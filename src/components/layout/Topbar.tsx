@@ -330,13 +330,13 @@ export default function Topbar({ collapsed }: TopbarProps) {
 
       {/* Topbar Actions */}
       <div className="topbar-actions" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        {/* Link to Executive Analytics Dashboard on port 5174 */}
+        {/* Link to Executive Analytics Dashboard */}
         <a
-          href="http://localhost:5174"
+          href={import.meta.env.PROD ? '/dashboard/' : 'http://localhost:5174'}
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn-sm btn-secondary"
-          title="Buka Executive Analytics Dashboard (Port 5174)"
+          title="Buka Executive Analytics Dashboard"
           style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}
         >
           <ExternalLink size={13} />

@@ -8,11 +8,16 @@
     "dev": "vite",
     "dashboard": "npm --prefix dashboard run dev",
     "dev:dashboard": "npm --prefix dashboard run dev",
-    "build": "tsc -b && vite build",
-    "build:all": "tsc -b && vite build && cd dashboard && npx vite build",
+    "build:erp": "tsc -b && vite build",
+    "build:dashboard": "npm --prefix dashboard run build:subpath",
+    "build": "tsc -b && vite build && npm --prefix dashboard run build:subpath",
+    "build:all": "npm run build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
+  "workspaces": [
+    "dashboard"
+  ],
   "dependencies": {
     "lucide-react": "^1.62.0",
     "react": "^19.3.1",

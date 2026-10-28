@@ -147,13 +147,13 @@ export default function ExecutiveDashboard() {
             <Download size={14} /> Export KPI Report
           </button>
           <a
-            href="http://localhost:5173"
+            href={import.meta.env.PROD ? '/' : 'http://localhost:5173'}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-primary"
             style={{ fontWeight: 600 }}
           >
-            <span>Open Operations ERP (Port 5173)</span>
+            <span>{import.meta.env.PROD ? 'Open Operations ERP' : 'Open Operations ERP (Port 5173)'}</span>
             <ExternalLink size={14} />
           </a>
         </div>
@@ -295,7 +295,7 @@ export default function ExecutiveDashboard() {
             </div>
           </div>
           <a
-            href="http://localhost:5173"
+            href={import.meta.env.PROD ? '/' : 'http://localhost:5173'}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-secondary"
