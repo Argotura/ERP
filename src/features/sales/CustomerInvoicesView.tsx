@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Customer Invoices (Faktur Tagihan Piutang)
+// ARGOTURO ERP — Customer Invoices (Accounts Receivable)
 // ============================================================
 
 import React, { useState } from 'react';
-import { FileCheck, DollarSign, Calendar, Building2, CheckCircle, AlertCircle } from 'lucide-react';
+import { DollarSign } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { CustomerInvoice } from '../../types';
 
@@ -30,10 +30,10 @@ export default function CustomerInvoicesView() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Faktur Penjualan (Customer Invoices)
+          Customer Invoices
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Pengakuan piutang usaha (AR), monitoring jatuh tempo, dan pelunasan kas/bank
+          Accounts receivable (AR) recognition, payment aging tracking, and cash/bank reconciliation
         </p>
       </div>
 
@@ -41,21 +41,21 @@ export default function CustomerInvoicesView() {
         <table className="data-table" style={{ width: '100%', fontSize: 13 }}>
           <thead>
             <tr>
-              <th>Status Bayar</th>
-              <th>No. Faktur</th>
-              <th>Pelanggan</th>
-              <th>Tanggal Faktur</th>
-              <th>Jatuh Tempo</th>
-              <th style={{ textAlign: 'right' }}>Total Tagihan</th>
-              <th style={{ textAlign: 'right' }}>Sisa Piutang</th>
-              <th style={{ textAlign: 'right' }}>Tindakan</th>
+              <th>Payment Status</th>
+              <th>Invoice No.</th>
+              <th>Customer</th>
+              <th>Invoice Date</th>
+              <th>Due Date</th>
+              <th style={{ textAlign: 'right' }}>Total Invoiced</th>
+              <th style={{ textAlign: 'right' }}>Remaining Balance</th>
+              <th style={{ textAlign: 'right' }}>Action</th>
             </tr>
           </thead>
           <tbody>
             {store.customerInvoices.length === 0 ? (
               <tr>
                 <td colSpan={8} style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
-                  Belum ada Faktur Penjualan. Buat dari Sales Order.
+                  No customer invoices found. Generate them from Sales Orders.
                 </td>
               </tr>
             ) : (
@@ -85,21 +85,21 @@ export default function CustomerInvoicesView() {
                         }}
                       >
                         {inv.status === 'paid'
-                          ? 'Lunas'
+                          ? 'Paid'
                           : inv.status === 'partially_paid'
-                          ? 'Dibayar Sebagian'
-                          : 'Belum Dibayar'}
+                          ? 'Partially Paid'
+                          : 'Unpaid'}
                       </span>
                     </td>
                     <td style={{ fontWeight: 600, color: '#1e293b' }}>{inv.invoiceNumber}</td>
-                    <td>{customer?.name || 'Pelanggan'}</td>
-                    <td>{new Date(inv.invoiceDate).toLocaleDateString('id-ID')}</td>
-                    <td>{new Date(inv.dueDate).toLocaleDateString('id-ID')}</td>
+                    <td>{customer?.name || 'Customer'}</td>
+                    <td>{new Date(inv.invoiceDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                    <td>{new Date(inv.dueDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                     <td style={{ textAlign: 'right', fontWeight: 600 }}>
-                      Rp {inv.grandTotal.toLocaleString('id-ID')}
+                      IDR {inv.grandTotal.toLocaleString('en-US')}
                     </td>
                     <td style={{ textAlign: 'right', fontWeight: 600, color: (inv.remainingAmount ?? inv.outstandingBalance ?? 0) > 0 ? '#ef4444' : '#10b981' }}>
-                      Rp {(inv.remainingAmount ?? inv.outstandingBalance ?? 0).toLocaleString('id-ID')}
+                      IDR {(inv.remainingAmount ?? inv.outstandingBalance ?? 0).toLocaleString('en-US')}
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       {(inv.remainingAmount ?? inv.outstandingBalance ?? 0) > 0 ? (
@@ -109,10 +109,10 @@ export default function CustomerInvoicesView() {
                           className="btn btn-sm btn-primary"
                           style={{ fontSize: 11, padding: '3px 8px', display: 'inline-flex', alignItems: 'center', gap: 4 }}
                         >
-                          <DollarSign size={12} /> Catat Pelunasan
+                          <DollarSign size={12} /> Record Receipt
                         </button>
                       ) : (
-                        <span style={{ fontSize: 11, color: '#10b981', fontWeight: 600 }}>✓ Lunas</span>
+                        <span style={{ fontSize: 11, color: '#10b981', fontWeight: 600 }}>✓ Settled</span>
                       )}
                     </td>
                   </tr>
@@ -149,7 +149,7 @@ export default function CustomerInvoicesView() {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>
-                Catat Pelunasan Faktur {selectedInvoice.invoiceNumber}
+                Record Payment for Invoice {selectedInvoice.invoiceNumber}
               </h3>
               <button
                 type="button"
@@ -161,17 +161,17 @@ export default function CustomerInvoicesView() {
             </div>
 
             <div style={{ backgroundColor: '#f8fafc', padding: 12, borderRadius: 6, fontSize: 12.5, marginBottom: 16 }}>
-              <div>Total Tagihan: Rp {selectedInvoice.grandTotal.toLocaleString('id-ID')}</div>
-              <div>Sudah Dibayar: Rp {selectedInvoice.paidAmount.toLocaleString('id-ID')}</div>
+              <div>Total Invoice: IDR {selectedInvoice.grandTotal.toLocaleString('en-US')}</div>
+              <div>Already Paid: IDR {selectedInvoice.paidAmount.toLocaleString('en-US')}</div>
               <div style={{ fontWeight: 700, color: '#ef4444', marginTop: 4 }}>
-                Sisa Piutang: Rp {(selectedInvoice.remainingAmount ?? selectedInvoice.outstandingBalance ?? 0).toLocaleString('id-ID')}
+                Remaining Balance: IDR {(selectedInvoice.remainingAmount ?? selectedInvoice.outstandingBalance ?? 0).toLocaleString('en-US')}
               </div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 20 }}>
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
-                  Jumlah Pembayaran Masuk (Rp):
+                  Received Amount (IDR):
                 </label>
                 <input
                   type="number"
@@ -186,7 +186,7 @@ export default function CustomerInvoicesView() {
 
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
-                  Metode Pembayaran:
+                  Payment Method:
                 </label>
                 <select
                   value={paymentMethod}
@@ -195,14 +195,14 @@ export default function CustomerInvoicesView() {
                 >
                   <option value="Bank Transfer BCA">Bank Transfer BCA</option>
                   <option value="Bank Transfer Mandiri">Bank Transfer Mandiri</option>
-                  <option value="Bilyet Giro / Cek">Bilyet Giro / Cek</option>
-                  <option value="Tunai / Kas Kecil">Tunai / Kas Kecil</option>
+                  <option value="Bilyet Giro / Cheque">Bilyet Giro / Cheque</option>
+                  <option value="Cash / Petty Cash">Cash / Petty Cash</option>
                 </select>
               </div>
 
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
-                  Rekening Bank Penerima:
+                  Receiving Bank Account:
                 </label>
                 <select
                   value={bankAccountId}
@@ -220,10 +220,10 @@ export default function CustomerInvoicesView() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setSelectedInvoice(null)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-success">
-                Posting Pembayaran & Jurnal Kas
+                Post Receipt & Record Journal
               </button>
             </div>
           </form>

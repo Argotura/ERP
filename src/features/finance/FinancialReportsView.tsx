@@ -1,9 +1,8 @@
 // ============================================================
-// ARGOTURO ERP — Financial Statements (Laporan Keuangan Standar)
+// ARGOTURO ERP — Financial Statements
 // ============================================================
 
 import React, { useState } from 'react';
-import { PieChart, TrendingUp, Scale, Landmark, FileSpreadsheet } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function FinancialReportsView() {
@@ -34,19 +33,19 @@ export default function FinancialReportsView() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Laporan Keuangan Perusahaan (Financial Statements)
+          Financial Statements & Reports
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Laporan Laba Rugi komprehensif, Neraca posisi keuangan, dan arus kas yang terhubung langsung ke buku besar
+          Comprehensive Profit & Loss, Balance Sheet, and Direct Cash Flow statements integrated with the general ledger
         </p>
       </div>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 8, borderBottom: '1px solid #e2e8f0', paddingBottom: 10 }}>
         {[
-          { id: 'pnl', label: 'Laba Rugi (Profit & Loss)' },
-          { id: 'balance_sheet', label: 'Neraca (Balance Sheet)' },
-          { id: 'cash_flow', label: 'Arus Kas (Cash Flow)' },
+          { id: 'pnl', label: 'Profit & Loss (P&L)' },
+          { id: 'balance_sheet', label: 'Balance Sheet' },
+          { id: 'cash_flow', label: 'Direct Cash Flow' },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -72,21 +71,21 @@ export default function FinancialReportsView() {
       {activeTab === 'pnl' && (
         <div style={{ backgroundColor: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', padding: 24 }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', margin: '0 0 16px' }}>
-            Laporan Laba Rugi Komprehensif (Tahun Berjalan 2026)
+            Comprehensive Income Statement (Year-to-Date 2026)
           </h3>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {/* Revenue */}
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: 14, color: '#1e293b', borderBottom: '1px solid #e2e8f0', paddingBottom: 6 }}>
-                <span>1. Pendapatan Penjualan & Usaha</span>
-                <span>Rp {totalRevenue.toLocaleString('id-ID')}</span>
+                <span>1. Commercial Sales & Operating Revenue</span>
+                <span>IDR {totalRevenue.toLocaleString('en-US')}</span>
               </div>
               <div style={{ paddingLeft: 16, marginTop: 8 }}>
                 {revenueAccounts.map((a) => (
                   <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, padding: '3px 0', color: '#475569' }}>
                     <span>{a.code} — {a.name}</span>
-                    <span>Rp {Math.abs(a.currentBalance).toLocaleString('id-ID')}</span>
+                    <span>IDR {Math.abs(a.currentBalance).toLocaleString('en-US')}</span>
                   </div>
                 ))}
               </div>
@@ -95,14 +94,14 @@ export default function FinancialReportsView() {
             {/* COGS */}
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: 14, color: '#1e293b', borderBottom: '1px solid #e2e8f0', paddingBottom: 6 }}>
-                <span>2. Harga Pokok Penjualan (HPP)</span>
-                <span>(Rp {totalCOGS.toLocaleString('id-ID')})</span>
+                <span>2. Cost of Goods Sold (COGS)</span>
+                <span>(IDR {totalCOGS.toLocaleString('en-US')})</span>
               </div>
               <div style={{ paddingLeft: 16, marginTop: 8 }}>
                 {cogsAccounts.map((a) => (
                   <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, padding: '3px 0', color: '#475569' }}>
                     <span>{a.code} — {a.name}</span>
-                    <span>Rp {Math.abs(a.currentBalance).toLocaleString('id-ID')}</span>
+                    <span>IDR {Math.abs(a.currentBalance).toLocaleString('en-US')}</span>
                   </div>
                 ))}
               </div>
@@ -110,23 +109,23 @@ export default function FinancialReportsView() {
 
             {/* Gross Profit */}
             <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: 14.5, backgroundColor: '#f8fafc', padding: '10px 14px', borderRadius: 6, color: '#1e293b' }}>
-              <span>LABA KOTOR (GROSS PROFIT):</span>
+              <span>GROSS PROFIT:</span>
               <span style={{ color: grossProfit >= 0 ? '#10b981' : '#ef4444' }}>
-                Rp {grossProfit.toLocaleString('id-ID')}
+                IDR {grossProfit.toLocaleString('en-US')}
               </span>
             </div>
 
             {/* Operating Expenses */}
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: 14, color: '#1e293b', borderBottom: '1px solid #e2e8f0', paddingBottom: 6 }}>
-                <span>3. Beban Operasional & Administrasi Umum</span>
-                <span>(Rp {totalOperatingExpense.toLocaleString('id-ID')})</span>
+                <span>3. Operating & Administrative Expenses</span>
+                <span>(IDR {totalOperatingExpense.toLocaleString('en-US')})</span>
               </div>
               <div style={{ paddingLeft: 16, marginTop: 8 }}>
                 {expenseAccounts.map((a) => (
                   <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, padding: '3px 0', color: '#475569' }}>
                     <span>{a.code} — {a.name}</span>
-                    <span>Rp {Math.abs(a.currentBalance).toLocaleString('id-ID')}</span>
+                    <span>IDR {Math.abs(a.currentBalance).toLocaleString('en-US')}</span>
                   </div>
                 ))}
               </div>
@@ -134,9 +133,9 @@ export default function FinancialReportsView() {
 
             {/* Net Income */}
             <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: 16, backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', padding: '12px 16px', borderRadius: 6, color: '#1e3a8a' }}>
-              <span>LABA BERSIH TAHUN BERJALAN (NET INCOME):</span>
+              <span>NET OPERATING INCOME:</span>
               <span style={{ color: netIncome >= 0 ? '#16a34a' : '#dc2626' }}>
-                Rp {netIncome.toLocaleString('id-ID')}
+                IDR {netIncome.toLocaleString('en-US')}
               </span>
             </div>
           </div>
@@ -147,25 +146,25 @@ export default function FinancialReportsView() {
       {activeTab === 'balance_sheet' && (
         <div style={{ backgroundColor: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', padding: 24 }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', margin: '0 0 16px' }}>
-            Neraca Posisi Keuangan (Balance Sheet)
+            Statement of Financial Position (Balance Sheet)
           </h3>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
             {/* Assets */}
             <div>
               <h4 style={{ fontSize: 14, fontWeight: 700, color: '#1e293b', borderBottom: '2px solid #3b82f6', paddingBottom: 6, margin: '0 0 12px' }}>
-                AKTIVA (ASSETS)
+                ASSETS
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {assetAccounts.map((a) => (
                   <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#475569' }}>
                     <span>{a.code} — {a.name}</span>
-                    <span style={{ fontWeight: 500 }}>Rp {Math.abs(a.currentBalance).toLocaleString('id-ID')}</span>
+                    <span style={{ fontWeight: 500 }}>IDR {Math.abs(a.currentBalance).toLocaleString('en-US')}</span>
                   </div>
                 ))}
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: 14.5, borderTop: '2px solid #1e293b', paddingTop: 8, marginTop: 10, color: '#1e293b' }}>
-                  <span>TOTAL AKTIVA:</span>
-                  <span style={{ color: '#10b981' }}>Rp {totalAssets.toLocaleString('id-ID')}</span>
+                  <span>TOTAL ASSETS:</span>
+                  <span style={{ color: '#10b981' }}>IDR {totalAssets.toLocaleString('en-US')}</span>
                 </div>
               </div>
             </div>
@@ -173,32 +172,32 @@ export default function FinancialReportsView() {
             {/* Liabilities & Equity */}
             <div>
               <h4 style={{ fontSize: 14, fontWeight: 700, color: '#1e293b', borderBottom: '2px solid #ea580c', paddingBottom: 6, margin: '0 0 12px' }}>
-                KEWAJIBAN & EKUITAS
+                LIABILITIES & EQUITY
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                <div style={{ fontWeight: 700, fontSize: 13, color: '#334155' }}>Kewajiban / Hutang:</div>
+                <div style={{ fontWeight: 700, fontSize: 13, color: '#334155' }}>Liabilities / Payables:</div>
                 {liabilityAccounts.map((a) => (
                   <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#475569' }}>
                     <span>{a.code} — {a.name}</span>
-                    <span style={{ fontWeight: 500 }}>Rp {Math.abs(a.currentBalance).toLocaleString('id-ID')}</span>
+                    <span style={{ fontWeight: 500 }}>IDR {Math.abs(a.currentBalance).toLocaleString('en-US')}</span>
                   </div>
                 ))}
 
-                <div style={{ fontWeight: 700, fontSize: 13, color: '#334155', marginTop: 10 }}>Ekuitas Pemilik:</div>
+                <div style={{ fontWeight: 700, fontSize: 13, color: '#334155', marginTop: 10 }}>Owner's Equity:</div>
                 {equityAccounts.map((a) => (
                   <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#475569' }}>
                     <span>{a.code} — {a.name}</span>
-                    <span style={{ fontWeight: 500 }}>Rp {Math.abs(a.currentBalance).toLocaleString('id-ID')}</span>
+                    <span style={{ fontWeight: 500 }}>IDR {Math.abs(a.currentBalance).toLocaleString('en-US')}</span>
                   </div>
                 ))}
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#3b82f6', fontWeight: 600 }}>
-                  <span>Laba Bersih Tahun Berjalan</span>
-                  <span>Rp {netIncome.toLocaleString('id-ID')}</span>
+                  <span>Current Year Net Income</span>
+                  <span>IDR {netIncome.toLocaleString('en-US')}</span>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: 14.5, borderTop: '2px solid #1e293b', paddingTop: 8, marginTop: 10, color: '#1e293b' }}>
-                  <span>TOTAL PASIVA (HUTANG + EKUITAS):</span>
-                  <span style={{ color: '#10b981' }}>Rp {(totalLiabilities + totalEquity).toLocaleString('id-ID')}</span>
+                  <span>TOTAL LIABILITIES & EQUITY:</span>
+                  <span style={{ color: '#10b981' }}>IDR {(totalLiabilities + totalEquity).toLocaleString('en-US')}</span>
                 </div>
               </div>
             </div>
@@ -210,48 +209,48 @@ export default function FinancialReportsView() {
       {activeTab === 'cash_flow' && (
         <div style={{ backgroundColor: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', padding: 24 }}>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', margin: '0 0 16px' }}>
-            Laporan Arus Kas Operasional (Direct Cash Flow)
+            Statement of Cash Flows (Direct Method)
           </h3>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14, fontSize: 13.5 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
-              <span>Penerimaan Kas dari Pelanggan (Inflow Penjualan)</span>
+              <span>Cash Received from Customers (Operating Inflow)</span>
               <strong style={{ color: '#10b981' }}>
-                +Rp {store.customerPayments.reduce((s, p) => s + p.amount, 0).toLocaleString('id-ID')}
+                +IDR {store.customerPayments.reduce((s, p) => s + p.amount, 0).toLocaleString('en-US')}
               </strong>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
-              <span>Pembayaran Kas ke Pemasok (Outflow Pengadaan)</span>
+              <span>Cash Paid to Suppliers (Procurement Outflow)</span>
               <strong style={{ color: '#ef4444' }}>
-                -Rp {store.supplierPayments.reduce((s, p) => s + p.amount, 0).toLocaleString('id-ID')}
+                -IDR {store.supplierPayments.reduce((s, p) => s + p.amount, 0).toLocaleString('en-US')}
               </strong>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
-              <span>Pengeluaran Kas untuk Beban Operasional & Kantor</span>
+              <span>Cash Paid for Operating Expenses & Facilities</span>
               <strong style={{ color: '#ef4444' }}>
-                -Rp {store.expenses.reduce((s, e) => s + e.amount, 0).toLocaleString('id-ID')}
+                -IDR {store.expenses.reduce((s, e) => s + e.amount, 0).toLocaleString('en-US')}
               </strong>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
-              <span>Pengeluaran Kas untuk Pembayaran Gaji Karyawan</span>
+              <span>Cash Paid for Employee Payroll & Net Compensation</span>
               <strong style={{ color: '#ef4444' }}>
-                -Rp {store.payrollRuns.reduce((s, p) => s + (p.totalNetSalary ?? p.totalNet ?? 0), 0).toLocaleString('id-ID')}
+                -IDR {store.payrollRuns.reduce((s, p) => s + (p.totalNetSalary ?? p.totalNet ?? 0), 0).toLocaleString('en-US')}
               </strong>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: 15, backgroundColor: '#f8fafc', padding: 12, borderRadius: 6, marginTop: 10 }}>
-              <span>ARUS KAS BERSIH:</span>
+              <span>NET CASH FLOW:</span>
               <span style={{ color: '#10b981' }}>
-                Rp{' '}
+                IDR{' '}
                 {(
                   store.customerPayments.reduce((s, p) => s + p.amount, 0) -
                   store.supplierPayments.reduce((s, p) => s + p.amount, 0) -
                   store.expenses.reduce((s, e) => s + e.amount, 0) -
                   store.payrollRuns.reduce((s, p) => s + (p.totalNetSalary ?? p.totalNet ?? 0), 0)
-                ).toLocaleString('id-ID')}
+                ).toLocaleString('en-US')}
               </span>
             </div>
           </div>

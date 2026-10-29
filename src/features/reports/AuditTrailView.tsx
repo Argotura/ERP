@@ -3,7 +3,7 @@
 // ============================================================
 
 import React, { useState } from 'react';
-import { ShieldCheck, Search, Filter, Clock, User, Tag } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function AuditTrailView() {
@@ -28,10 +28,10 @@ export default function AuditTrailView() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Jejak Audit Sistem & Kepatuhan (System Audit Trail)
+          System Audit Trail & Compliance Log
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Log aktivitas tidak dapat diubah (immutable log) yang merekam setiap pembuatan, persetujuan, dan mutasi data
+          Immutable activity log recording every entity creation, manager approval, transaction posting, and state change
         </p>
       </div>
 
@@ -41,7 +41,7 @@ export default function AuditTrailView() {
           <input
             type="text"
             className="input"
-            placeholder="Cari user, no. dokumen, atau deskripsi..."
+            placeholder="Search by user, document reference, or description..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{ paddingLeft: 34 }}
@@ -52,16 +52,16 @@ export default function AuditTrailView() {
           value={moduleFilter}
           onChange={(e) => setModuleFilter(e.target.value)}
           className="input"
-          style={{ width: 220 }}
+          style={{ width: 240 }}
         >
-          <option value="all">Semua Modul Sistem</option>
+          <option value="all">All System Modules</option>
           <option value="sales">CRM & Sales</option>
           <option value="purchasing">Procurement</option>
-          <option value="inventory">Inventory & Gudang</option>
+          <option value="inventory">Inventory & Logistics</option>
           <option value="manufacturing">Manufacturing</option>
           <option value="finance">Finance & GL</option>
           <option value="hr">People & HR</option>
-          <option value="approval">Otorisasi & Approval</option>
+          <option value="approval">Authorizations & Approvals</option>
         </select>
       </div>
 
@@ -69,13 +69,13 @@ export default function AuditTrailView() {
         <table className="data-table" style={{ width: '100%', fontSize: 12.5 }}>
           <thead>
             <tr>
-              <th>Waktu Stempel</th>
-              <th>Modul</th>
-              <th>Aksi</th>
-              <th>No. Referensi Dokumen</th>
-              <th>Pengguna</th>
-              <th>Peran Otoritas</th>
-              <th>Deskripsi Lengkap Transaksi</th>
+              <th>Timestamp</th>
+              <th>Module</th>
+              <th>Action</th>
+              <th>Document Ref</th>
+              <th>User</th>
+              <th>Authority Role</th>
+              <th>Transaction Description</th>
             </tr>
           </thead>
           <tbody>
@@ -83,9 +83,9 @@ export default function AuditTrailView() {
               <tr key={log.id}>
                 <td>
                   <span style={{ fontSize: 11.5, color: '#64748b' }}>
-                    {new Date(log.timestamp).toLocaleDateString('id-ID', {
-                      day: 'numeric',
+                    {new Date(log.timestamp).toLocaleDateString('en-US', {
                       month: 'short',
+                      day: 'numeric',
                       year: 'numeric',
                       hour: '2-digit',
                       minute: '2-digit',

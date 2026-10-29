@@ -177,7 +177,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const resetDemoData = useCallback(() => {
     const fresh = resetERPStore();
     setStore(fresh);
-    addToast('success', 'Seluruh data demo ARGOTURO ERP telah dikembalikan ke kondisi awal');
+    addToast('success', 'System data restored to initial baseline configuration');
   }, [addToast]);
 
   // Helper to log system activity
@@ -252,7 +252,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           'approved',
           req.entityId || req.documentId || '',
           req.entityNumber || req.documentNumber || '',
-          `Persetujuan ${req.entityType || req.type} ${req.entityNumber || req.documentNumber || ''} disetujui oleh ${activeUser.name}`
+          `Approval for ${req.entityType || req.type} ${req.entityNumber || req.documentNumber || ''} approved by ${activeUser.name}`
         );
 
         return {
@@ -261,7 +261,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Permintaan persetujuan berhasil disetujui');
+      addToast('success', 'Approval request approved successfully');
     },
     [activeUser, addToast]
   );
@@ -279,7 +279,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
                 status: 'rejected' as const,
                 approvedBy: activeUser.name,
                 approvedAt: new Date().toISOString(),
-                notes: notes || 'Ditolak',
+                notes: notes || 'Rejected',
               }
             : r
         );
@@ -313,7 +313,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           'rejected',
           req.entityId || req.documentId || '',
           req.entityNumber || req.documentNumber || '',
-          `Permintaan ${req.entityType || req.type} ${req.entityNumber || req.documentNumber || ''} ditolak oleh ${activeUser.name}: ${notes || ''}`
+          `Request for ${req.entityType || req.type} ${req.entityNumber || req.documentNumber || ''} rejected by ${activeUser.name}: ${notes || ''}`
         );
 
         return {
@@ -322,7 +322,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('warning', 'Permintaan telah ditolak');
+      addToast('warning', 'Request has been rejected');
     },
     [activeUser, addToast]
   );
@@ -367,7 +367,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           orderNumber: soNumber,
           quotationId: quotation.id,
           customerId: quotation.customerId,
-          customerName: quotation.customerName || prev.customers.find((c) => c.id === quotation.customerId)?.name || 'Pelanggan',
+          customerName: quotation.customerName || prev.customers.find((c) => c.id === quotation.customerId)?.name || 'Customer',
           notes: quotation.notes || '',
           orderDate: new Date().toISOString().split('T')[0],
           deliveryDate: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0],
@@ -412,7 +412,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           updatedApprovals = [approvalReq, ...updatedApprovals];
         }
 
-        const log = logActivity('sales', 'created', newSO.id, newSO.orderNumber, `Quotation ${quotation.quotationNumber} dikonversi ke Sales Order ${newSO.orderNumber}`);
+        const log = logActivity('sales', 'created', newSO.id, newSO.orderNumber, `Quotation ${quotation.quotationNumber} converted to Sales Order ${newSO.orderNumber}`);
 
         return {
           ...prev,
@@ -423,7 +423,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Quotation berhasil dikonversi menjadi Sales Order');
+      addToast('success', 'Quotation successfully converted to Sales Order');
     },
     [activeUser, addToast]
   );
@@ -447,10 +447,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           a.entityId === soId ? { ...a, status: 'approved' as const, approvedBy: activeUser.name, approvedAt: new Date().toISOString() } : a
         );
 
-        const log = logActivity('sales', 'approved', so.id, so.orderNumber, `Sales Order ${so.orderNumber} disetujui`);
+        const log = logActivity('sales', 'approved', so.id, so.orderNumber, `Sales Order ${so.orderNumber} approved`);
         return { ...prev, salesOrders: updatedSOs, approvalRequests: updatedApprovals, activityLogs: [log, ...prev.activityLogs] };
       });
-      addToast('success', 'Sales Order berhasil disetujui');
+      addToast('success', 'Sales Order approved successfully');
     },
     [activeUser, addToast]
   );
@@ -473,7 +473,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           warehouseId,
           deliveryDate: new Date().toISOString().split('T')[0],
           status: 'draft',
-          carrier: 'Armada Internal Logistik',
+          carrier: 'Internal Logistics Fleet',
           trackingNumber: `TRK-${Math.floor(100000 + Math.random() * 900000)}`,
           lines: so.lines.map((l) => ({
             id: `dol-${Date.now()}-${l.productId}`,
@@ -484,7 +484,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           createdAt: new Date().toISOString(),
         };
 
-        const log = logActivity('sales', 'created', newDO.id, newDO.deliveryNumber, `Surat Jalan (DO) ${newDO.deliveryNumber} dibuat dari Sales Order ${so.orderNumber}`);
+        const log = logActivity('sales', 'created', newDO.id, newDO.deliveryNumber, `Delivery Order (DO) ${newDO.deliveryNumber} created from Sales Order ${so.orderNumber}`);
 
         return {
           ...prev,
@@ -493,7 +493,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Surat Jalan (Delivery Order) berhasil dibuat');
+      addToast('success', 'Delivery Order (DO) created successfully');
     },
     [addToast]
   );
@@ -505,7 +505,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (!deliv) return prev;
 
         const warehouse = prev.warehouses.find((w) => w.id === deliv.warehouseId);
-        const warehouseName = warehouse ? warehouse.name : 'Gudang Pusat Cikarang';
+        const warehouseName = warehouse ? warehouse.name : 'Central Warehouse Cikarang';
 
         // 1. Generate inventory ledger records & update stock
         const newLedgerEntries = deliv.lines.map((line, idx) => {
@@ -527,7 +527,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             balanceAfter: newStock,
             unitCost,
             totalCost: line.quantity * unitCost,
-            notes: `Pengiriman barang ke customer via ${deliv.deliveryNumber}`,
+            notes: `Goods dispatched to customer via ${deliv.deliveryNumber}`,
             createdAt: new Date().toISOString(),
           };
         });
@@ -571,7 +571,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           };
         });
 
-        const log = logActivity('sales', 'confirmed', deliv.id, deliv.deliveryNumber, `Barang telah dikirim untuk DO ${deliv.deliveryNumber}. Stok di ${warehouseName} telah berkurang.`);
+        const log = logActivity('sales', 'confirmed', deliv.id, deliv.deliveryNumber, `Goods dispatched for DO ${deliv.deliveryNumber}. Inventory in ${warehouseName} updated.`);
 
         return {
           ...prev,
@@ -583,7 +583,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Pengiriman barang telah dikonfirmasi dan stok gudang otomatis terpotong');
+      addToast('success', 'Dispatch confirmed and warehouse inventory deducted successfully');
     },
     [addToast]
   );
@@ -606,7 +606,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           salesOrderId: so.id,
           salesOrderNumber: so.orderNumber,
           customerId: so.customerId,
-          customerName: customer ? customer.name : so.customerName || 'Pelanggan',
+          customerName: customer ? customer.name : so.customerName || 'Customer',
           invoiceDate: new Date().toISOString().split('T')[0],
           dueDate: new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0],
           status: 'unpaid',
@@ -636,8 +636,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         );
 
         const journalLines = [
-          { accountCode: '11200', accountName: 'Piutang Usaha', debit: newInvoice.grandTotal, credit: 0, memo: `Tagihan Penjualan ${newInvoice.invoiceNumber}` },
-          { accountCode: '41100', accountName: 'Pendapatan Penjualan Barang Dagang', debit: 0, credit: newInvoice.subtotal, memo: `Penjualan ${so.orderNumber}` },
+          { accountCode: '11200', accountName: 'Piutang Usaha', debit: newInvoice.grandTotal, credit: 0, memo: `Sales Invoice ${newInvoice.invoiceNumber}` },
+          { accountCode: '41100', accountName: 'Pendapatan Penjualan Barang Dagang', debit: 0, credit: newInvoice.subtotal, memo: `Sales ${so.orderNumber}` },
         ];
 
         const invTax = newInvoice.taxAmount ?? newInvoice.taxTotal ?? 0;
@@ -647,7 +647,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             accountName: 'Hutang PPN Keluaran',
             debit: 0,
             credit: invTax,
-            memo: `PPN 11% Faktur ${newInvoice.invoiceNumber}`,
+            memo: `VAT 11% Invoice ${newInvoice.invoiceNumber}`,
           });
         }
 
@@ -655,7 +655,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           jeNumber,
           'CustomerInvoice',
           newInvoice.invoiceNumber,
-          `Pengakuan Piutang & Penjualan Faktur ${newInvoice.invoiceNumber} - ${customer ? customer.name : ''}`,
+          `Sales Invoice Recognition ${newInvoice.invoiceNumber} - ${customer ? customer.name : ''}`,
           journalLines,
           activeUser.name
         );
@@ -663,7 +663,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const updatedJournals = [journal, ...prev.journalEntries];
         const updatedAccounts = updateAccountBalances(prev.accounts, updatedJournals);
 
-        const log = logActivity('finance', 'posted', newInvoice.id, newInvoice.invoiceNumber, `Faktur Penjualan ${newInvoice.invoiceNumber} diterbitkan & Jurnal ${jeNumber} berhasil diposting`);
+        const log = logActivity('finance', 'posted', newInvoice.id, newInvoice.invoiceNumber, `Sales Invoice ${newInvoice.invoiceNumber} issued & Journal Entry ${jeNumber} posted`);
 
         return {
           ...prev,
@@ -674,7 +674,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Faktur Penjualan berhasil diterbitkan dan jurnal piutang otomatis diposting');
+      addToast('success', 'Customer Invoice issued and Accounts Receivable journal posted');
     },
     [activeUser, addToast]
   );
@@ -699,7 +699,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           invoiceId: invoice.id,
           invoiceNumber: invoice.invoiceNumber,
           customerId: invoice.customerId,
-          customerName: customer ? customer.name : invoice.customerName || 'Pelanggan',
+          customerName: customer ? customer.name : invoice.customerName || 'Customer',
           paymentDate: new Date().toISOString().split('T')[0],
           amount,
           paymentMethod: paymentMethod as any,
@@ -733,10 +733,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           jeNumber,
           'CustomerPayment',
           newPayment.paymentNumber,
-          `Penerimaan Pembayaran Pelanggan ${customer ? customer.name : ''} untuk Faktur ${invoice.invoiceNumber}`,
+          `Customer Payment ${customer ? customer.name : ''} for Invoice ${invoice.invoiceNumber}`,
           [
-            { accountCode: debitAccountCode, accountName: debitAccountName, debit: amount, credit: 0, memo: `Penerimaan Kas/Bank via ${paymentMethod}` },
-            { accountCode: '11200', accountName: 'Piutang Usaha', debit: 0, credit: amount, memo: `Pelunasan Piutang ${invoice.invoiceNumber}` },
+            { accountCode: debitAccountCode, accountName: debitAccountName, debit: amount, credit: 0, memo: `Cash/Bank receipt via ${paymentMethod}` },
+            { accountCode: '11200', accountName: 'Piutang Usaha', debit: 0, credit: amount, memo: `Receivable settlement ${invoice.invoiceNumber}` },
           ],
           activeUser.name
         );
@@ -744,7 +744,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const updatedJournals = [journal, ...prev.journalEntries];
         const updatedAccounts = updateAccountBalances(prev.accounts, updatedJournals);
 
-        const log = logActivity('finance', 'paid', newPayment.id, newPayment.paymentNumber, `Pembayaran ${newPayment.paymentNumber} sebesar Rp ${amount.toLocaleString('id-ID')} diterima`);
+        const log = logActivity('finance', 'paid', newPayment.id, newPayment.paymentNumber, `Payment ${newPayment.paymentNumber} of Rp ${amount.toLocaleString('id-ID')} received`);
 
         return {
           ...prev,
@@ -756,7 +756,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Pembayaran pelanggan berhasil dicatat dan jurnal kas/bank diperbarui');
+      addToast('success', 'Customer payment recorded and cash/bank balance updated');
     },
     [activeUser, addToast]
   );
@@ -796,7 +796,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           updatedApprovals = [req, ...updatedApprovals];
         }
 
-        const log = logActivity('purchasing', 'created', newPR.id, newPR.requisitionNumber || newPR.prNumber || '', `Permintaan Pembelian (PR) ${newPR.requisitionNumber || newPR.prNumber} diajukan`);
+        const log = logActivity('purchasing', 'created', newPR.id, newPR.requisitionNumber || newPR.prNumber || '', `Purchase Requisition (PR) ${newPR.requisitionNumber || newPR.prNumber} submitted`);
 
         return {
           ...prev,
@@ -806,7 +806,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Permintaan Pembelian (PR) berhasil dibuat');
+      addToast('success', 'Purchase Requisition (PR) created successfully');
     },
     [activeUser, addToast]
   );
@@ -822,10 +822,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           a.entityId === prId ? { ...a, status: 'approved' as const, approvedBy: activeUser.name, approvedAt: new Date().toISOString() } : a
         );
 
-        const log = logActivity('purchasing', 'approved', pr.id, pr.requisitionNumber || pr.prNumber || '', `PR ${pr.requisitionNumber || pr.prNumber} disetujui`);
+        const log = logActivity('purchasing', 'approved', pr.id, pr.requisitionNumber || pr.prNumber || '', `PR ${pr.requisitionNumber || pr.prNumber} approved`);
         return { ...prev, purchaseRequisitions: updatedPRs, approvalRequests: updatedApprovals, activityLogs: [log, ...prev.activityLogs] };
       });
-      addToast('success', 'PR berhasil disetujui');
+      addToast('success', 'PR approved successfully');
     },
     [activeUser, addToast]
   );
@@ -896,7 +896,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           updatedApprovals = [req, ...updatedApprovals];
         }
 
-        const log = logActivity('purchasing', 'created', newPO.id, newPO.orderNumber || newPO.poNumber || '', `PR ${pr.requisitionNumber || pr.prNumber || ''} dikonversi ke Purchase Order ${newPO.orderNumber || newPO.poNumber || ''}`);
+        const log = logActivity('purchasing', 'created', newPO.id, newPO.orderNumber || newPO.poNumber || '', `PR ${pr.requisitionNumber || pr.prNumber || ''} converted to Purchase Order ${newPO.orderNumber || newPO.poNumber || ''}`);
 
         return {
           ...prev,
@@ -907,7 +907,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Purchase Order berhasil dibuat dari PR');
+      addToast('success', 'Purchase Order created from PR successfully');
     },
     [activeUser, addToast]
   );
@@ -931,10 +931,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           a.entityId === poId ? { ...a, status: 'approved' as const, approvedBy: activeUser.name, approvedAt: new Date().toISOString() } : a
         );
 
-        const log = logActivity('purchasing', 'approved', po.id, po.orderNumber || po.poNumber || '', `Purchase Order ${po.orderNumber || po.poNumber} disetujui`);
+        const log = logActivity('purchasing', 'approved', po.id, po.orderNumber || po.poNumber || '', `Purchase Order ${po.orderNumber || po.poNumber} approved`);
         return { ...prev, purchaseOrders: updatedPOs, approvalRequests: updatedApprovals, activityLogs: [log, ...prev.activityLogs] };
       });
-      addToast('success', 'Purchase Order berhasil disetujui');
+      addToast('success', 'Purchase Order approved successfully');
     },
     [activeUser, addToast]
   );
@@ -994,7 +994,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             balanceAfter: newStock,
             unitCost,
             totalCost: line.acceptedQuantity * unitCost,
-            notes: `Penerimaan barang dari PO ${po.orderNumber}`,
+            notes: `Inbound goods receipt from PO ${po.orderNumber}`,
             createdAt: new Date().toISOString(),
           };
         });
@@ -1035,7 +1035,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           };
         });
 
-        const log = logActivity('purchasing', 'received', newGR.id, newGR.receiptNumber || newGR.grNumber || '', `Penerimaan Barang ${newGR.receiptNumber || newGR.grNumber} dikonfirmasi di ${warehouse.name}`);
+        const log = logActivity('purchasing', 'received', newGR.id, newGR.receiptNumber || newGR.grNumber || '', `Goods Receipt ${newGR.receiptNumber || newGR.grNumber} confirmed at ${warehouse.name}`);
 
         return {
           ...prev,
@@ -1047,7 +1047,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Penerimaan barang berhasil diproses dan stok gudang otomatis bertambah');
+      addToast('success', 'Goods receipt confirmed and warehouse stock updated successfully');
     },
     [activeUser, addToast]
   );
@@ -1073,7 +1073,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           purchaseOrderId: po.id,
           purchaseOrderNumber: po.orderNumber || po.poNumber || '',
           supplierId: po.supplierId,
-          supplierName: supplier ? supplier.name : po.supplierName || 'Pemasok',
+          supplierName: supplier ? supplier.name : po.supplierName || 'Supplier',
           invoiceDate: new Date().toISOString().split('T')[0],
           dueDate: new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0],
           status: 'unpaid',
@@ -1103,8 +1103,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         );
 
         const journalLines = [
-          { accountCode: '11310', accountName: 'Persediaan Barang Dagang', debit: newBill.subtotal, credit: 0, memo: `Pembelian PO ${po.orderNumber}` },
-          { accountCode: '21100', accountName: 'Hutang Usaha', debit: 0, credit: newBill.grandTotal, memo: `Faktur Pemasok ${newBill.invoiceNumber}` },
+          { accountCode: '11310', accountName: 'Persediaan Barang Dagang', debit: newBill.subtotal, credit: 0, memo: `Purchase PO ${po.orderNumber}` },
+          { accountCode: '21100', accountName: 'Hutang Usaha', debit: 0, credit: newBill.grandTotal, memo: `Supplier Bill ${newBill.invoiceNumber}` },
         ];
 
         const billTax = newBill.taxAmount ?? newBill.taxTotal ?? 0;
@@ -1114,7 +1114,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             accountName: 'PPN Masukan',
             debit: billTax,
             credit: 0,
-            memo: `PPN Masukan 11% Tagihan ${newBill.invoiceNumber}`,
+            memo: `Input VAT 11% Bill ${newBill.invoiceNumber}`,
           });
         }
 
@@ -1122,7 +1122,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           jeNumber,
           'SupplierInvoice',
           newBill.invoiceNumber || newBill.billNumber || '',
-          `Pengakuan Hutang Usaha Faktur Pemasok ${newBill.invoiceNumber} - ${supplier ? supplier.name : ''}`,
+          `Accounts Payable recognition for Supplier Bill ${newBill.invoiceNumber} - ${supplier ? supplier.name : ''}`,
           journalLines,
           activeUser.name
         );
@@ -1130,7 +1130,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const updatedJournals = [journal, ...prev.journalEntries];
         const updatedAccounts = updateAccountBalances(prev.accounts, updatedJournals);
 
-        const log = logActivity('finance', 'posted', newBill.id, newBill.invoiceNumber || newBill.billNumber || '', `Faktur Tagihan Pemasok ${newBill.invoiceNumber} dicatat & Jurnal ${jeNumber} berhasil diposting`);
+        const log = logActivity('finance', 'posted', newBill.id, newBill.invoiceNumber || newBill.billNumber || '', `Supplier Bill ${newBill.invoiceNumber} recorded & Journal ${jeNumber} posted`);
 
         return {
           ...prev,
@@ -1141,7 +1141,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Tagihan Pemasok berhasil dicatat dan jurnal hutang usaha otomatis diposting');
+      addToast('success', 'Supplier Bill recorded and Accounts Payable journal posted');
     },
     [activeUser, addToast]
   );
@@ -1167,7 +1167,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           billNumber: bill.billNumber || bill.invoiceNumber || '',
           supplierInvoiceId: bill.id,
           supplierId: bill.supplierId,
-          supplierName: supplier ? supplier.name : bill.supplierName || 'Pemasok',
+          supplierName: supplier ? supplier.name : bill.supplierName || 'Supplier',
           paymentDate: new Date().toISOString().split('T')[0],
           amount,
           paymentMethod: paymentMethod as any,
@@ -1201,10 +1201,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           jeNumber,
           'SupplierPayment',
           newPayment.paymentNumber,
-          `Pembayaran Hutang ke ${supplier ? supplier.name : ''} untuk Faktur ${bill.invoiceNumber || bill.billNumber}`,
+          `Payable payment to ${supplier ? supplier.name : ''} for Bill ${bill.invoiceNumber || bill.billNumber}`,
           [
-            { accountCode: '21100', accountName: 'Hutang Usaha', debit: amount, credit: 0, memo: `Pelunasan Hutang ${bill.invoiceNumber || bill.billNumber}` },
-            { accountCode: creditAccountCode, accountName: creditAccountName, debit: 0, credit: amount, memo: `Pengeluaran Kas/Bank via ${paymentMethod}` },
+            { accountCode: '21100', accountName: 'Hutang Usaha', debit: amount, credit: 0, memo: `Accounts Payable settlement ${bill.invoiceNumber || bill.billNumber}` },
+            { accountCode: creditAccountCode, accountName: creditAccountName, debit: 0, credit: amount, memo: `Cash/Bank disbursement via ${paymentMethod}` },
           ],
           activeUser.name
         );
@@ -1212,7 +1212,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const updatedJournals = [journal, ...prev.journalEntries];
         const updatedAccounts = updateAccountBalances(prev.accounts, updatedJournals);
 
-        const log = logActivity('finance', 'paid', newPayment.id, newPayment.paymentNumber, `Pembayaran ke pemasok ${newPayment.paymentNumber} sebesar Rp ${amount.toLocaleString('id-ID')} berhasil`);
+        const log = logActivity('finance', 'paid', newPayment.id, newPayment.paymentNumber, `Payment to supplier ${newPayment.paymentNumber} of Rp ${amount.toLocaleString('id-ID')} completed`);
 
         return {
           ...prev,
@@ -1224,7 +1224,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Pembayaran ke pemasok berhasil dicatat dan saldo kas/bank diperbarui');
+      addToast('success', 'Supplier payment recorded and cash/bank balance updated');
     },
     [activeUser, addToast]
   );
@@ -1321,7 +1321,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             balanceAfter: Math.max(0, (product?.onHandStock || 0) - it.quantity),
             unitCost,
             totalCost: it.quantity * unitCost,
-            notes: `Transfer keluar ke ${toWh?.name || toWarehouseId}`,
+            notes: `Outbound transfer to ${toWh?.name || toWarehouseId}`,
             createdAt: new Date().toISOString(),
           });
           // IN
@@ -1338,7 +1338,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             balanceAfter: product?.onHandStock || 0,
             unitCost,
             totalCost: it.quantity * unitCost,
-            notes: `Transfer masuk dari ${fromWh?.name || fromWarehouseId}`,
+            notes: `Inbound transfer from ${fromWh?.name || fromWarehouseId}`,
             createdAt: new Date().toISOString(),
           });
         });
@@ -1361,7 +1361,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           return { ...p, warehouses: updatedWarehouses };
         });
 
-        const log = logActivity('inventory', 'transferred', newTransfer.id, newTransfer.transferNumber, `Transfer stok ${trfNumber} dari ${fromWh?.name} ke ${toWh?.name}`);
+        const log = logActivity('inventory', 'transferred', newTransfer.id, newTransfer.transferNumber, `Stock transfer ${trfNumber} from ${fromWh?.name} to ${toWh?.name}`);
 
         return {
           ...prev,
@@ -1372,7 +1372,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Transfer stok antar gudang berhasil dilakukan');
+      addToast('success', 'Inter-warehouse stock transfer completed successfully');
     },
     [activeUser, addToast]
   );
@@ -1428,7 +1428,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           balanceAfter: newTotalStock,
           unitCost: product.unitCost,
           totalCost: Math.abs(deltaQty * product.unitCost),
-          notes: `Penyesuaian stok (${adjustmentType}): ${reason}`,
+          notes: `Stock adjustment (${adjustmentType}): ${reason}`,
           createdAt: new Date().toISOString(),
         };
 
@@ -1445,7 +1445,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           };
         });
 
-        const log = logActivity('inventory', 'adjusted', newAdj.id, newAdj.adjustmentNumber, `Penyesuaian stok ${adjNumber} untuk ${product.name} (${deltaQty > 0 ? '+' : ''}${deltaQty} PCS)`);
+        const log = logActivity('inventory', 'adjusted', newAdj.id, newAdj.adjustmentNumber, `Stock adjustment ${adjNumber} for ${product.name} (${deltaQty > 0 ? '+' : ''}${deltaQty} PCS)`);
 
         return {
           ...prev,
@@ -1456,7 +1456,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Penyesuaian stok berhasil dicatat');
+      addToast('success', 'Stock adjustment recorded successfully');
     },
     [activeUser, addToast]
   );
@@ -1483,7 +1483,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           createdAt: new Date().toISOString(),
         };
 
-        const log = logActivity('inventory', 'counted', newCount.id, newCount.countNumber, `Stock Opname ${scNumber} diselesaikan oleh ${counterName}`);
+        const log = logActivity('inventory', 'counted', newCount.id, newCount.countNumber, `Physical stock count ${scNumber} completed by ${counterName}`);
 
         return {
           ...prev,
@@ -1492,7 +1492,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Stock Opname (Cycle Count) berhasil dicatat');
+      addToast('success', 'Physical stock count recorded successfully');
     },
     [addToast]
   );
@@ -1513,15 +1513,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           requisitionNumber: prNumber,
           requesterId: activeUser.id,
           requesterName: activeUser.name,
-          department: 'Gudang & Logistik',
+          department: 'Warehouse & Logistics',
           warehouseCode: prev.warehouses[0].code,
           requestDate: new Date().toISOString().split('T')[0],
           requiredDate: new Date(Date.now() + 5 * 86400000).toISOString().split('T')[0],
           status: 'pending_approval',
           totalEstimatedAmount: estimatedTotal,
           estimatedTotal,
-          businessJustification: 'Automated Reorder Planning: Stok berada di bawah minimum reorder point',
-          justification: 'Automated Reorder Planning: Stok berada di bawah minimum reorder point',
+          businessJustification: 'Automated Reorder Planning: Inventory below minimum reorder point',
+          justification: 'Automated Reorder Planning: Inventory below minimum reorder point',
           lines: items.map((it, idx) => {
             const prod = prev.products.find((p) => p.id === it.productId);
             return {
@@ -1551,7 +1551,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           createdAt: new Date().toISOString(),
         };
 
-        const log = logActivity('purchasing', 'created', newPR.id, newPR.requisitionNumber || newPR.prNumber || '', `PR ${prNumber} dibuat otomatis dari Reorder Planning`);
+        const log = logActivity('purchasing', 'created', newPR.id, newPR.requisitionNumber || newPR.prNumber || '', `PR ${prNumber} created automatically from Reorder Planning`);
 
         return {
           ...prev,
@@ -1561,7 +1561,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Permintaan Pembelian (PR) otomatis berhasil dibuat untuk barang low-stock');
+      addToast('success', 'Automated Purchase Requisition (PR) created for low-stock items');
     },
     [activeUser, addToast]
   );
@@ -1620,7 +1620,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           createdAt: new Date().toISOString(),
         };
 
-        const log = logActivity('manufacturing', 'created', newMO.id, newMO.orderNumber, `Perintah Produksi ${moNumber} dibuat untuk ${quantityToProduce} unit`);
+        const log = logActivity('manufacturing', 'created', newMO.id, newMO.orderNumber, `Production Order ${moNumber} created for ${quantityToProduce} units`);
 
         return {
           ...prev,
@@ -1629,7 +1629,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Perintah Produksi (MO) berhasil dibuat');
+      addToast('success', 'Production Order (MO) created successfully');
     },
     [addToast]
   );
@@ -1662,7 +1662,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             balanceAfter: newStock,
             unitCost: c.unitCost,
             totalCost: c.requiredQuantity * c.unitCost,
-            notes: `Konsumsi bahan baku untuk MO ${mo.orderNumber}`,
+            notes: `Raw material consumption for MO ${mo.orderNumber}`,
             createdAt: new Date().toISOString(),
           };
         });
@@ -1691,7 +1691,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             : m
         );
 
-        const log = logActivity('manufacturing', 'issued', mo.id, mo.orderNumber, `Bahan baku untuk MO ${mo.orderNumber} telah dikeluarkan ke lantai produksi`);
+        const log = logActivity('manufacturing', 'issued', mo.id, mo.orderNumber, `Raw materials for MO ${mo.orderNumber} issued to shop floor`);
 
         return {
           ...prev,
@@ -1702,7 +1702,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Bahan baku berhasil dikeluarkan ke produksi dan stok terpotong');
+      addToast('success', 'Raw materials issued to production and stock deducted');
     },
     [addToast]
   );
@@ -1734,7 +1734,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           balanceAfter: newStock,
           unitCost,
           totalCost: quantityProduced * unitCost,
-          notes: `Penerimaan Barang Jadi dari Perintah Produksi ${mo.orderNumber}`,
+          notes: `Finished goods receipt from Production Order ${mo.orderNumber}`,
           createdAt: new Date().toISOString(),
         };
 
@@ -1760,7 +1760,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             : m
         );
 
-        const log = logActivity('manufacturing', 'completed', mo.id, mo.orderNumber, `Perintah Produksi ${mo.orderNumber} selesai. ${quantityProduced} unit barang jadi masuk ke gudang.`);
+        const log = logActivity('manufacturing', 'completed', mo.id, mo.orderNumber, `Production Order ${mo.orderNumber} completed. ${quantityProduced} units of finished goods received into warehouse.`);
 
         return {
           ...prev,
@@ -1771,7 +1771,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Perintah produksi selesai dan stok barang jadi telah ditambahkan');
+      addToast('success', 'Production order completed and finished goods inventory updated');
     },
     [addToast]
   );
@@ -1797,7 +1797,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const updatedJournals = [journal, ...prev.journalEntries];
         const updatedAccounts = updateAccountBalances(prev.accounts, updatedJournals);
 
-        const log = logActivity('finance', 'posted', journal.id, journal.entryNumber, `Jurnal Umum ${journal.entryNumber} diposting: ${journal.description}`);
+        const log = logActivity('finance', 'posted', journal.id, journal.entryNumber, `General Journal Entry ${journal.entryNumber} posted: ${journal.description}`);
 
         return {
           ...prev,
@@ -1807,7 +1807,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Entri Jurnal Umum berhasil diposting dan buku besar diperbarui');
+      addToast('success', 'General Journal entry posted and general ledger updated');
     },
     [activeUser, addToast]
   );
@@ -1840,11 +1840,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           jeNumber,
           'Expense',
           newExpense.expenseNumber,
-          `Pencatatan Beban Operasional ${newExpense.expenseNumber}: ${newExpense.description}`,
+          `Operating Expense ${newExpense.expenseNumber}: ${newExpense.description}`,
           [
             {
               accountCode: expenseAccount?.code || '61900',
-              accountName: expenseAccount?.name || 'Beban Operasional Lainnya',
+              accountName: expenseAccount?.name || 'Other Operating Expenses',
               debit: newExpense.amount,
               credit: 0,
               memo: newExpense.description,
@@ -1854,7 +1854,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               accountName: bankAccount?.accountName || 'Bank BCA Operasional',
               debit: 0,
               credit: newExpense.amount,
-              memo: `Pengeluaran via ${newExpense.paymentMethod}`,
+              memo: `Disbursement via ${newExpense.paymentMethod}`,
             },
           ],
           activeUser.name
@@ -1863,7 +1863,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const updatedJournals = [journal, ...prev.journalEntries];
         const updatedAccounts = updateAccountBalances(prev.accounts, updatedJournals);
 
-        const log = logActivity('finance', 'posted', newExpense.id, newExpense.expenseNumber, `Beban ${newExpense.expenseNumber} sebesar Rp ${newExpense.amount.toLocaleString('id-ID')} dicatat`);
+        const log = logActivity('finance', 'posted', newExpense.id, newExpense.expenseNumber, `Expense ${newExpense.expenseNumber} of Rp ${newExpense.amount.toLocaleString('id-ID')} recorded`);
 
         return {
           ...prev,
@@ -1874,7 +1874,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Pengeluaran beban operasional berhasil dicatat & jurnal diposting');
+      addToast('success', 'Operating expense recorded and journal entry posted');
     },
     [activeUser, addToast]
   );
@@ -1909,14 +1909,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           entityType: 'leave_request',
           entityId: newReq.id,
           entityNumber: newReq.requestNumber,
-          requestedBy: prev.employees.find((e) => e.id === req.employeeId)?.name || 'Karyawan',
+          requestedBy: prev.employees.find((e) => e.id === req.employeeId)?.name || 'Employee',
           roleRequired: 'HR Manager',
           amount: req.daysCount,
           status: 'pending',
           createdAt: new Date().toISOString(),
         };
 
-        const log = logActivity('hr', 'created', newReq.id, newReq.requestNumber, `Pengajuan cuti ${lrNumber} (${req.daysCount} hari) diajukan`);
+        const log = logActivity('hr', 'created', newReq.id, newReq.requestNumber, `Leave request ${lrNumber} (${req.daysCount} days) submitted`);
 
         return {
           ...prev,
@@ -1926,7 +1926,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Pengajuan cuti berhasil dikirim untuk persetujuan HR');
+      addToast('success', 'Leave request submitted for HR approval');
     },
     [addToast]
   );
@@ -1945,10 +1945,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           a.entityId === id ? { ...a, status: 'approved' as const, approvedBy: activeUser.name, approvedAt: new Date().toISOString() } : a
         );
 
-        const log = logActivity('hr', 'approved', lr.id, lr.requestNumber, `Pengajuan cuti ${lr.requestNumber} disetujui`);
+        const log = logActivity('hr', 'approved', lr.id, lr.requestNumber, `Leave request ${lr.requestNumber} approved`);
         return { ...prev, leaveRequests: updatedLRs, approvalRequests: updatedApprovals, activityLogs: [log, ...prev.activityLogs] };
       });
-      addToast('success', 'Pengajuan cuti disetujui');
+      addToast('success', 'Leave request approved');
     },
     [activeUser, addToast]
   );
@@ -1964,10 +1964,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           a.entityId === id ? { ...a, status: 'rejected' as const, approvedBy: activeUser.name, approvedAt: new Date().toISOString() } : a
         );
 
-        const log = logActivity('hr', 'rejected', lr.id, lr.requestNumber, `Pengajuan cuti ${lr.requestNumber} ditolak`);
+        const log = logActivity('hr', 'rejected', lr.id, lr.requestNumber, `Leave request ${lr.requestNumber} rejected`);
         return { ...prev, leaveRequests: updatedLRs, approvalRequests: updatedApprovals, activityLogs: [log, ...prev.activityLogs] };
       });
-      addToast('warning', 'Pengajuan cuti ditolak');
+      addToast('warning', 'Leave request rejected');
     },
     [activeUser, addToast]
   );
@@ -2014,28 +2014,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           jeNumber,
           'Payroll',
           payNumber,
-          `Penggajian Karyawan Periode ${period} (${activeEmployees.length} Pegawai)`,
+          `Payroll Run for Period ${period} (${activeEmployees.length} Employees)`,
           [
             {
               accountCode: '61100',
               accountName: 'Beban Gaji dan Upah',
               debit: totalBaseSalary + totalAllowances,
               credit: 0,
-              memo: `Gaji Pokok & Tunjangan Periode ${period}`,
+              memo: `Base Salary & Allowances for Period ${period}`,
             },
             {
               accountCode: '11120',
               accountName: 'Bank BCA Operasional',
               debit: 0,
               credit: totalNetSalary,
-              memo: `Transfer Pembayaran Gaji Bersih`,
+              memo: `Net Salary Direct Transfer`,
             },
             {
               accountCode: '21300',
               accountName: 'Hutang Biaya & Gaji',
               debit: 0,
               credit: totalDeductions,
-              memo: `Potongan BPJS & PPh21 Karyawan`,
+              memo: `Tax & Social Security Deductions`,
             },
           ],
           activeUser.name
@@ -2044,7 +2044,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const updatedJournals = [journal, ...prev.journalEntries];
         const updatedAccounts = updateAccountBalances(prev.accounts, updatedJournals);
 
-        const log = logActivity('hr', 'processed', newPayroll.id, newPayroll.runNumber, `Penggajian Periode ${period} diproses untuk ${activeEmployees.length} pegawai. Total Rp ${totalNetSalary.toLocaleString('id-ID')}`);
+        const log = logActivity('hr', 'processed', newPayroll.id, newPayroll.runNumber, `Payroll for Period ${period} processed for ${activeEmployees.length} employees. Total Rp ${totalNetSalary.toLocaleString('id-ID')}`);
 
         return {
           ...prev,
@@ -2055,7 +2055,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       });
 
-      addToast('success', 'Proses penggajian berhasil diselesaikan dan jurnal beban gaji otomatis diposting');
+      addToast('success', 'Monthly payroll processed and payroll expense journal posted');
     },
     [activeUser, addToast]
   );

@@ -14,10 +14,10 @@ export default function NotificationsView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Notifikasi Sistem & Peringatan Operasional
+            System Notifications & Operational Alerts
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Pantau pemberitahuan transaksi, perubahan status, dan peringatan inventaris
+            Monitor real-time workflow notifications, order status transitions, and inventory alerts
           </p>
         </div>
 
@@ -29,14 +29,14 @@ export default function NotificationsView() {
           }}
           style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}
         >
-          <CheckCheck size={14} /> Tandai Semua Dibaca
+          <CheckCheck size={14} /> Mark All as Read
         </button>
       </div>
 
       <div style={{ backgroundColor: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
         {store.notifications.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>
-            Tidak ada notifikasi sistem saat ini.
+            No operational notifications found.
           </div>
         ) : (
           <div>
@@ -98,7 +98,7 @@ export default function NotificationsView() {
                       {n.title}
                     </span>
                     <span style={{ fontSize: 11, color: '#94a3b8' }}>
-                      {new Date(n.createdAt).toLocaleDateString('id-ID', {
+                      {new Date(n.createdAt).toLocaleDateString('en-US', {
                         day: 'numeric',
                         month: 'short',
                         hour: '2-digit',
@@ -122,7 +122,7 @@ export default function NotificationsView() {
                         borderRadius: 3,
                       }}
                     >
-                      Penerima: {n.targetRole}
+                      Target Role: {n.targetRole}
                     </span>
                   )}
                 </div>
@@ -134,4 +134,3 @@ export default function NotificationsView() {
     </div>
   );
 }
-

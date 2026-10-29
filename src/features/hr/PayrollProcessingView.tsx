@@ -1,14 +1,14 @@
 // ============================================================
-// ARGOTURO ERP — Payroll Processing (Penggajian Bulanan & PPh21)
+// ARGOTURO ERP — Payroll Processing
 // ============================================================
 
 import React, { useState } from 'react';
-import { Wallet, Play, CheckCircle2, Calendar, FileText, DollarSign } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function PayrollProcessingView() {
-  const { store, processMonthlyPayroll, addToast } = useApp();
-  const [period, setPeriod] = useState('Oktober 2026');
+  const { store, processMonthlyPayroll } = useApp();
+  const [period] = useState('October 2026');
 
   const activeEmployees = store.employees.filter((e) => e.status === 'active');
   const totalBase = activeEmployees.reduce((s, e) => s + (e.basicSalary ?? e.baseSalary ?? 0), 0);
@@ -17,7 +17,7 @@ export default function PayrollProcessingView() {
   const totalNet = totalBase + totalAllow - totalDeduct;
 
   const handleRunPayroll = () => {
-    if (window.confirm(`Proses penggajian periode ${period} untuk ${activeEmployees.length} pegawai? Ini akan otomatis memposting jurnal beban gaji ke Buku Besar.`)) {
+    if (window.confirm(`Execute payroll for ${period} for ${activeEmployees.length} personnel? This will automatically post salary expense journals to the General Ledger.`)) {
       processMonthlyPayroll(period);
     }
   };
@@ -27,10 +27,10 @@ export default function PayrollProcessingView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Pemrosesan Penggajian Karyawan (Payroll Processing)
+            Payroll Processing & Compensation
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Perhitungan gaji pokok, tunjangan operasional, potongan BPJS/PPh21, dan posting otomatis jurnal beban gaji
+            Base salary computation, operational allowances, tax withholdings, and automatic salary expense journal posting
           </p>
         </div>
 
@@ -40,61 +40,61 @@ export default function PayrollProcessingView() {
           onClick={handleRunPayroll}
           style={{ display: 'flex', alignItems: 'center', gap: 6, backgroundColor: '#10b981', borderColor: '#10b981' }}
         >
-          <Play size={14} fill="#ffffff" /> Jalankan Penggajian Periode {period}
+          <Play size={14} fill="#ffffff" /> Run Payroll for Period {period}
         </button>
       </div>
 
       {/* Summary KPI Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
         <div style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: 18, border: '1px solid #e2e8f0' }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Pegawai Aktif</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Active Personnel</span>
           <div style={{ fontSize: 24, fontWeight: 700, color: '#1e293b', marginTop: 4 }}>
-            {activeEmployees.length} Orang
+            {activeEmployees.length} Personnel
           </div>
-          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>7 Departemen</div>
+          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Across 7 Departments</div>
         </div>
 
         <div style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: 18, border: '1px solid #e2e8f0' }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Gaji Pokok & Tunjangan</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Gross Salary & Allowances</span>
           <div style={{ fontSize: 20, fontWeight: 700, color: '#3b82f6', marginTop: 4 }}>
-            Rp {(totalBase + totalAllow).toLocaleString('id-ID')}
+            IDR {(totalBase + totalAllow).toLocaleString('en-US')}
           </div>
-          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Bruto Beban Gaji</div>
+          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Gross Payroll Expense</div>
         </div>
 
         <div style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: 18, border: '1px solid #e2e8f0' }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Potongan BPJS & PPh21 (5%)</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Statutory Withholdings & Tax (5%)</span>
           <div style={{ fontSize: 20, fontWeight: 700, color: '#ef4444', marginTop: 4 }}>
-            Rp {totalDeduct.toLocaleString('id-ID')}
+            IDR {totalDeduct.toLocaleString('en-US')}
           </div>
-          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Hutang Pajak & Iuran</div>
+          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Tax & Benefit Liability</div>
         </div>
 
         <div style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: 18, border: '1px solid #e2e8f0' }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Gaji Bersih (Net Pay)</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Net Disbursed Compensation</span>
           <div style={{ fontSize: 20, fontWeight: 700, color: '#10b981', marginTop: 4 }}>
-            Rp {totalNet.toLocaleString('id-ID')}
+            IDR {totalNet.toLocaleString('en-US')}
           </div>
-          <div style={{ fontSize: 11, color: '#10b981', marginTop: 4 }}>Transfer Kas Keluar</div>
+          <div style={{ fontSize: 11, color: '#10b981', marginTop: 4 }}>Direct Bank Transfer</div>
         </div>
       </div>
 
       {/* Historical Payroll Runs */}
       <h3 style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', margin: '10px 0 0' }}>
-        Riwayat Pemrosesan Penggajian (Payroll Batches)
+        Processed Payroll Batches
       </h3>
       <div style={{ backgroundColor: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
         <table className="data-table" style={{ width: '100%', fontSize: 13 }}>
           <thead>
             <tr>
               <th>Status</th>
-              <th>No. Batch Payroll</th>
-              <th>Periode Bulan</th>
-              <th>Tanggal Pembayaran</th>
-              <th>Jumlah Karyawan</th>
-              <th style={{ textAlign: 'right' }}>Gaji Pokok Total</th>
-              <th style={{ textAlign: 'right' }}>Potongan (PPh/BPJS)</th>
-              <th style={{ textAlign: 'right' }}>Gaji Bersih (Net)</th>
+              <th>Payroll Batch No.</th>
+              <th>Pay Period</th>
+              <th>Disbursement Date</th>
+              <th>Personnel Count</th>
+              <th style={{ textAlign: 'right' }}>Gross Compensation</th>
+              <th style={{ textAlign: 'right' }}>Withholdings (Tax/BPJS)</th>
+              <th style={{ textAlign: 'right' }}>Net Compensation</th>
             </tr>
           </thead>
           <tbody>
@@ -116,14 +116,14 @@ export default function PayrollProcessingView() {
                 </td>
                 <td style={{ fontWeight: 600, color: '#1e293b' }}>{pr.runNumber}</td>
                 <td style={{ fontWeight: 600 }}>{pr.period}</td>
-                <td>{new Date(pr.payDate || pr.paidDate || pr.createdAt).toLocaleDateString('id-ID')}</td>
-                <td>{pr.totalEmployees || pr.employeeCount || 0} Pegawai</td>
-                <td style={{ textAlign: 'right' }}>Rp {(pr.totalBaseSalary ?? pr.totalGross ?? 0).toLocaleString('id-ID')}</td>
+                <td>{new Date(pr.payDate || pr.paidDate || pr.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                <td>{pr.totalEmployees || pr.employeeCount || 0} Employees</td>
+                <td style={{ textAlign: 'right' }}>IDR {(pr.totalBaseSalary ?? pr.totalGross ?? 0).toLocaleString('en-US')}</td>
                 <td style={{ textAlign: 'right', color: '#ef4444' }}>
-                  Rp {pr.totalDeductions.toLocaleString('id-ID')}
+                  IDR {pr.totalDeductions.toLocaleString('en-US')}
                 </td>
                 <td style={{ textAlign: 'right', fontWeight: 700, color: '#10b981' }}>
-                  Rp {(pr.totalNetSalary ?? pr.totalNet ?? 0).toLocaleString('id-ID')}
+                  IDR {(pr.totalNetSalary ?? pr.totalNet ?? 0).toLocaleString('en-US')}
                 </td>
               </tr>
             ))}

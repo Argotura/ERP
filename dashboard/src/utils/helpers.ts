@@ -1,5 +1,5 @@
 // ============================================================
-// NEXORA Executive Dashboard — Helpers
+// ARGOTURO Executive Dashboard — Helpers
 // ============================================================
 
 import { Product, Category, Supplier, EnrichedProduct, StockStatus } from '../types';

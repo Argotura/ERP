@@ -1,5 +1,5 @@
 // ============================================================
-// ARGOTURO ERP — Sales Orders (Pesanan Penjualan)
+// ARGOTURO ERP — Sales Orders Management
 // ============================================================
 
 import React, { useState } from 'react';
@@ -7,14 +7,10 @@ import {
   ShoppingCart,
   Plus,
   Search,
-  Filter,
   CheckCircle2,
   Truck,
   FileCheck,
-  AlertCircle,
   Eye,
-  Building2,
-  Package,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { SalesOrder } from '../../types';
@@ -39,7 +35,7 @@ export default function SalesOrdersView() {
   const [customerId, setCustomerId] = useState(store.customers[0]?.id || '');
   const [warehouseId, setWarehouseId] = useState(store.warehouses[0]?.id || '');
   const [paymentTerms, setPaymentTerms] = useState('NET 30');
-  const [shippingAddress, setShippingAddress] = useState('Kawasan Industri GIIC Cikarang');
+  const [shippingAddress, setShippingAddress] = useState('GIIC Industrial Estate, Cikarang');
   const [selectedLines, setSelectedLines] = useState<
     { productId: string; quantity: number; unitPrice: number; discount: number }[]
   >([{ productId: store.products[0]?.id || '', quantity: 5, unitPrice: store.products[0]?.sellingPrice || 0, discount: 0 }]);
@@ -85,7 +81,7 @@ export default function SalesOrdersView() {
   const handleCreateSO = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedLines.length === 0) {
-      addToast('warning', 'Tambahkan minimal satu item produk.');
+      addToast('warning', 'Please add at least one line item.');
       return;
     }
 
@@ -101,7 +97,7 @@ export default function SalesOrdersView() {
       id: soId,
       orderNumber,
       customerId,
-      customerName: store.customers.find((c) => c.id === customerId)?.name || 'Pelanggan',
+      customerName: store.customers.find((c) => c.id === customerId)?.name || 'Customer',
       notes: '',
       orderDate: new Date().toISOString().split('T')[0],
       deliveryDate: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0],
@@ -134,7 +130,7 @@ export default function SalesOrdersView() {
     setShowCreateModal(false);
     addToast(
       'success',
-      `Sales Order ${orderNumber} berhasil dibuat${isApprovalRequired ? ' (Menunggu Persetujuan Manajer)' : ''}`
+      `Sales Order ${orderNumber} created successfully${isApprovalRequired ? ' (Pending Manager Approval)' : ''}`
     );
   };
 
@@ -144,10 +140,10 @@ export default function SalesOrdersView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Pesanan Penjualan (Sales Orders)
+            Sales Orders
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Kelola pemesanan barang pelanggan, otorisasi kredit, pengiriman, dan penagihan
+            Manage commercial orders, credit limits, physical dispatch execution, and billing workflows
           </p>
         </div>
 
@@ -157,7 +153,7 @@ export default function SalesOrdersView() {
           onClick={() => setShowCreateModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Buat Sales Order Baru
+          <Plus size={15} /> Create Sales Order
         </button>
       </div>
 
@@ -168,7 +164,7 @@ export default function SalesOrdersView() {
           <input
             type="text"
             className="input"
-            placeholder="Cari berdasarkan nomor SO atau nama pelanggan..."
+            placeholder="Search by SO number or customer name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{ paddingLeft: 34 }}
@@ -179,13 +175,13 @@ export default function SalesOrdersView() {
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
           className="input"
-          style={{ width: 180 }}
+          style={{ width: 220 }}
         >
-          <option value="all">Semua Status</option>
-          <option value="pending_approval">Menunggu Persetujuan</option>
-          <option value="approved">Disetujui (Siap Kirim)</option>
-          <option value="partially_fulfilled">Terkirim Sebagian</option>
-          <option value="fulfilled">Terkirim Penuh</option>
+          <option value="all">All Statuses</option>
+          <option value="pending_approval">Pending Approval</option>
+          <option value="approved">Approved (Ready to Ship)</option>
+          <option value="partially_fulfilled">Partially Fulfilled</option>
+          <option value="fulfilled">Fulfilled</option>
         </select>
       </div>
 
@@ -195,20 +191,20 @@ export default function SalesOrdersView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>No. Sales Order</th>
-              <th>Pelanggan</th>
-              <th>Tanggal Order</th>
-              <th>Item & Kuantitas</th>
-              <th>Progress Kirim</th>
-              <th style={{ textAlign: 'right' }}>Total Transaksi</th>
-              <th style={{ textAlign: 'right' }}>Aksi</th>
+              <th>SO Number</th>
+              <th>Customer</th>
+              <th>Order Date</th>
+              <th>Items & Qty</th>
+              <th>Fulfillment Progress</th>
+              <th style={{ textAlign: 'right' }}>Grand Total</th>
+              <th style={{ textAlign: 'right' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredOrders.length === 0 ? (
               <tr>
                 <td colSpan={8} style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
-                  Tidak ada Sales Order yang ditemukan.
+                  No Sales Orders found matching your criteria.
                 </td>
               </tr>
             ) : (
@@ -246,22 +242,22 @@ export default function SalesOrdersView() {
                         }}
                       >
                         {so.status === 'fulfilled'
-                          ? 'Terkirim Penuh'
+                          ? 'Fulfilled'
                           : so.status === 'partially_fulfilled'
-                          ? 'Kirim Sebagian'
+                          ? 'Partially Fulfilled'
                           : so.status === 'approved'
-                          ? 'Disetujui'
+                          ? 'Approved'
                           : 'Pending Approval'}
                       </span>
                     </td>
                     <td style={{ fontWeight: 600, color: '#1e293b' }}>{so.orderNumber}</td>
                     <td>
-                      <div style={{ fontWeight: 500 }}>{customer?.name || 'Pelanggan'}</div>
+                      <div style={{ fontWeight: 500 }}>{customer?.name || 'Customer'}</div>
                       <div style={{ fontSize: 11, color: '#64748b' }}>{so.salesperson || so.salesRep || 'Sales Team'}</div>
                     </td>
-                    <td>{new Date(so.orderDate).toLocaleDateString('id-ID')}</td>
+                    <td>{new Date(so.orderDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                     <td>
-                      {so.lines.length} Baris ({totalQty} Unit)
+                      {so.lines.length} Line(s) ({totalQty} Units)
                     </td>
                     <td style={{ minWidth: 120 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -278,7 +274,7 @@ export default function SalesOrdersView() {
                       </div>
                     </td>
                     <td style={{ textAlign: 'right', fontWeight: 600, color: '#1e293b' }}>
-                      Rp {so.grandTotal.toLocaleString('id-ID')}
+                      IDR {so.grandTotal.toLocaleString('en-US')}
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       <button
@@ -287,7 +283,7 @@ export default function SalesOrdersView() {
                         className="btn btn-sm btn-secondary"
                         style={{ fontSize: 11, padding: '3px 8px' }}
                       >
-                        <Eye size={12} /> Detail & Alur
+                        <Eye size={12} /> Details & Workflow
                       </button>
                     </td>
                   </tr>
@@ -326,10 +322,10 @@ export default function SalesOrdersView() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <div>
                 <h3 style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-                  Detail Sales Order: {selectedSO.orderNumber}
+                  Sales Order Details: {selectedSO.orderNumber}
                 </h3>
                 <span style={{ fontSize: 12, color: '#64748b' }}>
-                  Pelanggan:{' '}
+                  Customer:{' '}
                   {store.customers.find((c) => c.id === selectedSO.customerId)?.name || selectedSO.customerId}
                 </span>
               </div>
@@ -354,7 +350,7 @@ export default function SalesOrdersView() {
                   className="btn btn-success"
                   style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}
                 >
-                  <CheckCircle2 size={14} /> Setujui Sales Order
+                  <CheckCircle2 size={14} /> Approve Sales Order
                 </button>
               )}
 
@@ -368,7 +364,7 @@ export default function SalesOrdersView() {
                   className="btn btn-primary"
                   style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}
                 >
-                  <Truck size={14} /> Buat Surat Jalan (DO)
+                  <Truck size={14} /> Create Delivery Order (DO)
                 </button>
               )}
 
@@ -382,22 +378,22 @@ export default function SalesOrdersView() {
                   className="btn btn-secondary"
                   style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, backgroundColor: '#f8fafc' }}
                 >
-                  <FileCheck size={14} /> Terbitkan Faktur (Invoice)
+                  <FileCheck size={14} /> Issue Invoice
                 </button>
               )}
             </div>
 
             {/* Line Items Table */}
             <h4 style={{ fontSize: 13, fontWeight: 700, color: '#334155', marginBottom: 8 }}>
-              Daftar Barang Pesanan
+              Ordered Items & Fulfillment Status
             </h4>
             <table className="data-table" style={{ width: '100%', fontSize: 12.5, marginBottom: 16 }}>
               <thead>
                 <tr>
-                  <th>Produk</th>
-                  <th>Jumlah Order</th>
-                  <th>Terkirim</th>
-                  <th>Harga Satuan</th>
+                  <th>Product</th>
+                  <th>Order Qty</th>
+                  <th>Fulfilled</th>
+                  <th>Unit Price</th>
                   <th style={{ textAlign: 'right' }}>Subtotal</th>
                 </tr>
               </thead>
@@ -415,8 +411,8 @@ export default function SalesOrdersView() {
                           {l.fulfilledQuantity} PCS
                         </span>
                       </td>
-                      <td>Rp {l.unitPrice.toLocaleString('id-ID')}</td>
-                      <td style={{ textAlign: 'right', fontWeight: 600 }}>Rp {l.subtotal.toLocaleString('id-ID')}</td>
+                      <td>IDR {l.unitPrice.toLocaleString('en-US')}</td>
+                      <td style={{ textAlign: 'right', fontWeight: 600 }}>IDR {l.subtotal.toLocaleString('en-US')}</td>
                     </tr>
                   );
                 })}
@@ -425,10 +421,10 @@ export default function SalesOrdersView() {
 
             {/* Calculation Breakdown */}
             <div style={{ backgroundColor: '#f8fafc', padding: 14, borderRadius: 6, fontSize: 12.5, textAlign: 'right' }}>
-              <div>Subtotal: Rp {selectedSO.subtotal.toLocaleString('id-ID')}</div>
-              <div style={{ margin: '4px 0' }}>PPN 11%: Rp {(selectedSO.taxAmount ?? selectedSO.taxTotal ?? 0).toLocaleString('id-ID')}</div>
+              <div>Subtotal: IDR {selectedSO.subtotal.toLocaleString('en-US')}</div>
+              <div style={{ margin: '4px 0' }}>VAT 11%: IDR {(selectedSO.taxAmount ?? selectedSO.taxTotal ?? 0).toLocaleString('en-US')}</div>
               <div style={{ fontSize: 15, fontWeight: 700, color: '#1e293b' }}>
-                Grand Total: Rp {selectedSO.grandTotal.toLocaleString('id-ID')}
+                Grand Total: IDR {selectedSO.grandTotal.toLocaleString('en-US')}
               </div>
             </div>
           </div>
@@ -463,7 +459,7 @@ export default function SalesOrdersView() {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <h3 style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-                Buat Pesanan Penjualan Baru (Sales Order)
+                Create New Sales Order
               </h3>
               <button
                 type="button"
@@ -477,7 +473,7 @@ export default function SalesOrdersView() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16 }}>
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#334155', marginBottom: 4 }}>
-                  Pelanggan:
+                  Customer:
                 </label>
                 <select
                   value={customerId}
@@ -495,7 +491,7 @@ export default function SalesOrdersView() {
 
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#334155', marginBottom: 4 }}>
-                  Gudang Pengeluaran:
+                  Dispatch Warehouse:
                 </label>
                 <select
                   value={warehouseId}
@@ -513,7 +509,7 @@ export default function SalesOrdersView() {
 
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#334155', marginBottom: 4 }}>
-                  Ketentuan Pembayaran:
+                  Payment Terms:
                 </label>
                 <select
                   value={paymentTerms}
@@ -521,15 +517,15 @@ export default function SalesOrdersView() {
                   className="input"
                 >
                   <option value="Cash Before Delivery">Cash Before Delivery (CBD)</option>
-                  <option value="NET 14">NET 14 Hari</option>
-                  <option value="NET 30">NET 30 Hari</option>
-                  <option value="NET 60">NET 60 Hari</option>
+                  <option value="NET 14">NET 14 Days</option>
+                  <option value="NET 30">NET 30 Days</option>
+                  <option value="NET 60">NET 60 Days</option>
                 </select>
               </div>
 
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#334155', marginBottom: 4 }}>
-                  Alamat Pengiriman:
+                  Shipping & Delivery Address:
                 </label>
                 <input
                   type="text"
@@ -544,14 +540,14 @@ export default function SalesOrdersView() {
             {/* Line Items Picker */}
             <div style={{ marginBottom: 16 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <span style={{ fontSize: 13, fontWeight: 700, color: '#334155' }}>Item Pesanan</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: '#334155' }}>Order Line Items</span>
                 <button
                   type="button"
                   onClick={handleAddLine}
                   className="btn btn-sm btn-secondary"
                   style={{ fontSize: 11 }}
                 >
-                  + Tambah Baris Produk
+                  + Add Line Item
                 </button>
               </div>
 
@@ -565,7 +561,7 @@ export default function SalesOrdersView() {
                   >
                     {store.products.map((p) => (
                       <option key={p.id} value={p.id}>
-                        {p.sku} — {p.name} (Stok: {p.onHandStock})
+                        {p.sku} — {p.name} (Available: {p.onHandStock})
                       </option>
                     ))}
                   </select>
@@ -587,7 +583,7 @@ export default function SalesOrdersView() {
                   <input
                     type="number"
                     className="input"
-                    placeholder="Harga Satuan"
+                    placeholder="Unit Price"
                     value={line.unitPrice}
                     onChange={(e) => {
                       const updated = [...selectedLines];
@@ -610,14 +606,14 @@ export default function SalesOrdersView() {
 
             {/* Totals Preview */}
             <div style={{ backgroundColor: '#f8fafc', padding: 12, borderRadius: 6, fontSize: 13, textAlign: 'right', marginBottom: 20 }}>
-              <div>Subtotal: Rp {calculateSubtotal().toLocaleString('id-ID')}</div>
+              <div>Subtotal: IDR {calculateSubtotal().toLocaleString('en-US')}</div>
               <div style={{ margin: '4px 0' }}>
-                PPN ({store.companySettings.standardVatRate}%): Rp{' '}
-                {Math.round(calculateSubtotal() * (store.companySettings.standardVatRate / 100)).toLocaleString('id-ID')}
+                VAT ({store.companySettings.standardVatRate}%): IDR{' '}
+                {Math.round(calculateSubtotal() * (store.companySettings.standardVatRate / 100)).toLocaleString('en-US')}
               </div>
               <div style={{ fontSize: 15, fontWeight: 700, color: '#1e293b' }}>
-                Grand Total: Rp{' '}
-                {Math.round(calculateSubtotal() * (1 + store.companySettings.standardVatRate / 100)).toLocaleString('id-ID')}
+                Grand Total: IDR{' '}
+                {Math.round(calculateSubtotal() * (1 + store.companySettings.standardVatRate / 100)).toLocaleString('en-US')}
               </div>
             </div>
 
@@ -627,10 +623,10 @@ export default function SalesOrdersView() {
                 className="btn btn-secondary"
                 onClick={() => setShowCreateModal(false)}
               >
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Simpan & Terbitkan SO
+                Save & Issue Sales Order
               </button>
             </div>
           </form>

@@ -52,7 +52,7 @@ export default function MyWorkView() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0, letterSpacing: '-0.02em' }}>
-              Selamat Datang, {activeUser.name}
+              Welcome back, {activeUser.name}
             </h1>
             <span
               style={{
@@ -69,7 +69,7 @@ export default function MyWorkView() {
             </span>
           </div>
           <p style={{ margin: '8px 0 0', fontSize: 13, color: '#94a3b8' }}>
-            PT ARGOTURO DINAMIKA PERKASA — Pusat kendali operasional, antrean persetujuan, dan transaksi lintas divisi.
+            PT ARGOTURO DINAMIKA PERKASA — Operational work center, approval queue, and cross-department workflows.
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export default function MyWorkView() {
             onClick={() => setRoute('sales/quotations')}
             style={{ backgroundColor: '#3b82f6', color: '#fff', border: 'none', display: 'flex', alignItems: 'center', gap: 6 }}
           >
-            <PlusCircle size={14} /> + Buat Quotation
+            <PlusCircle size={14} /> + New Quotation
           </button>
           <button
             type="button"
@@ -88,7 +88,7 @@ export default function MyWorkView() {
             onClick={() => setRoute('procurement/orders')}
             style={{ backgroundColor: '#334155', color: '#f8fafc', border: '1px solid #475569', display: 'flex', alignItems: 'center', gap: 6 }}
           >
-            <ShoppingCart size={14} /> + Buat PO
+            <ShoppingCart size={14} /> + New PO
           </button>
         </div>
       </div>
@@ -110,7 +110,7 @@ export default function MyWorkView() {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Antrean Persetujuan</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Pending Approvals</span>
               <div style={{ fontSize: 26, fontWeight: 700, color: pendingApprovals.length > 0 ? '#d97706' : '#1e293b', marginTop: 4 }}>
                 {pendingApprovals.length}
               </div>
@@ -120,7 +120,7 @@ export default function MyWorkView() {
             </div>
           </div>
           <div style={{ marginTop: 12, fontSize: 11.5, color: '#64748b', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span>Lihat semua permohonan</span>
+            <span>Review pending queue</span>
             <ArrowRight size={12} />
           </div>
         </div>
@@ -139,7 +139,7 @@ export default function MyWorkView() {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Item Low-Stock</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Low-Stock Items</span>
               <div style={{ fontSize: 26, fontWeight: 700, color: lowStockProducts.length > 0 ? '#ef4444' : '#1e293b', marginTop: 4 }}>
                 {lowStockProducts.length}
               </div>
@@ -149,7 +149,7 @@ export default function MyWorkView() {
             </div>
           </div>
           <div style={{ marginTop: 12, fontSize: 11.5, color: '#64748b', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span>Buka Reorder Planning</span>
+            <span>Open Reorder Planning</span>
             <ArrowRight size={12} />
           </div>
         </div>
@@ -168,7 +168,7 @@ export default function MyWorkView() {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Sales Orders Aktif</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Active Sales Orders</span>
               <div style={{ fontSize: 26, fontWeight: 700, color: '#1e293b', marginTop: 4 }}>
                 {openSOs.length}
               </div>
@@ -196,9 +196,9 @@ export default function MyWorkView() {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Piutang Usaha (AR)</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Accounts Receivable (AR)</span>
               <div style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', marginTop: 4 }}>
-                Rp {(totalUnpaidAR / 1000000).toFixed(1)} Jt
+                Rp {(totalUnpaidAR / 1000000).toFixed(1)} M
               </div>
             </div>
             <div style={{ width: 40, height: 40, borderRadius: 8, backgroundColor: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981' }}>
@@ -206,7 +206,7 @@ export default function MyWorkView() {
             </div>
           </div>
           <div style={{ marginTop: 12, fontSize: 11.5, color: '#10b981', fontWeight: 500 }}>
-            {unpaidInvoices.length} Faktur belum lunas
+            {unpaidInvoices.length} Unpaid Invoices
           </div>
         </div>
       </div>
@@ -218,10 +218,10 @@ export default function MyWorkView() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
             <div>
               <h2 style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-                Antrean Persetujuan Membutuhkan Tindakan
+                Pending Approvals Requiring Action
               </h2>
               <p style={{ fontSize: 12, color: '#64748b', margin: '4px 0 0' }}>
-                Otorisasi transaksi penjualan, pembelian, pengeluaran kas, dan permohonan cuti
+                Authorization queue for sales orders, purchase requisitions, expenses, and leave requests
               </p>
             </div>
             <button
@@ -230,27 +230,27 @@ export default function MyWorkView() {
               onClick={() => setRoute('work_center/approvals')}
               style={{ fontSize: 12 }}
             >
-              Lihat Semua ({pendingApprovals.length})
+              View All ({pendingApprovals.length})
             </button>
           </div>
 
           {pendingApprovals.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
               <CheckCircle size={36} color="#10b981" style={{ margin: '0 auto 8px' }} />
-              <div style={{ fontSize: 14, fontWeight: 600, color: '#334155' }}>Semua Persetujuan Selesai</div>
-              <div style={{ fontSize: 12 }}>Tidak ada antrean otorisasi yang tertunda saat ini.</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#334155' }}>All Approvals Cleared</div>
+              <div style={{ fontSize: 12 }}>No pending authorization requests in your queue.</div>
             </div>
           ) : (
             <div style={{ overflowX: 'auto' }}>
               <table className="data-table" style={{ width: '100%', fontSize: 12.5 }}>
                 <thead>
                   <tr>
-                    <th>Jenis Dokumen</th>
-                    <th>No. Referensi</th>
-                    <th>Pemohon</th>
-                    <th>Nilai Transaksi</th>
-                    <th>Otorisasi</th>
-                    <th style={{ textAlign: 'right' }}>Aksi</th>
+                    <th>Document Type</th>
+                    <th>Reference No.</th>
+                    <th>Requester</th>
+                    <th>Amount</th>
+                    <th>Required Role</th>
+                    <th style={{ textAlign: 'right' }}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -261,77 +261,77 @@ export default function MyWorkView() {
                     const role = req.roleRequired || req.targetRole || '';
 
                     return (
-                    <tr key={req.id}>
-                      <td>
-                        <span
-                          style={{
-                            fontSize: 11,
-                            fontWeight: 600,
-                            padding: '2px 8px',
-                            borderRadius: 4,
-                            backgroundColor:
-                              req.entityType === 'sales_order' || req.type === 'sales_order'
-                                ? '#eff6ff'
-                                : req.entityType === 'purchase_requisition' || req.type === 'purchase_requisition'
-                                ? '#f5f3ff'
-                                : '#fef3c7',
-                            color:
-                              req.entityType === 'sales_order' || req.type === 'sales_order'
-                                ? '#2563eb'
-                                : '#7c3aed',
-                          }}
-                        >
-                          {docType}
-                        </span>
-                      </td>
-                      <td style={{ fontWeight: 600, color: '#1e293b' }}>{docNum}</td>
-                      <td>{requester}</td>
-                      <td>
-                        {req.amount ? `Rp ${req.amount.toLocaleString('id-ID')}` : '—'}
-                      </td>
-                      <td>
-                        <span style={{ fontSize: 11, color: '#64748b' }}>{role}</span>
-                      </td>
-                      <td style={{ textAlign: 'right' }}>
-                        <div style={{ display: 'inline-flex', gap: 6 }}>
-                          <button
-                            type="button"
-                            onClick={() => approveRequest(req.id)}
+                      <tr key={req.id}>
+                        <td>
+                          <span
                             style={{
-                              backgroundColor: '#10b981',
-                              color: '#fff',
-                              border: 'none',
-                              borderRadius: 4,
-                              padding: '4px 8px',
                               fontSize: 11,
-                              cursor: 'pointer',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 4,
+                              fontWeight: 600,
+                              padding: '2px 8px',
+                              borderRadius: 4,
+                              backgroundColor:
+                                req.entityType === 'sales_order' || req.type === 'sales_order'
+                                  ? '#eff6ff'
+                                  : req.entityType === 'purchase_requisition' || req.type === 'purchase_requisition'
+                                  ? '#f5f3ff'
+                                  : '#fef3c7',
+                              color:
+                                req.entityType === 'sales_order' || req.type === 'sales_order'
+                                  ? '#2563eb'
+                                  : '#7c3aed',
                             }}
                           >
-                            <CheckCircle size={12} /> Setujui
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => rejectRequest(req.id)}
-                            style={{
-                              backgroundColor: '#f1f5f9',
-                              color: '#ef4444',
-                              border: '1px solid #cbd5e1',
-                              borderRadius: 4,
-                              padding: '4px 8px',
-                              fontSize: 11,
-                              cursor: 'pointer',
-                            }}
-                          >
-                            Tolak
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+                            {docType}
+                          </span>
+                        </td>
+                        <td style={{ fontWeight: 600, color: '#1e293b' }}>{docNum}</td>
+                        <td>{requester}</td>
+                        <td>
+                          {req.amount ? `Rp ${req.amount.toLocaleString('id-ID')}` : '—'}
+                        </td>
+                        <td>
+                          <span style={{ fontSize: 11, color: '#64748b' }}>{role}</span>
+                        </td>
+                        <td style={{ textAlign: 'right' }}>
+                          <div style={{ display: 'inline-flex', gap: 6 }}>
+                            <button
+                              type="button"
+                              onClick={() => approveRequest(req.id)}
+                              style={{
+                                backgroundColor: '#10b981',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: 4,
+                                padding: '4px 8px',
+                                fontSize: 11,
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 4,
+                              }}
+                            >
+                              <CheckCircle size={12} /> Approve
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => rejectRequest(req.id)}
+                              style={{
+                                backgroundColor: '#f1f5f9',
+                                color: '#ef4444',
+                                border: '1px solid #cbd5e1',
+                                borderRadius: 4,
+                                padding: '4px 8px',
+                                fontSize: 11,
+                                cursor: 'pointer',
+                              }}
+                            >
+                              Reject
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -342,7 +342,7 @@ export default function MyWorkView() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ backgroundColor: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', padding: 18 }}>
             <h3 style={{ fontSize: 14, fontWeight: 700, color: '#1e293b', marginBottom: 12 }}>
-              Jalur Pintas Operasional
+              Quick Operational Shortcuts
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <div
@@ -361,7 +361,7 @@ export default function MyWorkView() {
               >
                 <ArrowLeftRight size={16} color="#3b82f6" />
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 12.5, fontWeight: 600, color: '#1e293b' }}>Transfer Stok Antar Gudang</div>
+                  <div style={{ fontSize: 12.5, fontWeight: 600, color: '#1e293b' }}>Inter-Warehouse Transfer</div>
                   <div style={{ fontSize: 11, color: '#64748b' }}>Cikarang, Surabaya, Medan</div>
                 </div>
               </div>
@@ -382,8 +382,8 @@ export default function MyWorkView() {
               >
                 <Layers size={16} color="#8b5cf6" />
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 12.5, fontWeight: 600, color: '#1e293b' }}>Perintah Produksi (MO)</div>
-                  <div style={{ fontSize: 11, color: '#64748b' }}>Perakitan barang jadi & konsumsi bahan</div>
+                  <div style={{ fontSize: 12.5, fontWeight: 600, color: '#1e293b' }}>Manufacturing Orders (MO)</div>
+                  <div style={{ fontSize: 11, color: '#64748b' }}>Finished assembly & materials consumption</div>
                 </div>
               </div>
 
@@ -403,8 +403,8 @@ export default function MyWorkView() {
               >
                 <DollarSign size={16} color="#10b981" />
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 12.5, fontWeight: 600, color: '#1e293b' }}>Jurnal Umum & Buku Besar</div>
-                  <div style={{ fontSize: 11, color: '#64748b' }}>Pencatatan double-entry seimbang</div>
+                  <div style={{ fontSize: 12.5, fontWeight: 600, color: '#1e293b' }}>General Ledger Journals</div>
+                  <div style={{ fontSize: 11, color: '#64748b' }}>Balanced double-entry posting</div>
                 </div>
               </div>
 
@@ -424,8 +424,8 @@ export default function MyWorkView() {
               >
                 <Clock size={16} color="#f59e0b" />
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 12.5, fontWeight: 600, color: '#1e293b' }}>Penggajian Karyawan</div>
-                  <div style={{ fontSize: 11, color: '#64748b' }}>Perhitungan gaji bulanan & PPh21</div>
+                  <div style={{ fontSize: 12.5, fontWeight: 600, color: '#1e293b' }}>Payroll Processing</div>
+                  <div style={{ fontSize: 11, color: '#64748b' }}>Monthly compensation & tax calculation</div>
                 </div>
               </div>
             </div>
@@ -434,11 +434,11 @@ export default function MyWorkView() {
           {/* System Audit Status */}
           <div style={{ backgroundColor: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', padding: 18 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-              <span style={{ fontSize: 12, fontWeight: 700, color: '#1e293b' }}>Integritas Database Lokal</span>
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#1e293b' }}>Local Engine Integrity</span>
               <span style={{ fontSize: 11, color: '#10b981', fontWeight: 600 }}>100% Valid</span>
             </div>
             <div style={{ fontSize: 11.5, color: '#64748b', lineHeight: 1.4 }}>
-              Persediaan fisik, kartu stok mutasi, dan saldo akun buku besar (COA) sinkron secara otomatis.
+              Physical inventory, stock movement cards, and General Ledger balances are fully reconciled.
             </div>
           </div>
         </div>

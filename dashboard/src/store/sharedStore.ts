@@ -1,12 +1,12 @@
 // ============================================================
-// NEXORA Executive Dashboard — Shared Demo Store Listener
-// Reads live state from localStorage synced with NEXORA ERP
+// ARGOTURO Executive Dashboard — Shared Store Listener
+// Reads live state from localStorage synced with ARGOTURO ERP
 // ============================================================
 
 import { useState, useEffect } from 'react';
 import { DemoStore } from '../types';
 
-const STORAGE_KEY = 'nexora_erp_demo_v1';
+const STORAGE_KEY = 'argoturo_erp_v2';
 
 export function loadSharedStore(): DemoStore | null {
   try {

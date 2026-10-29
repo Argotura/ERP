@@ -2,8 +2,7 @@
 // ARGOTURO ERP — Accounts Receivable & Accounts Payable Aging
 // ============================================================
 
-import React, { useState } from 'react';
-import { CreditCard, DollarSign, Calendar, AlertCircle } from 'lucide-react';
+import React from 'react';
 import { useApp } from '../../context/AppContext';
 
 export default function AccountsReceivableAndPayableView({ mode }: { mode: 'ar' | 'ap' }) {
@@ -16,17 +15,17 @@ export default function AccountsReceivableAndPayableView({ mode }: { mode: 'ar' 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Analisis Umur Hutang Usaha (AP Aging Report)
+            Accounts Payable Aging (AP Report)
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Monitoring kewajiban pembayaran ke vendor, jatuh tempo kredit, dan arus kas keluar
+            Vendor payment obligations, credit maturities, and projected cash outflows
           </p>
         </div>
 
-        <div style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: 18, border: '1px solid #e2e8f0', maxWidth: 300 }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Kewajiban Hutang Usaha</span>
+        <div style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: 18, border: '1px solid #e2e8f0', maxWidth: 320 }}>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Accounts Payable Liability</span>
           <div style={{ fontSize: 24, fontWeight: 700, color: '#ef4444', marginTop: 4 }}>
-            Rp {totalAP.toLocaleString('id-ID')}
+            IDR {totalAP.toLocaleString('en-US')}
           </div>
         </div>
 
@@ -34,12 +33,12 @@ export default function AccountsReceivableAndPayableView({ mode }: { mode: 'ar' 
           <table className="data-table" style={{ width: '100%', fontSize: 13 }}>
             <thead>
               <tr>
-                <th>No. Tagihan</th>
-                <th>Pemasok / Vendor</th>
-                <th>Jatuh Tempo</th>
-                <th style={{ textAlign: 'right' }}>Total Tagihan</th>
-                <th style={{ textAlign: 'right' }}>Sudah Dibayar</th>
-                <th style={{ textAlign: 'right' }}>Sisa Hutang</th>
+                <th>Bill No.</th>
+                <th>Supplier / Vendor</th>
+                <th>Due Date</th>
+                <th style={{ textAlign: 'right' }}>Total Amount</th>
+                <th style={{ textAlign: 'right' }}>Amount Paid</th>
+                <th style={{ textAlign: 'right' }}>Remaining Payable</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -50,11 +49,11 @@ export default function AccountsReceivableAndPayableView({ mode }: { mode: 'ar' 
                   <tr key={b.id}>
                     <td style={{ fontWeight: 600, color: '#1e293b' }}>{b.invoiceNumber}</td>
                     <td>{supplier?.name || b.supplierId}</td>
-                    <td>{new Date(b.dueDate).toLocaleDateString('id-ID')}</td>
-                    <td style={{ textAlign: 'right' }}>Rp {b.grandTotal.toLocaleString('id-ID')}</td>
-                    <td style={{ textAlign: 'right' }}>Rp {b.paidAmount.toLocaleString('id-ID')}</td>
+                    <td>{new Date(b.dueDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                    <td style={{ textAlign: 'right' }}>IDR {b.grandTotal.toLocaleString('en-US')}</td>
+                    <td style={{ textAlign: 'right' }}>IDR {b.paidAmount.toLocaleString('en-US')}</td>
                     <td style={{ textAlign: 'right', fontWeight: 600, color: (b.remainingAmount ?? b.outstandingBalance ?? 0) > 0 ? '#ef4444' : '#10b981' }}>
-                      Rp {(b.remainingAmount ?? b.outstandingBalance ?? 0).toLocaleString('id-ID')}
+                      IDR {(b.remainingAmount ?? b.outstandingBalance ?? 0).toLocaleString('en-US')}
                     </td>
                     <td>
                       <span
@@ -87,17 +86,17 @@ export default function AccountsReceivableAndPayableView({ mode }: { mode: 'ar' 
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Analisis Umur Piutang Usaha (AR Aging Report)
+          Accounts Receivable Aging (AR Report)
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Monitoring penagihan faktur pelanggan, kolektibilitas piutang, dan jadwal penerimaan kas
+          Customer billing collections, aging buckets, and projected cash inflows
         </p>
       </div>
 
-      <div style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: 18, border: '1px solid #e2e8f0', maxWidth: 300 }}>
-        <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Tagihan Piutang Usaha</span>
+      <div style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: 18, border: '1px solid #e2e8f0', maxWidth: 320 }}>
+        <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Accounts Receivable Balance</span>
         <div style={{ fontSize: 24, fontWeight: 700, color: '#3b82f6', marginTop: 4 }}>
-          Rp {totalAR.toLocaleString('id-ID')}
+          IDR {totalAR.toLocaleString('en-US')}
         </div>
       </div>
 
@@ -105,12 +104,12 @@ export default function AccountsReceivableAndPayableView({ mode }: { mode: 'ar' 
         <table className="data-table" style={{ width: '100%', fontSize: 13 }}>
           <thead>
             <tr>
-              <th>No. Faktur</th>
-              <th>Pelanggan</th>
-              <th>Jatuh Tempo</th>
-              <th style={{ textAlign: 'right' }}>Total Tagihan</th>
-              <th style={{ textAlign: 'right' }}>Sudah Diterima</th>
-              <th style={{ textAlign: 'right' }}>Sisa Piutang</th>
+              <th>Invoice No.</th>
+              <th>Customer</th>
+              <th>Due Date</th>
+              <th style={{ textAlign: 'right' }}>Total Invoiced</th>
+              <th style={{ textAlign: 'right' }}>Amount Collected</th>
+              <th style={{ textAlign: 'right' }}>Remaining Receivable</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -121,11 +120,11 @@ export default function AccountsReceivableAndPayableView({ mode }: { mode: 'ar' 
                 <tr key={inv.id}>
                   <td style={{ fontWeight: 600, color: '#1e293b' }}>{inv.invoiceNumber}</td>
                   <td>{cust?.name || inv.customerId}</td>
-                  <td>{new Date(inv.dueDate).toLocaleDateString('id-ID')}</td>
-                  <td style={{ textAlign: 'right' }}>Rp {inv.grandTotal.toLocaleString('id-ID')}</td>
-                  <td style={{ textAlign: 'right' }}>Rp {inv.paidAmount.toLocaleString('id-ID')}</td>
+                  <td>{new Date(inv.dueDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                  <td style={{ textAlign: 'right' }}>IDR {inv.grandTotal.toLocaleString('en-US')}</td>
+                  <td style={{ textAlign: 'right' }}>IDR {inv.paidAmount.toLocaleString('en-US')}</td>
                   <td style={{ textAlign: 'right', fontWeight: 600, color: (inv.remainingAmount ?? inv.outstandingBalance ?? 0) > 0 ? '#ef4444' : '#10b981' }}>
-                    Rp {(inv.remainingAmount ?? inv.outstandingBalance ?? 0).toLocaleString('id-ID')}
+                    IDR {(inv.remainingAmount ?? inv.outstandingBalance ?? 0).toLocaleString('en-US')}
                   </td>
                   <td>
                     <span

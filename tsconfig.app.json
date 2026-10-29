@@ -22,10 +22,5 @@
     "erasableSyntaxOnly": false,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
-  "exclude": [
-    "src/components/operations",
-    "src/components/catalog",
-    "src/pages"
-  ]
+  "include": ["src"]
 }

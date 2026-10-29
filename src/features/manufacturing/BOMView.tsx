@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Bills of Materials (BOM / Struktur Produk)
+// ARGOTURO ERP — Bills of Materials (BOM)
 // ============================================================
 
 import React, { useState } from 'react';
-import { Layers, Plus, Eye, DollarSign, Package, Hammer } from 'lucide-react';
+import { Plus, Eye } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { BillOfMaterials } from '../../types';
 
@@ -20,11 +20,6 @@ export default function BOMView() {
   const [components, setComponents] = useState([
     { productId: store.products[1]?.id || '', quantity: 2, unitCost: store.products[1]?.unitCost || 0 },
   ]);
-
-  const calculateTotalCost = () => {
-    const materialCost = components.reduce((s, c) => s + c.quantity * c.unitCost, 0);
-    return materialCost + laborCost + overheadCost;
-  };
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,7 +57,7 @@ export default function BOMView() {
 
     saveBOM(newBOM);
     setShowModal(false);
-    addToast('success', `Formula BOM ${bomNumber} berhasil disimpan`);
+    addToast('success', `BOM formula ${bomNumber} saved successfully`);
   };
 
   return (
@@ -70,10 +65,10 @@ export default function BOMView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Struktur Produk & Formula (Bills of Materials / BOM)
+            Bills of Materials (BOM)
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Rincian komponen bahan baku, alokasi biaya tenaga kerja, dan overhead pabrik perakitan
+            Product formulations, raw material component breakdowns, direct labor costing, and factory overhead allocations
           </p>
         </div>
 
@@ -83,7 +78,7 @@ export default function BOMView() {
           onClick={() => setShowModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Buat BOM Baru
+          <Plus size={15} /> Create BOM Formula
         </button>
       </div>
 
@@ -92,14 +87,14 @@ export default function BOMView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>No. Formula BOM</th>
-              <th>Nama Formula</th>
-              <th>Barang Jadi Dihasilkan</th>
-              <th>Jumlah Komponen</th>
-              <th>Biaya Tenaga Kerja</th>
-              <th>Biaya Overhead</th>
-              <th style={{ textAlign: 'right' }}>Total Biaya Standar</th>
-              <th style={{ textAlign: 'right' }}>Aksi</th>
+              <th>BOM Formula No.</th>
+              <th>Formula Name</th>
+              <th>Finished Good Output</th>
+              <th>Component Count</th>
+              <th>Direct Labor Cost</th>
+              <th>Overhead Cost</th>
+              <th style={{ textAlign: 'right' }}>Total Standard Cost</th>
+              <th style={{ textAlign: 'right' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -127,14 +122,14 @@ export default function BOMView() {
                   <td style={{ fontWeight: 600, color: '#1e293b' }}>{bom.bomNumber || bom.bomCode}</td>
                   <td style={{ fontWeight: 600 }}>{bom.name || bom.finishedProductName}</td>
                   <td>
-                    <div>{fgProduct?.name || 'Barang Jadi'}</div>
+                    <div>{fgProduct?.name || 'Finished Good'}</div>
                     <div style={{ fontSize: 11, color: '#64748b' }}>{fgProduct?.sku}</div>
                   </td>
-                  <td>{bom.components.length} Bahan Baku</td>
-                  <td>Rp {(bom.laborCost || 0).toLocaleString('id-ID')}</td>
-                  <td>Rp {(bom.overheadCost || 0).toLocaleString('id-ID')}</td>
+                  <td>{bom.components.length} Component(s)</td>
+                  <td>IDR {(bom.laborCost || 0).toLocaleString('en-US')}</td>
+                  <td>IDR {(bom.overheadCost || 0).toLocaleString('en-US')}</td>
                   <td style={{ textAlign: 'right', fontWeight: 700, color: '#10b981' }}>
-                    Rp {totalStdCost.toLocaleString('id-ID')}
+                    IDR {totalStdCost.toLocaleString('en-US')}
                   </td>
                   <td style={{ textAlign: 'right' }}>
                     <button
@@ -143,7 +138,7 @@ export default function BOMView() {
                       className="btn btn-sm btn-secondary"
                       style={{ fontSize: 11, padding: '3px 8px' }}
                     >
-                      <Eye size={12} /> Rincian Bahan
+                      <Eye size={12} /> View Components
                     </button>
                   </td>
                 </tr>
@@ -196,15 +191,15 @@ export default function BOMView() {
             </div>
 
             <h4 style={{ fontSize: 13, fontWeight: 700, color: '#334155', marginBottom: 8 }}>
-              Komponen Bahan Baku Diperlukan:
+              Raw Material Components Required:
             </h4>
             <table className="data-table" style={{ width: '100%', fontSize: 12.5, marginBottom: 16 }}>
               <thead>
                 <tr>
-                  <th>Bahan Baku</th>
-                  <th>Kebutuhan per Unit</th>
-                  <th>Harga Pokok Satuan</th>
-                  <th style={{ textAlign: 'right' }}>Total Biaya Bahan</th>
+                  <th>Component</th>
+                  <th>Qty per Unit</th>
+                  <th>Unit Cost</th>
+                  <th style={{ textAlign: 'right' }}>Total Component Cost</th>
                 </tr>
               </thead>
               <tbody>
@@ -216,9 +211,9 @@ export default function BOMView() {
                         <strong>{p?.sku}</strong> — {p?.name}
                       </td>
                       <td>{c.quantity} PCS</td>
-                      <td>Rp {(c.unitCost ?? c.estimatedCost ?? 0).toLocaleString('id-ID')}</td>
+                      <td>IDR {(c.unitCost ?? c.estimatedCost ?? 0).toLocaleString('en-US')}</td>
                       <td style={{ textAlign: 'right', fontWeight: 600 }}>
-                        Rp {(c.quantity * (c.unitCost ?? c.estimatedCost ?? 0)).toLocaleString('id-ID')}
+                        IDR {(c.quantity * (c.unitCost ?? c.estimatedCost ?? 0)).toLocaleString('en-US')}
                       </td>
                     </tr>
                   );
@@ -227,21 +222,21 @@ export default function BOMView() {
             </table>
 
             <div style={{ backgroundColor: '#f8fafc', padding: 14, borderRadius: 6, fontSize: 12.5, textAlign: 'right' }}>
-              <div>Biaya Tenaga Kerja Langsung: Rp {(selectedBOM.laborCost || 0).toLocaleString('id-ID')}</div>
-              <div style={{ margin: '4px 0' }}>Biaya Overhead Pabrik: Rp {(selectedBOM.overheadCost || 0).toLocaleString('id-ID')}</div>
+              <div>Direct Labor Cost: IDR {(selectedBOM.laborCost || 0).toLocaleString('en-US')}</div>
+              <div style={{ margin: '4px 0' }}>Factory Overhead Cost: IDR {(selectedBOM.overheadCost || 0).toLocaleString('en-US')}</div>
               <div style={{ fontSize: 15, fontWeight: 700, color: '#10b981' }}>
-                Total Harga Pokok Produksi (HPP): Rp{' '}
+                Cost of Goods Manufactured (COGM): IDR{' '}
                 {(
                   selectedBOM.components.reduce((s, c) => s + c.quantity * (c.unitCost ?? c.estimatedCost ?? 0), 0) +
                   (selectedBOM.laborCost || 0) +
                   (selectedBOM.overheadCost || 0)
-                ).toLocaleString('id-ID')}
+                ).toLocaleString('en-US')}
               </div>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 18 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setSelectedBOM(null)}>
-                Tutup
+                Close
               </button>
             </div>
           </div>
@@ -273,7 +268,7 @@ export default function BOMView() {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Buat Formula BOM Baru</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Create BOM Formula</h3>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
@@ -285,7 +280,7 @@ export default function BOMView() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Nama Formula:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Formula Name:</label>
                 <input
                   type="text"
                   className="input"
@@ -297,7 +292,7 @@ export default function BOMView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Barang Jadi Output:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Finished Good Output:</label>
                 <select
                   value={productId}
                   onChange={(e) => setProductId(e.target.value)}
@@ -312,7 +307,7 @@ export default function BOMView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Biaya Tenaga Kerja (Rp):</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Direct Labor Cost (IDR):</label>
                 <input
                   type="number"
                   className="input"
@@ -323,7 +318,7 @@ export default function BOMView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Biaya Overhead (Rp):</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Factory Overhead Cost (IDR):</label>
                 <input
                   type="number"
                   className="input"
@@ -336,10 +331,10 @@ export default function BOMView() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Simpan Formula BOM
+                Save BOM Formula
               </button>
             </div>
           </form>

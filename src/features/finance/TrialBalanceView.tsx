@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Trial Balance (Neraca Saldo Rekonsiliasi)
+// ARGOTURO ERP — Trial Balance
 // ============================================================
 
 import React from 'react';
-import { Scale, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Scale } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function TrialBalanceView() {
@@ -49,10 +49,10 @@ export default function TrialBalanceView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Neraca Saldo Percobaan (Trial Balance)
+            Trial Balance
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Rekonsiliasi total saldo debit dan kredit seluruh bagan akun pembukuan
+            Reconciliation of total debit and credit balances across all chart of accounts
           </p>
         </div>
 
@@ -79,11 +79,11 @@ export default function TrialBalanceView() {
         <table className="data-table" style={{ width: '100%', fontSize: 12.5 }}>
           <thead>
             <tr>
-              <th>Kode Akun</th>
-              <th>Nama Akun</th>
-              <th>Klasifikasi</th>
+              <th>Account Code</th>
+              <th>Account Name</th>
+              <th>Classification</th>
               <th style={{ textAlign: 'right' }}>Debit (IDR)</th>
-              <th style={{ textAlign: 'right' }}>Kredit (IDR)</th>
+              <th style={{ textAlign: 'right' }}>Credit (IDR)</th>
             </tr>
           </thead>
           <tbody>
@@ -97,22 +97,22 @@ export default function TrialBalanceView() {
                   </span>
                 </td>
                 <td style={{ textAlign: 'right', fontWeight: row.debit > 0 ? 600 : 400 }}>
-                  {row.debit > 0 ? `Rp ${row.debit.toLocaleString('id-ID')}` : '—'}
+                  {row.debit > 0 ? `IDR ${row.debit.toLocaleString('en-US')}` : '—'}
                 </td>
                 <td style={{ textAlign: 'right', fontWeight: row.credit > 0 ? 600 : 400 }}>
-                  {row.credit > 0 ? `Rp ${row.credit.toLocaleString('id-ID')}` : '—'}
+                  {row.credit > 0 ? `IDR ${row.credit.toLocaleString('en-US')}` : '—'}
                 </td>
               </tr>
             ))}
           </tbody>
           <tfoot>
             <tr style={{ backgroundColor: '#f8fafc', fontWeight: 800, fontSize: 13.5 }}>
-              <td colSpan={3} style={{ textAlign: 'right' }}>TOTAL NERACA SALDO:</td>
+              <td colSpan={3} style={{ textAlign: 'right' }}>TOTAL TRIAL BALANCE:</td>
               <td style={{ textAlign: 'right', color: '#10b981' }}>
-                Rp {totalDebitCol.toLocaleString('id-ID')}
+                IDR {totalDebitCol.toLocaleString('en-US')}
               </td>
               <td style={{ textAlign: 'right', color: '#10b981' }}>
-                Rp {totalCreditCol.toLocaleString('id-ID')}
+                IDR {totalCreditCol.toLocaleString('en-US')}
               </td>
             </tr>
           </tfoot>

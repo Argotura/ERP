@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Product Catalog (Katalog Produk Master)
+// ARGOTURO ERP — Product Catalog (Master Item Data)
 // ============================================================
 
 import React, { useState } from 'react';
-import { Package, Plus, Search, Filter, Layers, AlertTriangle, Eye, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Search, Eye, Trash2 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Product } from '../../types';
 
@@ -40,7 +40,7 @@ export default function ProductCatalogView() {
       id: `prod-${Date.now()}`,
       sku: sku || `SKU-${Date.now().toString().slice(-4)}`,
       name,
-      description: `${name} spesifikasi industri enterprise`,
+      description: `${name} enterprise grade industrial specification`,
       categoryId,
       supplierId: store.suppliers[0]?.id || 'sup-001',
       unit: uom,
@@ -65,7 +65,7 @@ export default function ProductCatalogView() {
 
     saveProduct(newProduct);
     setShowCreateModal(false);
-    addToast('success', `Produk baru ${name} (${newProduct.sku}) berhasil disimpan`);
+    addToast('success', `Product ${name} (${newProduct.sku}) saved successfully`);
   };
 
   return (
@@ -73,10 +73,10 @@ export default function ProductCatalogView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Master Data Katalog Produk (Product Catalog)
+            Product Catalog
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Database produk industri, perakitan, harga jual, margin, dan parameter persediaan
+            Industrial components, assemblies, price lists, target margins, and stock control parameters
           </p>
         </div>
 
@@ -86,7 +86,7 @@ export default function ProductCatalogView() {
           onClick={() => setShowCreateModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Tambah Produk Baru
+          <Plus size={15} /> Add New Product
         </button>
       </div>
 
@@ -97,7 +97,7 @@ export default function ProductCatalogView() {
           <input
             type="text"
             className="input"
-            placeholder="Cari SKU atau nama produk..."
+            placeholder="Search by SKU or product name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{ paddingLeft: 34 }}
@@ -108,9 +108,9 @@ export default function ProductCatalogView() {
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
           className="input"
-          style={{ width: 220 }}
+          style={{ width: 240 }}
         >
-          <option value="all">Semua Kategori ({store.categories.length})</option>
+          <option value="all">All Categories ({store.categories.length})</option>
           {store.categories.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
@@ -124,16 +124,16 @@ export default function ProductCatalogView() {
         <table className="data-table" style={{ width: '100%', fontSize: 13 }}>
           <thead>
             <tr>
-              <th>Status Stok</th>
-              <th>SKU Produk</th>
-              <th>Nama Produk</th>
-              <th>Kategori</th>
-              <th>Satuan (UOM)</th>
-              <th style={{ textAlign: 'right' }}>Stok Fisik</th>
-              <th style={{ textAlign: 'right' }}>Harga Beli</th>
-              <th style={{ textAlign: 'right' }}>Harga Jual</th>
+              <th>Stock Status</th>
+              <th>Product SKU</th>
+              <th>Product Name</th>
+              <th>Category</th>
+              <th>UOM</th>
+              <th style={{ textAlign: 'right' }}>On-Hand Stock</th>
+              <th style={{ textAlign: 'right' }}>Unit Cost</th>
+              <th style={{ textAlign: 'right' }}>Selling Price</th>
               <th style={{ textAlign: 'right' }}>Margin (%)</th>
-              <th style={{ textAlign: 'right' }}>Aksi</th>
+              <th style={{ textAlign: 'right' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -155,20 +155,20 @@ export default function ProductCatalogView() {
                         color: p.onHandStock === 0 ? '#b91c1c' : isLowStock ? '#b45309' : '#15803d',
                       }}
                     >
-                      {p.onHandStock === 0 ? 'HABIS' : isLowStock ? 'LOW STOCK' : 'IN STOCK'}
+                      {p.onHandStock === 0 ? 'OUT OF STOCK' : isLowStock ? 'LOW STOCK' : 'IN STOCK'}
                     </span>
                   </td>
                   <td style={{ fontWeight: 600, color: '#1e293b' }}>{p.sku}</td>
                   <td>
                     <div style={{ fontWeight: 600 }}>{p.name}</div>
                   </td>
-                  <td>{category?.name || 'Umum'}</td>
+                  <td>{category?.name || 'General'}</td>
                   <td>{p.uom}</td>
                   <td style={{ textAlign: 'right', fontWeight: 600, color: isLowStock ? '#ef4444' : '#1e293b' }}>
                     {p.onHandStock} {p.uom}
                   </td>
-                  <td style={{ textAlign: 'right' }}>Rp {p.unitCost.toLocaleString('id-ID')}</td>
-                  <td style={{ textAlign: 'right', fontWeight: 600 }}>Rp {p.sellingPrice.toLocaleString('id-ID')}</td>
+                  <td style={{ textAlign: 'right' }}>IDR {p.unitCost.toLocaleString('en-US')}</td>
+                  <td style={{ textAlign: 'right', fontWeight: 600 }}>IDR {p.sellingPrice.toLocaleString('en-US')}</td>
                   <td style={{ textAlign: 'right', color: '#10b981', fontWeight: 600 }}>
                     {margin.toFixed(1)}%
                   </td>
@@ -185,9 +185,9 @@ export default function ProductCatalogView() {
                       <button
                         type="button"
                         onClick={() => {
-                          if (window.confirm(`Hapus produk ${p.name}?`)) {
+                          if (window.confirm(`Delete product ${p.name}?`)) {
                             deleteProduct(p.id);
-                            addToast('info', `Produk ${p.name} telah dihapus/diarsipkan.`);
+                            addToast('info', `Product ${p.name} deleted/archived.`);
                           }
                         }}
                         style={{
@@ -197,7 +197,7 @@ export default function ProductCatalogView() {
                           cursor: 'pointer',
                           padding: 2,
                         }}
-                        title="Hapus / Arsipkan"
+                        title="Delete / Archive"
                       >
                         <Trash2 size={13} />
                       </button>
@@ -239,7 +239,7 @@ export default function ProductCatalogView() {
                   {selectedProduct.sku} — {selectedProduct.name}
                 </h3>
                 <span style={{ fontSize: 12, color: '#64748b' }}>
-                  Kategori:{' '}
+                  Category:{' '}
                   {store.categories.find((c) => c.id === selectedProduct.categoryId)?.name || selectedProduct.categoryId}
                 </span>
               </div>
@@ -254,29 +254,29 @@ export default function ProductCatalogView() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16, fontSize: 13 }}>
               <div>
-                <span style={{ color: '#64748b', fontSize: 11 }}>Stok Fisik Saat Ini:</span>
+                <span style={{ color: '#64748b', fontSize: 11 }}>Current On-Hand Stock:</span>
                 <div style={{ fontSize: 18, fontWeight: 700, color: '#1e293b' }}>
                   {selectedProduct.onHandStock} {selectedProduct.uom}
                 </div>
               </div>
               <div>
-                <span style={{ color: '#64748b', fontSize: 11 }}>Nilai Aset Persediaan:</span>
+                <span style={{ color: '#64748b', fontSize: 11 }}>Inventory Valuation:</span>
                 <div style={{ fontSize: 18, fontWeight: 700, color: '#10b981' }}>
-                  Rp {(selectedProduct.onHandStock * selectedProduct.unitCost).toLocaleString('id-ID')}
+                  IDR {(selectedProduct.onHandStock * selectedProduct.unitCost).toLocaleString('en-US')}
                 </div>
               </div>
               <div>
-                <span style={{ color: '#64748b', fontSize: 11 }}>Reorder Point (Batas Minimum):</span>
+                <span style={{ color: '#64748b', fontSize: 11 }}>Reorder Point (ROP):</span>
                 <div style={{ fontWeight: 600 }}>{selectedProduct.reorderLevel} {selectedProduct.uom}</div>
               </div>
               <div>
-                <span style={{ color: '#64748b', fontSize: 11 }}>Safety Stock:</span>
+                <span style={{ color: '#64748b', fontSize: 11 }}>Safety Stock Level:</span>
                 <div style={{ fontWeight: 600 }}>{selectedProduct.safetyStock} {selectedProduct.uom}</div>
               </div>
             </div>
 
             <h4 style={{ fontSize: 13, fontWeight: 700, color: '#334155', marginBottom: 8 }}>
-              Alokasi Lokasi Gudang
+              Warehouse Location Allocations
             </h4>
             <div style={{ backgroundColor: '#f8fafc', padding: 12, borderRadius: 6, fontSize: 12.5, marginBottom: 20 }}>
               {(selectedProduct.warehouses || []).map((w, idx) => {
@@ -286,7 +286,7 @@ export default function ProductCatalogView() {
                     <span>
                       {wh?.name || w.warehouseId} (Bin: {w.binLocation || 'A-01'})
                     </span>
-                    <strong style={{ color: '#3b82f6' }}>{w.onHandStock} Unit</strong>
+                    <strong style={{ color: '#3b82f6' }}>{w.onHandStock} Units</strong>
                   </div>
                 );
               })}
@@ -294,7 +294,7 @@ export default function ProductCatalogView() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <button type="button" className="btn btn-secondary" onClick={() => setSelectedProduct(null)}>
-                Tutup
+                Close
               </button>
             </div>
           </div>
@@ -326,7 +326,7 @@ export default function ProductCatalogView() {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Tambah Master Produk Baru</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Add Master Product</h3>
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
@@ -338,7 +338,7 @@ export default function ProductCatalogView() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>SKU Produk:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Product SKU:</label>
                 <input
                   type="text"
                   className="input"
@@ -350,7 +350,7 @@ export default function ProductCatalogView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Nama Produk:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Product Name:</label>
                 <input
                   type="text"
                   className="input"
@@ -362,7 +362,7 @@ export default function ProductCatalogView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Kategori:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Category:</label>
                 <select
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
@@ -377,17 +377,17 @@ export default function ProductCatalogView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Satuan Ukur (UOM):</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Unit of Measure (UOM):</label>
                 <select value={uom} onChange={(e) => setUom(e.target.value)} className="input">
                   <option value="PCS">PCS (Pieces)</option>
                   <option value="SET">SET (Set / Unit)</option>
                   <option value="MTR">MTR (Meter)</option>
-                  <option value="BOX">BOX (Box / Karton)</option>
+                  <option value="BOX">BOX (Box / Carton)</option>
                 </select>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Harga Beli Pokok (HPP):</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Unit Cost (HPP):</label>
                 <input
                   type="number"
                   className="input"
@@ -398,7 +398,7 @@ export default function ProductCatalogView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Harga Jual Standar:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Standard Selling Price:</label>
                 <input
                   type="number"
                   className="input"
@@ -409,7 +409,7 @@ export default function ProductCatalogView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Stok Awal Fisik:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Initial On-Hand Stock:</label>
                 <input
                   type="number"
                   className="input"
@@ -420,7 +420,7 @@ export default function ProductCatalogView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Batas Reorder Point:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Reorder Point (ROP):</label>
                 <input
                   type="number"
                   className="input"
@@ -433,10 +433,10 @@ export default function ProductCatalogView() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowCreateModal(false)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Simpan Produk
+                Save Product
               </button>
             </div>
           </form>

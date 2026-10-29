@@ -1,9 +1,8 @@
 // ============================================================
-// ARGOTURO ERP — Supplier Payments (Histori Pembayaran Vendor)
+// ARGOTURO ERP — Supplier Disbursements & Payments
 // ============================================================
 
 import React from 'react';
-import { CreditCard, Landmark, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function SupplierPaymentsView() {
@@ -13,10 +12,10 @@ export default function SupplierPaymentsView() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Histori Pembayaran ke Pemasok (Supplier Payments)
+          Supplier Disbursements & Payments
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Arsip pengeluaran kas/bank untuk pelunasan hutang usaha (AP) dan bukti transfer
+          History of accounts payable settlements, bank wires, and cash disbursement journal records
         </p>
       </div>
 
@@ -25,20 +24,20 @@ export default function SupplierPaymentsView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>No. Pembayaran</th>
-              <th>Pemasok / Vendor</th>
-              <th>Referensi Tagihan</th>
-              <th>Metode Pengeluaran</th>
-              <th>Rekening Kas/Bank</th>
-              <th>Tanggal Bayar</th>
-              <th style={{ textAlign: 'right' }}>Jumlah Dibayar</th>
+              <th>Disbursement No.</th>
+              <th>Supplier / Vendor</th>
+              <th>Bill Reference</th>
+              <th>Method</th>
+              <th>Bank Account</th>
+              <th>Payment Date</th>
+              <th style={{ textAlign: 'right' }}>Amount Paid</th>
             </tr>
           </thead>
           <tbody>
             {store.supplierPayments.length === 0 ? (
               <tr>
                 <td colSpan={8} style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
-                  Belum ada pembayaran ke pemasok.
+                  No supplier payments recorded yet.
                 </td>
               </tr>
             ) : (
@@ -64,17 +63,17 @@ export default function SupplierPaymentsView() {
                       </span>
                     </td>
                     <td style={{ fontWeight: 600, color: '#1e293b' }}>{p.paymentNumber}</td>
-                    <td>{supplier?.name || 'Pemasok'}</td>
+                    <td>{supplier?.name || 'Supplier'}</td>
                     <td>
                       <span style={{ color: '#3b82f6', fontWeight: 500 }}>
                         {bill?.invoiceNumber || bill?.billNumber || p.supplierInvoiceId || p.billNumber || '-'}
                       </span>
                     </td>
                     <td>{p.paymentMethod}</td>
-                    <td>{bank?.bankName || 'Bank BCA Operasional'}</td>
-                    <td>{new Date(p.paymentDate).toLocaleDateString('id-ID')}</td>
+                    <td>{bank?.bankName || 'BCA Operational Account'}</td>
+                    <td>{new Date(p.paymentDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                     <td style={{ textAlign: 'right', fontWeight: 700, color: '#1e293b' }}>
-                      Rp {p.amount.toLocaleString('id-ID')}
+                      IDR {p.amount.toLocaleString('en-US')}
                     </td>
                   </tr>
                 );

@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Employee Directory (Direktori SDM & Karyawan)
+// ARGOTURO ERP — Employee Directory
 // ============================================================
 
 import React, { useState } from 'react';
-import { Users, Plus, Mail, Phone, Calendar, Search } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Employee } from '../../types';
 
@@ -15,7 +15,7 @@ export default function EmployeeDirectoryView() {
   // Form State
   const [name, setName] = useState('');
   const [departmentId, setDepartmentId] = useState(store.departments[0]?.id || '');
-  const [jobTitle, setJobTitle] = useState('Staff Operasional');
+  const [jobTitle, setJobTitle] = useState('Operations Specialist');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [basicSalary, setBasicSalary] = useState(8500000);
@@ -34,7 +34,7 @@ export default function EmployeeDirectoryView() {
       employeeNumber: empNum,
       name,
       departmentId,
-      departmentName: store.departments.find((d) => d.id === departmentId)?.name || 'Operasional',
+      departmentName: store.departments.find((d) => d.id === departmentId)?.name || 'Operations',
       position: jobTitle,
       jobTitle,
       email,
@@ -50,7 +50,7 @@ export default function EmployeeDirectoryView() {
 
     saveEmployee(newEmp);
     setShowModal(false);
-    addToast('success', `Karyawan ${name} (${empNum}) berhasil didaftarkan`);
+    addToast('success', `Employee ${name} (${empNum}) added successfully`);
   };
 
   return (
@@ -58,10 +58,10 @@ export default function EmployeeDirectoryView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Direktori Data Karyawan (Employee Directory)
+            Employee Directory
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Data induk SDM, departemen, jabatan, remunerasi gaji pokok, dan status ketenagakerjaan
+            Personnel master data, department assignments, job positions, base compensation, and employment status
           </p>
         </div>
 
@@ -71,7 +71,7 @@ export default function EmployeeDirectoryView() {
           onClick={() => setShowModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Tambah Karyawan Baru
+          <Plus size={15} /> Add New Employee
         </button>
       </div>
 
@@ -80,7 +80,7 @@ export default function EmployeeDirectoryView() {
         <input
           type="text"
           className="input"
-          placeholder="Cari NIK atau nama karyawan..."
+          placeholder="Search by employee ID or name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           style={{ paddingLeft: 34 }}
@@ -92,13 +92,13 @@ export default function EmployeeDirectoryView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>NIK Karyawan</th>
-              <th>Nama Pegawai</th>
-              <th>Departemen</th>
-              <th>Jabatan / Posisi</th>
-              <th>Kontak</th>
-              <th>Tanggal Bergabung</th>
-              <th style={{ textAlign: 'right' }}>Gaji Pokok (Rp)</th>
+              <th>Employee ID</th>
+              <th>Full Name</th>
+              <th>Department</th>
+              <th>Position / Title</th>
+              <th>Contact Details</th>
+              <th>Hire Date</th>
+              <th style={{ textAlign: 'right' }}>Base Salary</th>
             </tr>
           </thead>
           <tbody>
@@ -128,9 +128,9 @@ export default function EmployeeDirectoryView() {
                   <td>{dept?.name || emp.departmentId}</td>
                   <td>{emp.jobTitle || emp.position}</td>
                   <td>{emp.phone}</td>
-                  <td>{new Date(emp.joinDate).toLocaleDateString('id-ID')}</td>
+                  <td>{new Date(emp.joinDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                   <td style={{ textAlign: 'right', fontWeight: 600 }}>
-                    Rp {(emp.basicSalary ?? emp.baseSalary ?? 0).toLocaleString('id-ID')}
+                    IDR {(emp.basicSalary ?? emp.baseSalary ?? 0).toLocaleString('en-US')}
                   </td>
                 </tr>
               );
@@ -163,7 +163,7 @@ export default function EmployeeDirectoryView() {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Tambah Karyawan Baru</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Add New Employee</h3>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
@@ -175,7 +175,7 @@ export default function EmployeeDirectoryView() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16 }}>
               <div style={{ gridColumn: 'span 2' }}>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Nama Lengkap:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Full Name:</label>
                 <input
                   type="text"
                   className="input"
@@ -186,7 +186,7 @@ export default function EmployeeDirectoryView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Departemen:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Department:</label>
                 <select
                   value={departmentId}
                   onChange={(e) => setDepartmentId(e.target.value)}
@@ -201,7 +201,7 @@ export default function EmployeeDirectoryView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Jabatan:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Position / Job Title:</label>
                 <input
                   type="text"
                   className="input"
@@ -212,7 +212,7 @@ export default function EmployeeDirectoryView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Email Resmi:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Corporate Email:</label>
                 <input
                   type="email"
                   className="input"
@@ -223,7 +223,7 @@ export default function EmployeeDirectoryView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Nomor Telepon:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Phone Number:</label>
                 <input
                   type="text"
                   className="input"
@@ -234,7 +234,7 @@ export default function EmployeeDirectoryView() {
               </div>
 
               <div style={{ gridColumn: 'span 2' }}>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Gaji Pokok (Rp):</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Base Salary (IDR):</label>
                 <input
                   type="number"
                   className="input"
@@ -247,10 +247,10 @@ export default function EmployeeDirectoryView() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Simpan Pegawai
+                Save Employee
               </button>
             </div>
           </form>

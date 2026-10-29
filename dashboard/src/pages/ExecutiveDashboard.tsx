@@ -1,5 +1,5 @@
 // ============================================================
-// NEXORA Executive Dashboard — Real-time Operational Intelligence
+// ARGOTURO Executive Dashboard — Real-time Operational Intelligence
 // ============================================================
 
 import React, { useMemo } from 'react';
@@ -87,7 +87,7 @@ export default function ExecutiveDashboard() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `nexora-executive-kpi-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `argoturo-executive-kpi-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -103,7 +103,7 @@ export default function ExecutiveDashboard() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <h1 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>
-                NEXORA Executive Intelligence
+                ARGOTURO Executive Intelligence
               </h1>
               <span
                 style={{
@@ -370,7 +370,7 @@ export default function ExecutiveDashboard() {
             <div className="card-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <Activity size={16} /> Live Operational Audit Stream
             </div>
-            <div className="card-subtitle">Real-time business activities executed in NEXORA ERP</div>
+            <div className="card-subtitle">Real-time business activities executed in ARGOTURO ERP</div>
           </div>
         </div>
         <div style={{ maxHeight: 280, overflowY: 'auto' }}>

@@ -1,77 +1,77 @@
 # ARGOTURO ERP — Integrated Business Operations Platform
 
-> Enterprise Resource Planning (ERP) Prototype & Standalone Executive Analytics Dashboard.
+> Enterprise Resource Planning (ERP) Platform & Standalone Executive Analytics Dashboard.
 
-Aplikasi prototype ERP B2B enterprise lengkap untuk perusahaan distribusi dan perakitan industri di Indonesia. Dilengkapi sistem pencatatan double-entry accounting seimbang, alur penjualan Quote-to-Cash, pengadaan Procure-to-Pay, perakitan Manufaktur Material-to-FG, manajemen SDM & Penggajian, kartu stok (Inventory Ledger), serta Executive Analytics Dashboard terpisah.
-
----
-
-## 🚀 Fitur Utama
-
-- **Work Center**: My Work, Antrean Persetujuan (Approval Queue), Notifikasi Sistem, Log Aktivitas Real-time.
-- **CRM & Penjualan**: Leads Pipeline, Pelanggan & Plafon Kredit, Quotations, Sales Orders, Surat Jalan (DO), Faktur Penjualan, Penerimaan Pembayaran Kas/Bank, Retur Penjualan.
-- **Pengadaan & Pembelian**: Purchase Requisition (PR), Pemasok, Purchase Order (PO), Penerimaan Barang (GR), Tagihan Vendor (Bill), Pembayaran Hutang.
-- **Inventaris & Pergudangan**: Katalog 40+ Produk Industri, Multi-Gudang (Cikarang, Surabaya, Medan), Kartu Stok (Inventory Ledger), Mutasi Antar Gudang, Penyesuaian Stok & Stock Opname, Reorder Planning Otomatis.
-- **Manufaktur & Perakitan**: Bill of Materials (BOM) dengan HPP & biaya overhead, Perintah Produksi (MO), Pengeluaran Bahan Baku, Penerimaan Barang Jadi.
-- **Keuangan & Akuntansi**: Bagan Akun Standar (COA) 5-digit Indonesia, Jurnal Umum Otomatis Seimbang (*Total Debit === Total Credit*), Buku Besar (*General Ledger*), Neraca Saldo (*Trial Balance*), Laporan Laba Rugi (P&L), Neraca (*Balance Sheet*), Arus Kas (*Cash Flow*), Analisis Umur Piutang/Hutang (AR/AP Aging).
-- **Ketenagakerjaan (HR)**: Direktori Pegawai, Presensi Kehadiran, Pengajuan Cuti, Pemrosesan Gaji Bulanan (*Payroll Processing*).
-- **Executive Analytics Dashboard**: Aplikasi analitik visual mandiri untuk jajaran direksi/C-Level.
+A comprehensive B2B enterprise ERP platform engineered for industrial distribution and assembly manufacturing enterprises. Equipped with a mathematically balanced double-entry general ledger, Quote-to-Cash commercial workflow, Procure-to-Pay procurement cycle, shop-floor manufacturing assembly, Human Resources & monthly payroll processing, real-time perpetual inventory ledger, and an interconnected standalone Executive Analytics Dashboard.
 
 ---
 
-## 💻 Menjalankan Secara Lokal
+## 🚀 Key Modules & Capabilities
 
-### 1. Menjalankan ERP Operasional (Port 5173)
+- **Work Center**: My Work Command Center, Pending Approvals Queue, Operational Notifications, and Real-Time Activity Audit Trail.
+- **CRM & Commercial Sales**: Sales Leads Pipeline, Customer Accounts & Credit Limits, Quotations, Sales Orders, Delivery Orders (DO), Customer Invoices (AR), Cash/Bank Receipts, and Sales Return RMA.
+- **Procurement & Supply Chain**: Purchase Requisitions (PR), Vendor Directory, Purchase Orders (PO), Inbound Goods Receipts (GRN), Vendor Bills (AP), and Accounts Payable Disbursements.
+- **Inventory & Warehousing**: 40+ Master Industrial SKUs, Multi-Warehouse Operations (Cikarang, Surabaya, Medan), Perpetual Inventory Ledger, Inter-Warehouse Transfers, Cycle Counts & Adjustments, and Automated Reorder Point Replenishment.
+- **Manufacturing & Assembly**: Multi-level Bills of Materials (BOM) with standard labor and factory overhead costing, Manufacturing Orders (MO), Raw Material Issuance, and Finished Goods Intake.
+- **Finance & Corporate Accounting**: Standard 5-digit Chart of Accounts (COA), Strict Double-Entry General Journal (*Total Debit === Total Credit*), General Ledger Detail, Reconciled Trial Balance, Comprehensive Profit & Loss (P&L), Balance Sheet, Direct Cash Flow Statement, and Aging Reports (AR/AP).
+- **Human Resources (HR)**: Personnel Directory, Daily Clock-in/Clock-out Attendance, Leave Requests & Manager Approvals, and Monthly Payroll Processing with automatic salary expense journal posting.
+- **Executive Analytics Dashboard**: Standalone visual executive application for C-Level leadership with real-time synchronized operational metrics.
+
+---
+
+## 💻 Local Development Setup
+
+### 1. Run Core ERP Platform (Port 5173)
 ```bash
 npm install
 npm run dev
 ```
-Akses di browser: `http://localhost:5173`
+Access in your browser: `http://localhost:5173`
 
-### 2. Menjalankan Executive Dashboard (Port 5174)
-Buka terminal baru:
+### 2. Run Executive Analytics Dashboard (Port 5174)
+Open a separate terminal window:
 ```bash
 npm run dashboard
 ```
-Akses di browser: `http://localhost:5174`
+Access in your browser: `http://localhost:5174`
 
 ---
 
-## ☁️ Panduan Deploy ke Vercel
+## ☁️ Deployment Guide (Vercel)
 
-Proyek ini telah dikonfigurasi secara optimal untuk Vercel:
-- **Root (`/`)** otomatis menyajikan **ARGOTURO ERP**.
-- **Subpath (`/dashboard/`)** otomatis menyajikan **Executive Analytics Dashboard**.
-- Tombol **"Executive Analytics ↗"** di bar atas ERP otomatis terhubung ke `/dashboard/`.
+The repository is pre-configured for seamless multi-SPA deployment on Vercel:
+- **Root (`/`)** automatically serves **ARGOTURO ERP**.
+- **Subpath (`/dashboard/`)** automatically serves the **Executive Analytics Dashboard**.
+- The **"Executive Analytics ↗"** button in the ERP top bar smoothly navigates to `/dashboard/`.
 
-### Cara 1: Deploy Otomatis via GitHub (Direkomendasikan)
-1. Push repository ini ke GitHub / GitLab:
+### Method 1: Git-Based Deployment (Recommended)
+1. Push this repository to GitHub or GitLab:
    ```bash
    git add .
-   git commit -m "feat: complete Argoturo ERP and Vercel configuration"
+   git commit -m "feat: complete Argoturo ERP enterprise platform"
    git push origin main
    ```
-2. Buka dashboard [Vercel](https://vercel.com/) dan klik **"Add New Project"**.
-3. Import repository Anda.
-4. Pada **Build & Output Settings**:
-   - **Framework Preset**: `Vite` (terdeteksi otomatis)
+2. Navigate to your [Vercel Dashboard](https://vercel.com/) and click **"Add New Project"**.
+3. Import your repository.
+4. Under **Build & Output Settings**:
+   - **Framework Preset**: `Vite` (auto-detected)
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
-5. Klik **"Deploy"**.
+5. Click **"Deploy"**.
 
-### Cara 2: Deploy via Vercel CLI
-Jika Anda telah menginstal Vercel CLI di komputer Anda:
+### Method 2: Deploy via Vercel CLI
+If you have the Vercel CLI installed:
 ```bash
 npm i -g vercel
 vercel
 ```
-Ikuti instruksi interaktif, dan aplikasi Anda akan langsung live dalam hitungan detik.
 
 ---
 
-## 🛠️ Build & Uji Produksi Lokal
-Untuk memverifikasi build produksi di komputer Anda sebelum deploy:
+## 🛠️ Production Build Verification
+To test and verify the multi-SPA production build locally:
 ```bash
 npm run build
 npm run preview
 ```
+Both the core ERP (`dist/`) and executive dashboard (`dist/dashboard/`) compile with exit code 0.

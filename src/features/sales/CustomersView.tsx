@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Customers Directory (Master Pelanggan)
+// ARGOTURO ERP — Customers Directory
 // ============================================================
 
 import React, { useState } from 'react';
-import { Building2, Plus, Phone, Mail, MapPin, DollarSign, Search } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Customer } from '../../types';
 
@@ -46,7 +46,7 @@ export default function CustomersView() {
     };
     saveCustomer(newCust);
     setShowModal(false);
-    addToast('success', `Pelanggan baru ${name} (${code}) berhasil ditambahkan`);
+    addToast('success', `Customer ${name} (${code}) added successfully`);
   };
 
   return (
@@ -54,10 +54,10 @@ export default function CustomersView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Master Data Pelanggan (Customers)
+            Customer Directory
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Database akun pelanggan industri, limit kredit, saldo piutang, dan histori transaksi
+            Enterprise client accounts, credit limits, outstanding receivables, and transaction history
           </p>
         </div>
 
@@ -67,7 +67,7 @@ export default function CustomersView() {
           onClick={() => setShowModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Tambah Pelanggan Baru
+          <Plus size={15} /> Add New Customer
         </button>
       </div>
 
@@ -76,7 +76,7 @@ export default function CustomersView() {
         <input
           type="text"
           className="input"
-          placeholder="Cari kode atau nama pelanggan..."
+          placeholder="Search by code or customer name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           style={{ paddingLeft: 34 }}
@@ -88,13 +88,13 @@ export default function CustomersView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>Kode</th>
-              <th>Nama Perusahaan Pelanggan</th>
-              <th>Kontak & Alamat</th>
-              <th>NPWP</th>
-              <th>Termin</th>
-              <th style={{ textAlign: 'right' }}>Batas Kredit</th>
-              <th style={{ textAlign: 'right' }}>Piutang Berjalan</th>
+              <th>Code</th>
+              <th>Company Name</th>
+              <th>Contact & Address</th>
+              <th>Tax ID (NPWP)</th>
+              <th>Terms</th>
+              <th style={{ textAlign: 'right' }}>Credit Limit</th>
+              <th style={{ textAlign: 'right' }}>Receivables Balance</th>
             </tr>
           </thead>
           <tbody>
@@ -125,9 +125,9 @@ export default function CustomersView() {
                 </td>
                 <td>{c.taxId}</td>
                 <td>{c.paymentTerms}</td>
-                <td style={{ textAlign: 'right' }}>Rp {c.creditLimit.toLocaleString('id-ID')}</td>
+                <td style={{ textAlign: 'right' }}>IDR {c.creditLimit.toLocaleString('en-US')}</td>
                 <td style={{ textAlign: 'right', fontWeight: 600, color: c.currentReceivable > 0 ? '#ef4444' : '#10b981' }}>
-                  Rp {c.currentReceivable.toLocaleString('id-ID')}
+                  IDR {c.currentReceivable.toLocaleString('en-US')}
                 </td>
               </tr>
             ))}
@@ -160,7 +160,7 @@ export default function CustomersView() {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Tambah Pelanggan Baru</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Add New Customer</h3>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
@@ -172,7 +172,7 @@ export default function CustomersView() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16 }}>
               <div style={{ gridColumn: 'span 2' }}>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Nama Perusahaan:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Company Name:</label>
                 <input
                   type="text"
                   className="input"
@@ -184,7 +184,7 @@ export default function CustomersView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>NPWP Perusahaan:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Tax ID (NPWP):</label>
                 <input
                   type="text"
                   className="input"
@@ -195,7 +195,7 @@ export default function CustomersView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Telepon / WhatsApp:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Phone / WhatsApp:</label>
                 <input
                   type="text"
                   className="input"
@@ -207,7 +207,7 @@ export default function CustomersView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Email Resmi:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Corporate Email:</label>
                 <input
                   type="email"
                   className="input"
@@ -219,7 +219,7 @@ export default function CustomersView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Limit Plafon Kredit (Rp):</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Credit Limit (IDR):</label>
                 <input
                   type="number"
                   className="input"
@@ -230,7 +230,7 @@ export default function CustomersView() {
               </div>
 
               <div style={{ gridColumn: 'span 2' }}>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Alamat Lengkap & Pengiriman:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Full Billing & Shipping Address:</label>
                 <textarea
                   className="input"
                   rows={2}
@@ -243,10 +243,10 @@ export default function CustomersView() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Simpan Pelanggan
+                Save Customer
               </button>
             </div>
           </form>
@@ -255,4 +255,3 @@ export default function CustomersView() {
     </div>
   );
 }
-

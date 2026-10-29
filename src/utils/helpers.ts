@@ -1,5 +1,5 @@
 // ============================================================
-// NEXORA ERP — Utility Functions
+// ARGOTURO ERP — Utility Functions
 // ============================================================
 
 import {
@@ -321,7 +321,7 @@ export function exportProductsToCSV(products: ProductWithRelations[]): void {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `nexora-product-catalog-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `argoturo-product-catalog-${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -348,8 +348,8 @@ export function exportDashboardReport(
   const catRows = catData.map((c) => [c.categoryName, c.skuCount, c.inventoryValue]);
 
   const csvContent = [
-    'NEXORA ERP — Dashboard Report',
-    `Generated: ${new Date().toLocaleString('id-ID')}`,
+    'ARGOTURO ERP — Inventory Report',
+    `Generated: ${new Date().toLocaleString('en-US')}`,
     '',
     headers.join(','),
     ...kpiRows.map((r) => r.map(escapeCSV).join(',')),
@@ -363,7 +363,7 @@ export function exportDashboardReport(
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `nexora-dashboard-report-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `argoturo-inventory-report-${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -389,7 +389,7 @@ export function activityLabel(action: ActivityAction): string {
     adjustment_created: 'Stock Opname Adjustment',
     inbound_received: 'Inbound PO Received',
     outbound_dispatched: 'Outbound DO Dispatched',
-    data_reset: 'Demo Data Reset',
+    data_reset: 'System Baseline Reset',
   };
   return map[action] ?? action;
 }
@@ -411,7 +411,7 @@ export function createActivityLog(
     entityName,
     summary,
     description: summary,
-    user: 'Demo User',
+    user: 'System Administrator',
     role: 'General Manager',
     timestamp: new Date().toISOString(),
   };
@@ -426,7 +426,7 @@ export function relativeTime(timestamp: string): string {
   if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
   if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
   if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
-  return new Date(timestamp).toLocaleDateString('id-ID', {
+  return new Date(timestamp).toLocaleDateString('en-US', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',

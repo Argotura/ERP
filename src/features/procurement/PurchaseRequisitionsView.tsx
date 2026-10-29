@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Purchase Requisitions (Permintaan Pembelian)
+// ARGOTURO ERP — Purchase Requisitions
 // ============================================================
 
 import React, { useState } from 'react';
-import { FileText, Plus, CheckCircle2, ArrowRight, Building2 } from 'lucide-react';
+import { Plus, CheckCircle2, ArrowRight } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { PurchaseRequisition } from '../../types';
 
@@ -14,8 +14,8 @@ export default function PurchaseRequisitionsView() {
   const [selectedSupplierId, setSelectedSupplierId] = useState(store.suppliers[0]?.id || '');
 
   // Form State
-  const [department, setDepartment] = useState('Gudang & Logistik');
-  const [justification, setJustification] = useState('Pengadaan rutin untuk replenishment inventaris');
+  const [department, setDepartment] = useState('Warehouse & Logistics');
+  const [justification, setJustification] = useState('Routine replenishment for stock replenishment');
   const [lines, setLines] = useState([
     { productId: store.products[0]?.id || '', quantity: 20, estimatedUnitCost: store.products[0]?.unitCost || 0 },
   ]);
@@ -58,7 +58,7 @@ export default function PurchaseRequisitionsView() {
 
     savePurchaseRequisition(newPR);
     setShowCreateModal(false);
-    addToast('success', `Purchase Requisition ${prNumber} berhasil diajukan`);
+    addToast('success', `Purchase Requisition ${prNumber} submitted successfully`);
   };
 
   const handleConvert = (e: React.FormEvent) => {
@@ -73,10 +73,10 @@ export default function PurchaseRequisitionsView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Permintaan Pembelian (Purchase Requisitions / PR)
+            Purchase Requisitions (PR)
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Pengajuan kebutuhan pengadaan internal sebelum diterbitkan PO resmi ke vendor
+            Internal procurement requests submitted for departmental verification and PO conversion
           </p>
         </div>
 
@@ -86,7 +86,7 @@ export default function PurchaseRequisitionsView() {
           onClick={() => setShowCreateModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Buat PR Baru
+          <Plus size={15} /> Create Requisition
         </button>
       </div>
 
@@ -95,13 +95,13 @@ export default function PurchaseRequisitionsView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>No. Permintaan</th>
-              <th>Departemen</th>
-              <th>Tanggal Pengajuan</th>
-              <th>Tanggal Diperlukan</th>
-              <th>Justifikasi Kebutuhan</th>
-              <th style={{ textAlign: 'right' }}>Estimasi Total</th>
-              <th style={{ textAlign: 'right' }}>Tindakan</th>
+              <th>Requisition No.</th>
+              <th>Department</th>
+              <th>Request Date</th>
+              <th>Required By</th>
+              <th>Justification</th>
+              <th style={{ textAlign: 'right' }}>Estimated Total</th>
+              <th style={{ textAlign: 'right' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -129,21 +129,21 @@ export default function PurchaseRequisitionsView() {
                     }}
                   >
                     {pr.status === 'ordered'
-                      ? 'Dipesan (PO)'
+                      ? 'Ordered (PO)'
                       : pr.status === 'approved'
-                      ? 'Disetujui'
+                      ? 'Approved'
                       : 'Pending Approval'}
                   </span>
                 </td>
                 <td style={{ fontWeight: 600, color: '#1e293b' }}>{pr.requisitionNumber || pr.prNumber}</td>
                 <td>{pr.department}</td>
-                <td>{new Date(pr.requestDate).toLocaleDateString('id-ID')}</td>
-                <td>{new Date(pr.requiredDate).toLocaleDateString('id-ID')}</td>
+                <td>{new Date(pr.requestDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                <td>{new Date(pr.requiredDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                 <td style={{ maxWidth: 220, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {pr.justification || pr.businessJustification}
                 </td>
                 <td style={{ textAlign: 'right', fontWeight: 600 }}>
-                  Rp {(pr.estimatedTotal ?? pr.totalEstimatedAmount ?? 0).toLocaleString('id-ID')}
+                  IDR {(pr.estimatedTotal ?? pr.totalEstimatedAmount ?? 0).toLocaleString('en-US')}
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   <div style={{ display: 'inline-flex', gap: 6 }}>
@@ -154,7 +154,7 @@ export default function PurchaseRequisitionsView() {
                         className="btn btn-sm btn-success"
                         style={{ fontSize: 11, padding: '3px 8px' }}
                       >
-                        <CheckCircle2 size={12} /> Setujui
+                        <CheckCircle2 size={12} /> Approve
                       </button>
                     )}
                     {pr.status === 'approved' && (
@@ -164,7 +164,7 @@ export default function PurchaseRequisitionsView() {
                         className="btn btn-sm btn-primary"
                         style={{ fontSize: 11, padding: '3px 8px', display: 'inline-flex', alignItems: 'center', gap: 4 }}
                       >
-                        Konversi ke PO <ArrowRight size={11} />
+                        Convert to PO <ArrowRight size={11} />
                       </button>
                     )}
                   </div>
@@ -200,14 +200,14 @@ export default function PurchaseRequisitionsView() {
             }}
           >
             <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 14px' }}>
-              Penerbitan PO dari PR {showConvertModal.requisitionNumber}
+              Issue PO from Requisition {showConvertModal.requisitionNumber}
             </h3>
             <p style={{ fontSize: 13, color: '#64748b', marginBottom: 16 }}>
-              Pilih vendor pemasok untuk menerbitkan Purchase Order resmi.
+              Select a designated vendor to issue the commercial Purchase Order.
             </p>
 
             <div style={{ marginBottom: 20 }}>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Pemasok / Vendor:</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Vendor / Supplier:</label>
               <select
                 value={selectedSupplierId}
                 onChange={(e) => setSelectedSupplierId(e.target.value)}
@@ -224,10 +224,10 @@ export default function PurchaseRequisitionsView() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowConvertModal(null)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Terbitkan Purchase Order
+                Issue Purchase Order
               </button>
             </div>
           </form>
@@ -259,7 +259,7 @@ export default function PurchaseRequisitionsView() {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Buat Permintaan Pembelian (PR)</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Create Purchase Requisition</h3>
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
@@ -271,17 +271,17 @@ export default function PurchaseRequisitionsView() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Departemen:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Department:</label>
                 <select value={department} onChange={(e) => setDepartment(e.target.value)} className="input">
-                  <option value="Gudang & Logistik">Gudang & Logistik</option>
-                  <option value="Produksi & Perakitan">Produksi & Perakitan</option>
-                  <option value="Teknik & Engineering">Teknik & Engineering</option>
-                  <option value="Operasional Kantor">Operasional Kantor</option>
+                  <option value="Warehouse & Logistics">Warehouse & Logistics</option>
+                  <option value="Production & Assembly">Production & Assembly</option>
+                  <option value="Engineering & Maintenance">Engineering & Maintenance</option>
+                  <option value="Office Operations">Office Operations</option>
                 </select>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Alasan / Justifikasi:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Business Justification:</label>
                 <input
                   type="text"
                   className="input"
@@ -293,7 +293,7 @@ export default function PurchaseRequisitionsView() {
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Item Produk:</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Requested Items:</label>
               {lines.map((l, idx) => (
                 <div key={idx} style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
                   <select
@@ -344,10 +344,10 @@ export default function PurchaseRequisitionsView() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowCreateModal(false)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Ajukan PR
+                Submit Requisition
               </button>
             </div>
           </form>

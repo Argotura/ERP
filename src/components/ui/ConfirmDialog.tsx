@@ -1,5 +1,5 @@
 // ============================================================
-// NEXORA ERP — Confirm Dialog Component
+// ARGOTURO ERP — Confirm Dialog Component
 // ============================================================
 
 import React from 'react';

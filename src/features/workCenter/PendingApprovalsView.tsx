@@ -33,13 +33,13 @@ export default function PendingApprovalsView() {
   });
 
   const handleApprove = (req: ApprovalRequest) => {
-    approveRequest(req.id, approvalNotes || 'Disetujui');
+    approveRequest(req.id, approvalNotes || 'Approved');
     setActiveModalReq(null);
     setApprovalNotes('');
   };
 
   const handleReject = (req: ApprovalRequest) => {
-    rejectRequest(req.id, approvalNotes || 'Ditolak');
+    rejectRequest(req.id, approvalNotes || 'Rejected');
     setActiveModalReq(null);
     setApprovalNotes('');
   };
@@ -50,10 +50,10 @@ export default function PendingApprovalsView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Antrean Otorisasi & Persetujuan (Approval Center)
+            Authorization & Approvals Center
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Kelola persetujuan berjenjang untuk dokumen penjualan, pengadaan, beban operasional, dan HR.
+            Manage multi-tier managerial approvals for sales orders, procurement requisitions, operational expenses, and leaves
           </p>
         </div>
 
@@ -65,10 +65,10 @@ export default function PendingApprovalsView() {
             className="input-sm"
             style={{ borderRadius: 6, border: '1px solid #cbd5e1', padding: '4px 8px', fontSize: 12 }}
           >
-            <option value="pending">Tertunda (Pending)</option>
-            <option value="approved">Telah Disetujui</option>
-            <option value="rejected">Ditolak</option>
-            <option value="all">Semua Status</option>
+            <option value="pending">Pending Action</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="all">All Statuses</option>
           </select>
         </div>
       </div>
@@ -76,12 +76,12 @@ export default function PendingApprovalsView() {
       {/* Filter Tabs by Entity Type */}
       <div style={{ display: 'flex', gap: 8, borderBottom: '1px solid #e2e8f0', paddingBottom: 10 }}>
         {[
-          { id: 'all', label: 'Semua Permohonan' },
-          { id: 'sales_order', label: 'Sales Order' },
-          { id: 'purchase_requisition', label: 'Purchase Requisition (PR)' },
-          { id: 'purchase_order', label: 'Purchase Order (PO)' },
-          { id: 'expense', label: 'Biaya Operasional' },
-          { id: 'leave_request', label: 'Cuti Karyawan' },
+          { id: 'all', label: 'All Requests' },
+          { id: 'sales_order', label: 'Sales Orders' },
+          { id: 'purchase_requisition', label: 'Purchase Requisitions (PR)' },
+          { id: 'purchase_order', label: 'Purchase Orders (PO)' },
+          { id: 'expense', label: 'Expenses' },
+          { id: 'leave_request', label: 'Leave Requests' },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -109,20 +109,20 @@ export default function PendingApprovalsView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>Jenis Dokumen</th>
-              <th>Nomor Dokumen</th>
-              <th>Pemohon</th>
-              <th>Peran Otorisasi</th>
-              <th>Nilai / Kuantitas</th>
-              <th>Tanggal Pengajuan</th>
-              <th style={{ textAlign: 'right' }}>Tindakan</th>
+              <th>Document Type</th>
+              <th>Reference Number</th>
+              <th>Requester</th>
+              <th>Authorized Role</th>
+              <th>Amount / Quantity</th>
+              <th>Submission Date</th>
+              <th style={{ textAlign: 'right' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredRequests.length === 0 ? (
               <tr>
                 <td colSpan={8} style={{ textAlign: 'center', padding: '40px 0', color: '#94a3b8' }}>
-                  Tidak ada data persetujuan yang sesuai filter.
+                  No approval requests match the selected filters.
                 </td>
               </tr>
             ) : (
@@ -150,10 +150,10 @@ export default function PendingApprovalsView() {
                       }}
                     >
                       {req.status === 'approved'
-                        ? 'Disetujui'
+                        ? 'Approved'
                         : req.status === 'rejected'
-                        ? 'Ditolak'
-                        : 'Menunggu Persetujuan'}
+                        ? 'Rejected'
+                        : 'Pending Action'}
                     </span>
                   </td>
                   <td>
@@ -178,12 +178,12 @@ export default function PendingApprovalsView() {
                   </td>
                   <td>
                     {(req.entityType === 'leave_request' || req.type === 'leave_request')
-                      ? `${req.amount || 1} Hari`
+                      ? `${req.amount || 1} Days`
                       : req.amount
                       ? `Rp ${req.amount.toLocaleString('id-ID')}`
                       : '—'}
                   </td>
-                  <td>{new Date(req.createdAt || req.submittedAt || Date.now()).toLocaleDateString('id-ID')}</td>
+                  <td>{new Date(req.createdAt || req.submittedAt || Date.now()).toLocaleDateString('en-US')}</td>
                   <td style={{ textAlign: 'right' }}>
                     <div style={{ display: 'inline-flex', gap: 6 }}>
                       <button
@@ -195,14 +195,14 @@ export default function PendingApprovalsView() {
                         className="btn btn-sm btn-secondary"
                         style={{ fontSize: 11, padding: '3px 8px' }}
                       >
-                        <Eye size={12} /> Detail
+                        <Eye size={12} /> Details
                       </button>
 
                       {req.status === 'pending' && (
                         <>
                           <button
                             type="button"
-                            onClick={() => approveRequest(req.id, 'Disetujui via antrean cepat')}
+                            onClick={() => approveRequest(req.id, 'Approved via quick queue')}
                             style={{
                               backgroundColor: '#10b981',
                               color: '#fff',
@@ -216,11 +216,11 @@ export default function PendingApprovalsView() {
                               gap: 4,
                             }}
                           >
-                            <CheckCircle2 size={12} /> Setujui
+                            <CheckCircle2 size={12} /> Approve
                           </button>
                           <button
                             type="button"
-                            onClick={() => rejectRequest(req.id, 'Ditolak via antrean')}
+                            onClick={() => rejectRequest(req.id, 'Rejected via queue')}
                             style={{
                               backgroundColor: '#f8fafc',
                               color: '#ef4444',
@@ -231,7 +231,7 @@ export default function PendingApprovalsView() {
                               cursor: 'pointer',
                             }}
                           >
-                            Tolak
+                            Reject
                           </button>
                         </>
                       )}
@@ -271,7 +271,7 @@ export default function PendingApprovalsView() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <CheckSquare size={20} color="#3b82f6" />
                 <h3 style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-                  Review Dokumen Otorisasi
+                  Review Authorization Request
                 </h3>
               </div>
               <button
@@ -286,26 +286,26 @@ export default function PendingApprovalsView() {
             <div style={{ backgroundColor: '#f8fafc', borderRadius: 8, padding: 14, marginBottom: 16, fontSize: 13 }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                 <div>
-                  <span style={{ color: '#64748b', fontSize: 11 }}>Jenis Dokumen:</span>
+                  <span style={{ color: '#64748b', fontSize: 11 }}>Document Type:</span>
                   <div style={{ fontWeight: 600 }}>{(activeModalReq.entityType || activeModalReq.type || '').toUpperCase().replace('_', ' ')}</div>
                 </div>
                 <div>
-                  <span style={{ color: '#64748b', fontSize: 11 }}>Nomor Dokumen:</span>
+                  <span style={{ color: '#64748b', fontSize: 11 }}>Document Number:</span>
                   <div style={{ fontWeight: 600, color: '#3b82f6' }}>{activeModalReq.entityNumber || activeModalReq.documentNumber}</div>
                 </div>
                 <div>
-                  <span style={{ color: '#64748b', fontSize: 11 }}>Diajukan Oleh:</span>
+                  <span style={{ color: '#64748b', fontSize: 11 }}>Requested By:</span>
                   <div>{activeModalReq.requestedBy || activeModalReq.requesterName}</div>
                 </div>
                 <div>
-                  <span style={{ color: '#64748b', fontSize: 11 }}>Peran Berwenang:</span>
+                  <span style={{ color: '#64748b', fontSize: 11 }}>Required Authority:</span>
                   <div style={{ fontWeight: 600 }}>{activeModalReq.roleRequired || activeModalReq.targetRole}</div>
                 </div>
                 <div style={{ gridColumn: 'span 2' }}>
-                  <span style={{ color: '#64748b', fontSize: 11 }}>Total Nilai Transaksi:</span>
+                  <span style={{ color: '#64748b', fontSize: 11 }}>Transaction Value:</span>
                   <div style={{ fontSize: 16, fontWeight: 700, color: '#10b981' }}>
                     {(activeModalReq.entityType === 'leave_request' || activeModalReq.type === 'leave_request')
-                      ? `${activeModalReq.amount} Hari Cuti`
+                      ? `${activeModalReq.amount} Leave Days`
                       : activeModalReq.amount
                       ? `Rp ${activeModalReq.amount.toLocaleString('id-ID')}`
                       : '—'}
@@ -317,12 +317,12 @@ export default function PendingApprovalsView() {
             {/* Approval Notes */}
             <div style={{ marginBottom: 20 }}>
               <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#334155', marginBottom: 6 }}>
-                Catatan Otorisasi / Alasan Penolakan:
+                Approval Notes / Reason:
               </label>
               <textarea
                 value={approvalNotes}
                 onChange={(e) => setApprovalNotes(e.target.value)}
-                placeholder="Tambahkan catatan resmi (opsional)..."
+                placeholder="Add optional internal compliance notes..."
                 rows={3}
                 style={{
                   width: '100%',
@@ -341,7 +341,7 @@ export default function PendingApprovalsView() {
                 className="btn btn-secondary"
                 onClick={() => setActiveModalReq(null)}
               >
-                Tutup
+                Close
               </button>
               {activeModalReq.status === 'pending' && (
                 <>
@@ -350,14 +350,14 @@ export default function PendingApprovalsView() {
                     className="btn btn-danger"
                     onClick={() => handleReject(activeModalReq)}
                   >
-                    Tolak Permohonan
+                    Reject Request
                   </button>
                   <button
                     type="button"
                     className="btn btn-success"
                     onClick={() => handleApprove(activeModalReq)}
                   >
-                    Setujui & Terbitkan
+                    Approve & Issue
                   </button>
                 </>
               )}

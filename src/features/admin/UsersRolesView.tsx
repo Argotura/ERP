@@ -1,5 +1,5 @@
 // ============================================================
-// ARGOTURO ERP — Users & Roles Simulation (Pengguna & Hak Akses)
+// ARGOTURO ERP — User Access & Role Administration
 // ============================================================
 
 import React from 'react';
@@ -13,10 +13,10 @@ export default function UsersRolesView() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Pengguna Sistem & Simulasi Hak Akses (Role Switcher)
+          User Directory & Role Permissions
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Ganti persona seketika untuk mendemonstrasikan batasan otorisasi antar departemen secara interaktif
+          Select and switch user roles to test cross-departmental approval workflows and security authorizations
         </p>
       </div>
 
@@ -73,14 +73,14 @@ export default function UsersRolesView() {
                         color: '#15803d',
                       }}
                     >
-                      AKTIF SAAT INI
+                      CURRENT USER
                     </span>
                   )}
                 </div>
 
                 <div style={{ marginTop: 16, fontSize: 12.5, color: '#475569' }}>
                   <div>
-                    Departemen: <strong>{u.department}</strong>
+                    Department: <strong>{u.department}</strong>
                   </div>
                   <div style={{ marginTop: 3 }}>
                     Email: <strong>{u.email}</strong>
@@ -93,14 +93,14 @@ export default function UsersRolesView() {
                   type="button"
                   onClick={() => {
                     setActiveUserId(u.id);
-                    addToast('info', `Beralih ke persona: ${u.name} (${u.role})`);
+                    addToast('info', `Active user changed to: ${u.name} (${u.role})`);
                   }}
                   className={`btn btn-sm ${isActive ? 'btn-secondary' : 'btn-primary'}`}
                   style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6 }}
                   disabled={isActive}
                 >
                   <UserCheck size={14} />
-                  {isActive ? 'Persona Sedang Digunakan' : 'Simulasikan Sebagai Pengguna Ini'}
+                  {isActive ? 'Currently Active' : 'Switch to this User'}
                 </button>
               </div>
             </div>
@@ -110,4 +110,3 @@ export default function UsersRolesView() {
     </div>
   );
 }
-

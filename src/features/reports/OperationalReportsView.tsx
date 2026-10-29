@@ -2,8 +2,7 @@
 // ARGOTURO ERP — Operational Reports & Inventory Valuation
 // ============================================================
 
-import React, { useState } from 'react';
-import { FileSpreadsheet, PieChart, TrendingUp, BarChart2, Package } from 'lucide-react';
+import React from 'react';
 import { useApp } from '../../context/AppContext';
 
 export default function OperationalReportsView({ mode }: { mode: 'sales' | 'purchasing' | 'valuation' }) {
@@ -14,10 +13,10 @@ export default function OperationalReportsView({ mode }: { mode: 'sales' | 'purc
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Laporan Rekapitulasi Pengadaan (Purchasing Summary Report)
+            Procurement & Purchasing Summary Report
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Statistik pengeluaran pembelian barang per vendor pemasok dan tren pengadaan barang
+            Vendor purchasing expenditure statistics, payment terms, and procurement volume trends
           </p>
         </div>
 
@@ -25,10 +24,10 @@ export default function OperationalReportsView({ mode }: { mode: 'sales' | 'purc
           <table className="data-table" style={{ width: '100%', fontSize: 13 }}>
             <thead>
               <tr>
-                <th>Pemasok / Vendor</th>
-                <th>Jumlah Purchase Order</th>
-                <th>Status Pembayaran</th>
-                <th style={{ textAlign: 'right' }}>Total Pembelian (Rp)</th>
+                <th>Supplier / Vendor</th>
+                <th>Purchase Orders Placed</th>
+                <th>Payment Terms</th>
+                <th style={{ textAlign: 'right' }}>Total Procurement Value</th>
               </tr>
             </thead>
             <tbody>
@@ -42,10 +41,10 @@ export default function OperationalReportsView({ mode }: { mode: 'sales' | 'purc
                       <div style={{ fontWeight: 600 }}>{s.name}</div>
                       <div style={{ fontSize: 11, color: '#64748b' }}>{s.code}</div>
                     </td>
-                    <td>{pos.length} Pesanan (PO)</td>
+                    <td>{pos.length} Order(s)</td>
                     <td>{s.paymentTerms}</td>
                     <td style={{ textAlign: 'right', fontWeight: 700, color: '#1e293b' }}>
-                      Rp {totalSpent.toLocaleString('id-ID')}
+                      IDR {totalSpent.toLocaleString('en-US')}
                     </td>
                   </tr>
                 );
@@ -64,19 +63,19 @@ export default function OperationalReportsView({ mode }: { mode: 'sales' | 'purc
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Laporan Valuasi Nilai Persediaan (Inventory Valuation)
+            Inventory Valuation Report
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Penilaian nilai aset barang dagang dan komponen manufaktur menggunakan metode FIFO Perpetual
+            Asset valuation of merchandise and manufacturing components using FIFO Perpetual Costing
           </p>
         </div>
 
         <div style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: 18, border: '1px solid #e2e8f0', maxWidth: 320 }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Nilai Buku Persediaan</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Inventory Book Value</span>
           <div style={{ fontSize: 22, fontWeight: 700, color: '#10b981', marginTop: 4 }}>
-            Rp {totalValuation.toLocaleString('id-ID')}
+            IDR {totalValuation.toLocaleString('en-US')}
           </div>
-          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Tercatat di Akun 11310 GL</div>
+          <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Recognized in GL Account 11310</div>
         </div>
 
         <div style={{ backgroundColor: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
@@ -84,11 +83,11 @@ export default function OperationalReportsView({ mode }: { mode: 'sales' | 'purc
             <thead>
               <tr>
                 <th>SKU</th>
-                <th>Nama Produk</th>
-                <th>Kategori</th>
-                <th style={{ textAlign: 'right' }}>Stok Fisik</th>
-                <th style={{ textAlign: 'right' }}>Harga Beli Standar (HPP)</th>
-                <th style={{ textAlign: 'right' }}>Total Nilai Aset</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th style={{ textAlign: 'right' }}>On-Hand Stock</th>
+                <th style={{ textAlign: 'right' }}>Standard Cost (HPP)</th>
+                <th style={{ textAlign: 'right' }}>Total Asset Value</th>
               </tr>
             </thead>
             <tbody>
@@ -99,11 +98,11 @@ export default function OperationalReportsView({ mode }: { mode: 'sales' | 'purc
                   <tr key={p.id}>
                     <td style={{ fontWeight: 600, color: '#1e293b' }}>{p.sku}</td>
                     <td style={{ fontWeight: 500 }}>{p.name}</td>
-                    <td>{cat?.name || 'Umum'}</td>
+                    <td>{cat?.name || 'General'}</td>
                     <td style={{ textAlign: 'right' }}>{p.onHandStock} {p.uom}</td>
-                    <td style={{ textAlign: 'right' }}>Rp {p.unitCost.toLocaleString('id-ID')}</td>
+                    <td style={{ textAlign: 'right' }}>IDR {p.unitCost.toLocaleString('en-US')}</td>
                     <td style={{ textAlign: 'right', fontWeight: 700, color: '#10b981' }}>
-                      Rp {val.toLocaleString('id-ID')}
+                      IDR {val.toLocaleString('en-US')}
                     </td>
                   </tr>
                 );
@@ -122,20 +121,20 @@ export default function OperationalReportsView({ mode }: { mode: 'sales' | 'purc
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Laporan Operasional Penjualan (Sales Operational Report)
+          Sales Operational Report
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Rekapitulasi transaksi penjualan per pelanggan industri, status pemenuhan, dan total pendapatan
+          Commercial sales transactions per industrial client, fulfillment status, and revenue volume
         </p>
       </div>
 
       <div style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: 18, border: '1px solid #e2e8f0', maxWidth: 320 }}>
-        <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Nilai Pesanan Penjualan</span>
+        <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Sales Order Value</span>
         <div style={{ fontSize: 22, fontWeight: 700, color: '#3b82f6', marginTop: 4 }}>
-          Rp {totalSalesRevenue.toLocaleString('id-ID')}
+          IDR {totalSalesRevenue.toLocaleString('en-US')}
         </div>
         <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>
-          {store.salesOrders.length} Pesanan Terbit
+          {store.salesOrders.length} Order(s) Issued
         </div>
       </div>
 
@@ -143,10 +142,10 @@ export default function OperationalReportsView({ mode }: { mode: 'sales' | 'purc
         <table className="data-table" style={{ width: '100%', fontSize: 13 }}>
           <thead>
             <tr>
-              <th>Pelanggan</th>
-              <th>Total Transaksi (SO)</th>
-              <th>Status Pemenuhan</th>
-              <th style={{ textAlign: 'right' }}>Akumulasi Nilai Penjualan (Rp)</th>
+              <th>Customer Account</th>
+              <th>Total Orders (SO)</th>
+              <th>Fulfillment Status</th>
+              <th style={{ textAlign: 'right' }}>Cumulative Sales Value</th>
             </tr>
           </thead>
           <tbody>
@@ -161,9 +160,9 @@ export default function OperationalReportsView({ mode }: { mode: 'sales' | 'purc
                     <div style={{ fontSize: 11, color: '#64748b' }}>{c.code}</div>
                   </td>
                   <td>{sos.length} Orders</td>
-                  <td>{sos.some((s) => s.status === 'fulfilled') ? 'Aktif Terkirim' : 'Menunggu / Proses'}</td>
+                  <td>{sos.some((s) => s.status === 'fulfilled') ? 'Active Fulfillment' : 'Pending / Processing'}</td>
                   <td style={{ textAlign: 'right', fontWeight: 700, color: '#1e293b' }}>
-                    Rp {totalVal.toLocaleString('id-ID')}
+                    IDR {totalVal.toLocaleString('en-US')}
                   </td>
                 </tr>
               );
@@ -174,4 +173,3 @@ export default function OperationalReportsView({ mode }: { mode: 'sales' | 'purc
     </div>
   );
 }
-

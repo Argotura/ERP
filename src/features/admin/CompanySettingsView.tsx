@@ -1,5 +1,5 @@
 // ============================================================
-// ARGOTURO ERP — Company Settings (Pengaturan Perusahaan)
+// ARGOTURO ERP — Company Settings & System Parameters
 // ============================================================
 
 import React, { useState } from 'react';
@@ -13,17 +13,17 @@ export default function CompanySettingsView() {
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     store.companySettings = settings;
-    addToast('success', 'Pengaturan parameter perusahaan berhasil diperbarui');
+    addToast('success', 'Company configuration parameters updated successfully');
   };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Pengaturan Konfigurasi Perusahaan (Company Settings)
+          Company Configuration & Parameters
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Identitas badan usaha, NPWP, tahun fiskal, tarif PPN standar, dan threshold otorisasi manajerial
+          Corporate entity profile, tax registration, fiscal year parameters, VAT rates, and managerial approval thresholds
         </p>
       </div>
 
@@ -31,7 +31,7 @@ export default function CompanySettingsView() {
         <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <div style={{ gridColumn: 'span 2' }}>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Nama Perusahaan:</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Company Legal Name:</label>
               <input
                 type="text"
                 className="input"
@@ -42,7 +42,7 @@ export default function CompanySettingsView() {
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Tagline Resmi:</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Official Tagline:</label>
               <input
                 type="text"
                 className="input"
@@ -52,7 +52,7 @@ export default function CompanySettingsView() {
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>NPWP Perusahaan:</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Tax Identification Number (NPWP):</label>
               <input
                 type="text"
                 className="input"
@@ -63,7 +63,7 @@ export default function CompanySettingsView() {
             </div>
 
             <div style={{ gridColumn: 'span 2' }}>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Alamat Kantor Pusat & Pabrik:</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Headquarters & Plant Address:</label>
               <input
                 type="text"
                 className="input"
@@ -74,7 +74,7 @@ export default function CompanySettingsView() {
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Tarif Standar PPN (%):</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Standard VAT Rate (%):</label>
               <input
                 type="number"
                 className="input"
@@ -85,7 +85,7 @@ export default function CompanySettingsView() {
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Mata Uang Utama:</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Functional Base Currency:</label>
               <input
                 type="text"
                 className="input"
@@ -96,7 +96,7 @@ export default function CompanySettingsView() {
 
             <div>
               <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
-                Batas Approval SO Manajer (Rp):
+                Sales Order Manager Approval Threshold (IDR):
               </label>
               <input
                 type="number"
@@ -109,7 +109,7 @@ export default function CompanySettingsView() {
 
             <div>
               <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
-                Batas Approval PO Manajer (Rp):
+                Purchase Order Manager Approval Threshold (IDR):
               </label>
               <input
                 type="number"
@@ -123,7 +123,7 @@ export default function CompanySettingsView() {
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10 }}>
             <button type="submit" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Save size={15} /> Simpan Perubahan Parameter
+              <Save size={15} /> Save Configuration Changes
             </button>
           </div>
         </form>
@@ -131,4 +131,3 @@ export default function CompanySettingsView() {
     </div>
   );
 }
-

@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Inventory Ledger (Buku Besar Kartu Stok Mutasi)
+// ARGOTURO ERP — Inventory Ledger
 // ============================================================
 
 import React, { useState } from 'react';
-import { BookOpen, Search, Filter, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Sliders } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function InventoryLedgerView() {
@@ -28,10 +28,10 @@ export default function InventoryLedgerView() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Buku Besar Persediaan (Inventory Ledger / Kartu Stok)
+          Inventory Ledger (Stock Movement Card)
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Jejak audit permanen setiap mutasi barang masuk, keluar, transfer antar gudang, dan perakitan produksi
+          Permanent audit trail of inbound receipts, shipments, inter-warehouse transfers, and production issues
         </p>
       </div>
 
@@ -41,7 +41,7 @@ export default function InventoryLedgerView() {
           <input
             type="text"
             className="input"
-            placeholder="Cari no. mutasi, referensi, atau SKU..."
+            placeholder="Search movement no., reference, or SKU..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{ paddingLeft: 34 }}
@@ -52,15 +52,15 @@ export default function InventoryLedgerView() {
           value={movementFilter}
           onChange={(e) => setMovementFilter(e.target.value)}
           className="input"
-          style={{ width: 220 }}
+          style={{ width: 240 }}
         >
-          <option value="all">Semua Tipe Mutasi</option>
-          <option value="inbound">Penerimaan Masuk (Inbound)</option>
-          <option value="outbound">Pengeluaran Logistik (Outbound)</option>
-          <option value="transfer">Transfer Antar Gudang</option>
-          <option value="adjustment">Penyesuaian (Adjustment)</option>
-          <option value="production_issue">Konsumsi Bahan Produksi</option>
-          <option value="production_receipt">Penerimaan Barang Jadi</option>
+          <option value="all">All Movement Types</option>
+          <option value="inbound">Inbound Receipt</option>
+          <option value="outbound">Outbound Shipment</option>
+          <option value="transfer">Inter-Warehouse Transfer</option>
+          <option value="adjustment">Stock Adjustment</option>
+          <option value="production_issue">Production Material Issue</option>
+          <option value="production_receipt">Finished Goods Intake</option>
         </select>
       </div>
 
@@ -68,22 +68,22 @@ export default function InventoryLedgerView() {
         <table className="data-table" style={{ width: '100%', fontSize: 12.5 }}>
           <thead>
             <tr>
-              <th>Waktu Mutasi</th>
-              <th>No. Entri Mutasi</th>
-              <th>Tipe Pergerakan</th>
-              <th>Produk (SKU)</th>
-              <th>Lokasi Gudang</th>
-              <th>Referensi Dokumen</th>
-              <th style={{ textAlign: 'right' }}>Kuantitas Mutasi</th>
-              <th style={{ textAlign: 'right' }}>Saldo Akhir</th>
-              <th style={{ textAlign: 'right' }}>Nilai Mutasi</th>
+              <th>Movement Timestamp</th>
+              <th>Entry No.</th>
+              <th>Movement Type</th>
+              <th>Product (SKU)</th>
+              <th>Warehouse</th>
+              <th>Document Ref</th>
+              <th style={{ textAlign: 'right' }}>Quantity</th>
+              <th style={{ textAlign: 'right' }}>Balance After</th>
+              <th style={{ textAlign: 'right' }}>Total Value</th>
             </tr>
           </thead>
           <tbody>
             {filteredLedger.length === 0 ? (
               <tr>
                 <td colSpan={9} style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
-                  Belum ada catatan mutasi inventaris.
+                  No inventory movement records found.
                 </td>
               </tr>
             ) : (
@@ -96,9 +96,9 @@ export default function InventoryLedgerView() {
                 return (
                   <tr key={entry.id}>
                     <td>
-                      {new Date(entry.date).toLocaleDateString('id-ID', {
-                        day: 'numeric',
+                      {new Date(entry.date).toLocaleDateString('en-US', {
                         month: 'short',
+                        day: 'numeric',
                         hour: '2-digit',
                         minute: '2-digit',
                       })}
@@ -125,7 +125,7 @@ export default function InventoryLedgerView() {
                               : '#1d4ed8',
                         }}
                       >
-                        {(entry.movementType || entry.sourceDocType || 'MUTASI').toUpperCase().replace('_', ' ')}
+                        {(entry.movementType || entry.sourceDocType || 'MOVEMENT').toUpperCase().replace('_', ' ')}
                       </span>
                     </td>
                     <td>
@@ -149,7 +149,7 @@ export default function InventoryLedgerView() {
                       {entry.balanceAfter} {product?.uom || product?.unit || 'PCS'}
                     </td>
                     <td style={{ textAlign: 'right', color: '#64748b' }}>
-                      Rp {(entry.totalCost ?? Math.abs(qty * entry.unitCost)).toLocaleString('id-ID')}
+                      IDR {(entry.totalCost ?? Math.abs(qty * entry.unitCost)).toLocaleString('en-US')}
                     </td>
                   </tr>
                 );

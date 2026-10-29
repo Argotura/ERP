@@ -1,9 +1,8 @@
 // ============================================================
-// ARGOTURO ERP — Goods Receipts (Penerimaan Barang / GRN)
+// ARGOTURO ERP — Goods Receipts (GRN)
 // ============================================================
 
 import React from 'react';
-import { PackageCheck, Truck, Warehouse, Calendar, CheckCircle } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function GoodsReceiptsView() {
@@ -13,10 +12,10 @@ export default function GoodsReceiptsView() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Penerimaan Barang Gudang (Goods Receipts / GRN)
+          Goods Receipts (GRN)
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Pencatatan penerimaan fisik dari vendor, inspeksi kualitas, penomoran batch, dan penambahan stok
+          Physical inbound receiving from vendors, quality inspection, batch tracking, and automatic stock increments
         </p>
       </div>
 
@@ -25,19 +24,19 @@ export default function GoodsReceiptsView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>No. Penerimaan</th>
-              <th>Referensi PO</th>
-              <th>Gudang Penerima</th>
-              <th>Petugas Gudang</th>
-              <th>Tanggal Terima</th>
-              <th>Item Diterima & Batch</th>
+              <th>Receipt No.</th>
+              <th>PO Reference</th>
+              <th>Receiving Warehouse</th>
+              <th>Received By</th>
+              <th>Receipt Date</th>
+              <th>Received Items & Batches</th>
             </tr>
           </thead>
           <tbody>
             {store.goodsReceipts.length === 0 ? (
               <tr>
                 <td colSpan={7} style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
-                  Belum ada dokumen penerimaan barang.
+                  No goods receipts recorded yet.
                 </td>
               </tr>
             ) : (
@@ -64,11 +63,11 @@ export default function GoodsReceiptsView() {
                     </td>
                     <td style={{ fontWeight: 600, color: '#1e293b' }}>{gr.receiptNumber}</td>
                     <td>{po?.orderNumber || gr.purchaseOrderId}</td>
-                    <td>{warehouse?.name || 'Gudang Pusat'}</td>
+                    <td>{warehouse?.name || 'Main Distribution Warehouse'}</td>
                     <td>{gr.receivedBy}</td>
-                    <td>{new Date(gr.receiptDate).toLocaleDateString('id-ID')}</td>
+                    <td>{new Date(gr.receiptDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                     <td>
-                      {gr.lines.length} Produk ({totalAccepted} Unit Diterima)
+                      {gr.lines.length} Line(s) ({totalAccepted} Units Received)
                     </td>
                   </tr>
                 );
@@ -80,4 +79,3 @@ export default function GoodsReceiptsView() {
     </div>
   );
 }
-

@@ -3,20 +3,20 @@
 // ============================================================
 
 import React, { useState } from 'react';
-import { Landmark, Wallet, Plus, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
+import { Landmark, Plus } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 'expenses' }) {
-  const { store, saveExpense, addToast } = useApp();
+  const { store, saveExpense } = useApp();
   const [showModal, setShowModal] = useState(false);
 
   // Expense Form State
   const [category, setCategory] = useState<'utility' | 'rent' | 'office' | 'maintenance' | 'travel' | 'marketing' | 'other'>('office');
-  const [description, setDescription] = useState('Pembelian perlengkapan kantor & ATK divisi sales');
+  const [description, setDescription] = useState('Office supplies purchase for commercial department');
   const [amount, setAmount] = useState(2500000);
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'bank_transfer' | 'petty_cash'>('bank_transfer');
   const [bankAccountId, setBankAccountId] = useState(store.bankAccounts[0]?.id || '');
-  const [expenseAccountId, setExpenseAccountId] = useState(store.accounts.find((a) => a.code === '61900')?.id || '');
+  const [expenseAccountId] = useState(store.accounts.find((a) => a.code === '61900')?.id || '');
 
   const handleCreateExpense = (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,10 +39,10 @@ export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-              Biaya & Beban Operasional (Operating Expenses)
+              Operating Expenses
             </h1>
             <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-              Pencatatan pengeluaran rutin, utilitas pabrik, ATK, pemeliharaan, dan posting otomatis ke GL
+              Record routine expenditures, facility utilities, office supplies, maintenance, and automated GL posting
             </p>
           </div>
 
@@ -52,7 +52,7 @@ export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 
             onClick={() => setShowModal(true)}
             style={{ display: 'flex', alignItems: 'center', gap: 6 }}
           >
-            <Plus size={15} /> Catat Beban Operasional
+            <Plus size={15} /> Record Operating Expense
           </button>
         </div>
 
@@ -60,12 +60,12 @@ export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 
           <table className="data-table" style={{ width: '100%', fontSize: 13 }}>
             <thead>
               <tr>
-                <th>No. Beban</th>
-                <th>Kategori</th>
-                <th>Keterangan / Deskripsi</th>
-                <th>Metode Pembayaran</th>
-                <th>Tanggal Pengeluaran</th>
-                <th style={{ textAlign: 'right' }}>Jumlah Biaya (Rp)</th>
+                <th>Expense No.</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Payment Method</th>
+                <th>Disbursement Date</th>
+                <th style={{ textAlign: 'right' }}>Expense Amount (IDR)</th>
               </tr>
             </thead>
             <tbody>
@@ -88,9 +88,9 @@ export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 
                   </td>
                   <td>{exp.description}</td>
                   <td>{exp.paymentMethod.replace('_', ' ').toUpperCase()}</td>
-                  <td>{new Date(exp.date).toLocaleDateString('id-ID')}</td>
+                  <td>{new Date(exp.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                   <td style={{ textAlign: 'right', fontWeight: 700, color: '#ef4444' }}>
-                    Rp {exp.amount.toLocaleString('id-ID')}
+                    IDR {exp.amount.toLocaleString('en-US')}
                   </td>
                 </tr>
               ))}
@@ -123,7 +123,7 @@ export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Catat Beban Operasional</h3>
+                <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Record Operating Expense</h3>
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
@@ -135,24 +135,24 @@ export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 20 }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Kategori Beban:</label>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Expense Category:</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as any)}
                     className="input"
                   >
-                    <option value="utility">Listrik, Air & Internet (Utilitas)</option>
-                    <option value="office">Perlengkapan Kantor & ATK</option>
-                    <option value="maintenance">Pemeliharaan Fasilitas & Mesin</option>
-                    <option value="travel">Transportasi & Perjalanan Dinas</option>
-                    <option value="rent">Sewa Gudang / Gedung</option>
-                    <option value="marketing">Pemasaran & Promosi</option>
-                    <option value="other">Beban Operasional Lainnya</option>
+                    <option value="utility">Electricity, Utilities & Web</option>
+                    <option value="office">Office Supplies & Stationery</option>
+                    <option value="maintenance">Facility & Machine Maintenance</option>
+                    <option value="travel">Travel & Transportation</option>
+                    <option value="rent">Warehouse / Building Rent</option>
+                    <option value="marketing">Marketing & Promotion</option>
+                    <option value="other">Other Operational Expenses</option>
                   </select>
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Deskripsi Pengeluaran:</label>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Expense Description:</label>
                   <input
                     type="text"
                     className="input"
@@ -163,7 +163,7 @@ export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Nominal Biaya (Rp):</label>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Expense Amount (IDR):</label>
                   <input
                     type="number"
                     min="1"
@@ -175,7 +175,7 @@ export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Sumber Kas/Bank:</label>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Source Cash/Bank Account:</label>
                   <select
                     value={bankAccountId}
                     onChange={(e) => setBankAccountId(e.target.value)}
@@ -183,7 +183,7 @@ export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 
                   >
                     {store.bankAccounts.map((b) => (
                       <option key={b.id} value={b.id}>
-                        {b.bankName} — {b.accountNumber} ({b.accountName})
+                        {b.bankName} — {b.accountNumber} ({b.accountName || b.accountHolder})
                       </option>
                     ))}
                   </select>
@@ -192,10 +192,10 @@ export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                  Batal
+                  Cancel
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  Posting Beban & Jurnal Kas
+                  Post Expense & Journal Entry
                 </button>
               </div>
             </form>
@@ -210,10 +210,10 @@ export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Kas & Rekening Bank (Cash & Bank Balances)
+          Cash & Bank Accounts
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Posisi likuiditas perbankan operasional dan buku kas kecil (petty cash)
+          Operational banking liquidity positions and petty cash accounts
         </p>
       </div>
 
@@ -236,7 +236,7 @@ export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 
                 <div>
                   <h3 style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', margin: 0 }}>{b.bankName}</h3>
                   <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>
-                    No. Rek: <strong style={{ color: '#1e293b' }}>{b.accountNumber}</strong>
+                    Account No.: <strong style={{ color: '#1e293b' }}>{b.accountNumber}</strong>
                   </div>
                   <div style={{ fontSize: 11, color: '#94a3b8' }}>a/n {b.accountName}</div>
                 </div>
@@ -258,12 +258,12 @@ export default function CashBankAndExpensesView({ mode }: { mode: 'cash_bank' | 
               </div>
 
               <div style={{ marginTop: 20, borderTop: '1px solid #f1f5f9', paddingTop: 14 }}>
-                <span style={{ fontSize: 11, color: '#64748b' }}>Saldo Buku Kas/Bank:</span>
+                <span style={{ fontSize: 11, color: '#64748b' }}>Ledger Book Balance:</span>
                 <div style={{ fontSize: 22, fontWeight: 700, color: '#10b981', marginTop: 2 }}>
-                  Rp {currentBal.toLocaleString('id-ID')}
+                  IDR {currentBal.toLocaleString('en-US')}
                 </div>
                 <div style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>
-                  Kode Akun GL: <strong>{b.accountCode}</strong>
+                  GL Account Code: <strong>{b.accountCode}</strong>
                 </div>
               </div>
             </div>

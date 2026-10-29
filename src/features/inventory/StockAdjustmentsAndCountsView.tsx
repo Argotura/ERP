@@ -1,13 +1,13 @@
 // ============================================================
-// ARGOTURO ERP — Stock Adjustments & Opname (Cycle Counts)
+// ARGOTURO ERP — Stock Adjustments & Cycle Counts
 // ============================================================
 
 import React, { useState } from 'react';
-import { Sliders, Plus, ClipboardList, AlertCircle, CheckCircle } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustments' | 'counts' }) {
-  const { store, createStockAdjustment, createStockCount, addToast } = useApp();
+  const { store, createStockAdjustment } = useApp();
   const [showAdjModal, setShowAdjModal] = useState(false);
 
   // Form State
@@ -15,7 +15,7 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
   const [productId, setProductId] = useState(store.products[0]?.id || '');
   const [adjustmentType, setAdjustmentType] = useState<'gain' | 'loss' | 'scrap' | 'damage'>('loss');
   const [quantity, setQuantity] = useState(2);
-  const [reason, setReason] = useState('Penyusutan berkala / Barang cacat fisik');
+  const [reason, setReason] = useState('Periodic shrinkage / physical defect');
 
   const handleCreateAdj = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,10 +28,10 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Hasil Stock Opname (Physical Cycle Counts)
+            Cycle Count Audit Results (Stock Opname)
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Rekapitulasi penghitungan fisik periodik, selisih persediaan (variance), dan akurasi gudang
+            Periodic physical inventory count recapitulation, inventory variance reconciliation, and accuracy audits
           </p>
         </div>
 
@@ -40,18 +40,18 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
             <thead>
               <tr>
                 <th>Status</th>
-                <th>No. Dokumen Opname</th>
-                <th>Lokasi Gudang</th>
-                <th>Tanggal Opname</th>
-                <th>Petugas Penghitung</th>
-                <th>Jumlah SKU Dihitung</th>
+                <th>Count Document No.</th>
+                <th>Warehouse Location</th>
+                <th>Count Date</th>
+                <th>Auditor / Counter</th>
+                <th>SKUs Audited</th>
               </tr>
             </thead>
             <tbody>
               {store.stockCounts.length === 0 ? (
                 <tr>
                   <td colSpan={6} style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
-                    Belum ada riwayat stock opname.
+                    No cycle count records found.
                   </td>
                 </tr>
               ) : (
@@ -74,10 +74,10 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
                         </span>
                       </td>
                       <td style={{ fontWeight: 600, color: '#1e293b' }}>{sc.countNumber}</td>
-                      <td>{wh?.name || sc.warehouseCode || sc.warehouseId || 'Gudang'}</td>
-                      <td>{new Date(sc.countDate).toLocaleDateString('id-ID')}</td>
+                      <td>{wh?.name || sc.warehouseCode || sc.warehouseId || 'Warehouse'}</td>
+                      <td>{new Date(sc.countDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                       <td>{sc.counterName || sc.auditor || 'Internal Auditor'}</td>
-                      <td>{sc.lines.length} Produk Dihitung</td>
+                      <td>{sc.lines.length} SKU(s) Audited</td>
                     </tr>
                   );
                 })
@@ -95,10 +95,10 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Penyesuaian Stok (Stock Adjustments)
+            Stock Adjustments
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Koreksi saldo stok akibat selisih opname, kerusakan (scrap), atau penyusutan barang
+            Balance corrections resulting from cycle count discrepancies, scrap, shrinkage, or quality quarantine
           </p>
         </div>
 
@@ -108,7 +108,7 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
           onClick={() => setShowAdjModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Buat Penyesuaian Stok
+          <Plus size={15} /> Create Stock Adjustment
         </button>
       </div>
 
@@ -116,19 +116,19 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
         <table className="data-table" style={{ width: '100%', fontSize: 13 }}>
           <thead>
             <tr>
-              <th>No. Penyesuaian</th>
-              <th>Lokasi Gudang</th>
-              <th>Tanggal</th>
-              <th>Alasan Penyesuaian</th>
-              <th>Petugas Otorisasi</th>
-              <th>Rincian Item</th>
+              <th>Adjustment No.</th>
+              <th>Warehouse Location</th>
+              <th>Date</th>
+              <th>Reason / Memo</th>
+              <th>Authorized By</th>
+              <th>Item Variance Details</th>
             </tr>
           </thead>
           <tbody>
             {store.stockAdjustments.length === 0 ? (
               <tr>
                 <td colSpan={6} style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
-                  Belum ada penyesuaian stok.
+                  No stock adjustments recorded.
                 </td>
               </tr>
             ) : (
@@ -138,7 +138,7 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
                   <tr key={a.id}>
                     <td style={{ fontWeight: 600, color: '#1e293b' }}>{a.adjustmentNumber}</td>
                     <td>{wh?.name || a.warehouseId}</td>
-                    <td>{new Date(a.adjustmentDate || a.date || a.createdAt).toLocaleDateString('id-ID')}</td>
+                    <td>{new Date(a.adjustmentDate || a.date || a.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                     <td>{a.reason}</td>
                     <td>{a.adjustedBy}</td>
                     <td>
@@ -187,7 +187,7 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Form Penyesuaian Saldo Stok</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Create Stock Adjustment</h3>
               <button
                 type="button"
                 onClick={() => setShowAdjModal(false)}
@@ -199,7 +199,7 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Gudang Terkait:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Warehouse:</label>
                 <select
                   value={warehouseId}
                   onChange={(e) => setWarehouseId(e.target.value)}
@@ -214,21 +214,21 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Tipe Penyesuaian:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Adjustment Type:</label>
                 <select
                   value={adjustmentType}
                   onChange={(e) => setAdjustmentType(e.target.value as any)}
                   className="input"
                 >
-                  <option value="loss">Kehilangan / Selisih Kurang (Loss)</option>
-                  <option value="gain">Ditemukan Lebih / Selisih Tambah (Gain)</option>
-                  <option value="scrap">Kerusakan Fisik / Rusak (Scrap)</option>
-                  <option value="damage">Karantina Rusak (Damage)</option>
+                  <option value="loss">Loss / Shortage (Loss)</option>
+                  <option value="gain">Surplus Found (Gain)</option>
+                  <option value="scrap">Physical Damage / Scrap</option>
+                  <option value="damage">Quarantine Defect (Damage)</option>
                 </select>
               </div>
 
               <div style={{ gridColumn: 'span 2' }}>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Pilih Produk:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Select Product:</label>
                 <select
                   value={productId}
                   onChange={(e) => setProductId(e.target.value)}
@@ -236,14 +236,14 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
                 >
                   {store.products.map((p) => (
                     <option key={p.id} value={p.id}>
-                      {p.sku} — {p.name} (Stok Saat Ini: {p.onHandStock})
+                      {p.sku} — {p.name} (Current Stock: {p.onHandStock})
                     </option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Jumlah Unit:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Quantity Variance:</label>
                 <input
                   type="number"
                   min="1"
@@ -255,7 +255,7 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Alasan / Memo:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Reason / Memo:</label>
                 <input
                   type="text"
                   className="input"
@@ -268,10 +268,10 @@ export default function StockAdjustmentsAndCountsView({ mode }: { mode: 'adjustm
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowAdjModal(false)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Simpan Penyesuaian
+                Save Adjustment
               </button>
             </div>
           </form>

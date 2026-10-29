@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Journal Entries (Jurnal Umum Double-Entry)
+// ARGOTURO ERP — Journal Entries (Double-Entry General Journal)
 // ============================================================
 
 import React, { useState } from 'react';
-import { FileText, Plus, CheckCircle2, AlertCircle, Eye, Scale } from 'lucide-react';
+import { Plus, Eye, Scale } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { JournalEntry } from '../../types';
 
@@ -13,11 +13,11 @@ export default function JournalEntriesView() {
   const [showModal, setShowModal] = useState(false);
 
   // Form State
-  const [description, setDescription] = useState('Penyesuaian biaya penyusutan perlengkapan kantor');
+  const [description, setDescription] = useState('Office supplies depreciation adjustment');
   const [referenceType, setReferenceType] = useState<JournalEntry['referenceType']>('Manual');
   const [lines, setLines] = useState([
-    { accountCode: '61900', accountName: 'Beban Operasional Lainnya', debit: 1500000, credit: 0, memo: 'Beban perlengkapan' },
-    { accountCode: '11120', accountName: 'Bank BCA Operasional', debit: 0, credit: 1500000, memo: 'Pembayaran perlengkapan' },
+    { accountCode: '61900', accountName: 'Other Operating Expenses', debit: 1500000, credit: 0, memo: 'Office supplies expense' },
+    { accountCode: '11120', accountName: 'BCA Operational Bank', debit: 0, credit: 1500000, memo: 'Supplies settlement payment' },
   ]);
 
   const totalDebit = lines.reduce((s, l) => s + (Number(l.debit) || 0), 0);
@@ -27,7 +27,7 @@ export default function JournalEntriesView() {
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isBalanced) {
-      addToast('warning', `Jurnal tidak seimbang! Total Debit (Rp ${totalDebit.toLocaleString()}) harus sama dengan Total Credit (Rp ${totalCredit.toLocaleString()})`);
+      addToast('warning', `Journal is unbalanced! Total Debit (IDR ${totalDebit.toLocaleString()}) must equal Total Credit (IDR ${totalCredit.toLocaleString()})`);
       return;
     }
 
@@ -56,10 +56,10 @@ export default function JournalEntriesView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Jurnal Umum Akuntansi (General Journal Entries)
+            General Journal Entries
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Seluruh transaksi finansial otomatis & manual dengan validasi double-entry (Debit = Credit)
+            Automated & manual financial transactions strictly balanced with double-entry validation (Debit = Credit)
           </p>
         </div>
 
@@ -69,7 +69,7 @@ export default function JournalEntriesView() {
           onClick={() => setShowModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Buat Jurnal Manual
+          <Plus size={15} /> Create Manual Journal
         </button>
       </div>
 
@@ -78,13 +78,13 @@ export default function JournalEntriesView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>No. Bukti Jurnal</th>
-              <th>Tanggal Posting</th>
-              <th>Tipe Dokumen</th>
-              <th>Keterangan / Memo</th>
-              <th style={{ textAlign: 'right' }}>Total Debit (Rp)</th>
-              <th style={{ textAlign: 'right' }}>Total Kredit (Rp)</th>
-              <th style={{ textAlign: 'right' }}>Aksi</th>
+              <th>Voucher No.</th>
+              <th>Posting Date</th>
+              <th>Doc Type</th>
+              <th>Memo / Description</th>
+              <th style={{ textAlign: 'right' }}>Total Debit</th>
+              <th style={{ textAlign: 'right' }}>Total Credit</th>
+              <th style={{ textAlign: 'right' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -105,7 +105,7 @@ export default function JournalEntriesView() {
                   </span>
                 </td>
                 <td style={{ fontWeight: 600, color: '#1e293b' }}>{je.entryNumber}</td>
-                <td>{new Date(je.date).toLocaleDateString('id-ID')}</td>
+                <td>{new Date(je.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                 <td>
                   <span
                     style={{
@@ -123,10 +123,10 @@ export default function JournalEntriesView() {
                   {je.description}
                 </td>
                 <td style={{ textAlign: 'right', fontWeight: 600 }}>
-                  Rp {je.totalDebit.toLocaleString('id-ID')}
+                  IDR {je.totalDebit.toLocaleString('en-US')}
                 </td>
                 <td style={{ textAlign: 'right', fontWeight: 600 }}>
-                  Rp {je.totalCredit.toLocaleString('id-ID')}
+                  IDR {je.totalCredit.toLocaleString('en-US')}
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   <button
@@ -135,7 +135,7 @@ export default function JournalEntriesView() {
                     className="btn btn-sm btn-secondary"
                     style={{ fontSize: 11, padding: '3px 8px' }}
                   >
-                    <Eye size={12} /> Baris Jurnal
+                    <Eye size={12} /> View Lines
                   </button>
                 </td>
               </tr>
@@ -170,10 +170,10 @@ export default function JournalEntriesView() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <div>
                 <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>
-                  Rincian Baris Jurnal: {selectedJE.entryNumber}
+                  Journal Voucher Lines: {selectedJE.entryNumber}
                 </h3>
                 <span style={{ fontSize: 12, color: '#64748b' }}>
-                  Referensi: {selectedJE.referenceNumber} ({selectedJE.referenceType})
+                  Reference: {selectedJE.referenceNumber} ({selectedJE.referenceType})
                 </span>
               </div>
               <button
@@ -186,17 +186,17 @@ export default function JournalEntriesView() {
             </div>
 
             <p style={{ fontSize: 13, color: '#334155', marginBottom: 14 }}>
-              <strong>Keterangan:</strong> {selectedJE.description}
+              <strong>Description:</strong> {selectedJE.description}
             </p>
 
             <table className="data-table" style={{ width: '100%', fontSize: 12.5, marginBottom: 16 }}>
               <thead>
                 <tr>
-                  <th>Kode Akun</th>
-                  <th>Nama Akun</th>
-                  <th>Memo Baris</th>
-                  <th style={{ textAlign: 'right' }}>Debit (Rp)</th>
-                  <th style={{ textAlign: 'right' }}>Kredit (Rp)</th>
+                  <th>Account Code</th>
+                  <th>Account Name</th>
+                  <th>Line Memo</th>
+                  <th style={{ textAlign: 'right' }}>Debit (IDR)</th>
+                  <th style={{ textAlign: 'right' }}>Credit (IDR)</th>
                 </tr>
               </thead>
               <tbody>
@@ -206,10 +206,10 @@ export default function JournalEntriesView() {
                     <td style={{ fontWeight: 500 }}>{l.accountName}</td>
                     <td style={{ color: '#64748b' }}>{l.memo}</td>
                     <td style={{ textAlign: 'right', fontWeight: l.debit > 0 ? 600 : 400 }}>
-                      {l.debit > 0 ? `Rp ${l.debit.toLocaleString('id-ID')}` : '—'}
+                      {l.debit > 0 ? `IDR ${l.debit.toLocaleString('en-US')}` : '—'}
                     </td>
                     <td style={{ textAlign: 'right', fontWeight: l.credit > 0 ? 600 : 400 }}>
-                      {l.credit > 0 ? `Rp ${l.credit.toLocaleString('id-ID')}` : '—'}
+                      {l.credit > 0 ? `IDR ${l.credit.toLocaleString('en-US')}` : '—'}
                     </td>
                   </tr>
                 ))}
@@ -218,10 +218,10 @@ export default function JournalEntriesView() {
                 <tr style={{ backgroundColor: '#f8fafc', fontWeight: 700 }}>
                   <td colSpan={3} style={{ textAlign: 'right' }}>TOTAL:</td>
                   <td style={{ textAlign: 'right', color: '#10b981' }}>
-                    Rp {selectedJE.totalDebit.toLocaleString('id-ID')}
+                    IDR {selectedJE.totalDebit.toLocaleString('en-US')}
                   </td>
                   <td style={{ textAlign: 'right', color: '#10b981' }}>
-                    Rp {selectedJE.totalCredit.toLocaleString('id-ID')}
+                    IDR {selectedJE.totalCredit.toLocaleString('en-US')}
                   </td>
                 </tr>
               </tfoot>
@@ -229,7 +229,7 @@ export default function JournalEntriesView() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <button type="button" className="btn btn-secondary" onClick={() => setSelectedJE(null)}>
-                Tutup
+                Close
               </button>
             </div>
           </div>
@@ -261,7 +261,7 @@ export default function JournalEntriesView() {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Input Jurnal Manual Double-Entry</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Input Manual Double-Entry Journal</h3>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
@@ -273,7 +273,7 @@ export default function JournalEntriesView() {
 
             <div style={{ marginBottom: 14 }}>
               <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
-                Keterangan / Memo Jurnal:
+                Journal Description / Memo:
               </label>
               <input
                 type="text"
@@ -286,7 +286,7 @@ export default function JournalEntriesView() {
 
             <div style={{ marginBottom: 16 }}>
               <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 6 }}>
-                Baris Akun Debit & Kredit:
+                Debit & Credit Account Lines:
               </label>
               {lines.map((l, idx) => (
                 <div key={idx} style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
@@ -325,7 +325,7 @@ export default function JournalEntriesView() {
                   <input
                     type="number"
                     className="input"
-                    placeholder="Kredit"
+                    placeholder="Credit"
                     value={l.credit || ''}
                     onChange={(e) => {
                       const updated = [...lines];
@@ -354,20 +354,20 @@ export default function JournalEntriesView() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Scale size={16} color={isBalanced ? '#16a34a' : '#dc2626'} />
                 <span style={{ fontSize: 12.5, fontWeight: 600, color: isBalanced ? '#166534' : '#991b1b' }}>
-                  {isBalanced ? '✓ Jurnal Seimbang (Balanced)' : '✕ Jurnal Tidak Seimbang (Unbalanced)'}
+                  {isBalanced ? '✓ Balanced Double-Entry Journal' : '✕ Unbalanced Journal (Debit !== Credit)'}
                 </span>
               </div>
               <div style={{ fontSize: 12.5, fontWeight: 700 }}>
-                Debit: Rp {totalDebit.toLocaleString('id-ID')} | Kredit: Rp {totalCredit.toLocaleString('id-ID')}
+                Debit: IDR {totalDebit.toLocaleString('en-US')} | Credit: IDR {totalCredit.toLocaleString('en-US')}
               </div>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary" disabled={!isBalanced}>
-                Posting Jurnal ke Buku Besar
+                Post Journal to General Ledger
               </button>
             </div>
           </form>

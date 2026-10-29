@@ -51,11 +51,11 @@ const ROUTE_LABELS: Record<string, { group: string; title: string }> = {
   'inventory/catalog': { group: 'Inventory & Warehouse', title: 'Product Catalog' },
   'inventory/categories': { group: 'Inventory & Warehouse', title: 'Categories & UOM' },
   'inventory/overview': { group: 'Inventory & Warehouse', title: 'Stock Overview' },
-  'inventory/ledger': { group: 'Inventory & Warehouse', title: 'Inventory Ledger (Kartu Stok)' },
+  'inventory/ledger': { group: 'Inventory & Warehouse', title: 'Inventory Ledger' },
   'inventory/warehouses': { group: 'Inventory & Warehouse', title: 'Warehouses & Locations' },
   'inventory/transfers': { group: 'Inventory & Warehouse', title: 'Stock Transfers' },
   'inventory/adjustments': { group: 'Inventory & Warehouse', title: 'Stock Adjustments' },
-  'inventory/counts': { group: 'Inventory & Warehouse', title: 'Stock Opname' },
+  'inventory/counts': { group: 'Inventory & Warehouse', title: 'Physical Stock Count' },
   'inventory/reorder': { group: 'Inventory & Warehouse', title: 'Reorder Planning' },
   'manufacturing/bom': { group: 'Manufacturing', title: 'Bills of Materials (BOM)' },
   'manufacturing/planning': { group: 'Manufacturing', title: 'Production Planning' },
@@ -81,10 +81,10 @@ const ROUTE_LABELS: Record<string, { group: string; title: string }> = {
   'reports/purchasing': { group: 'Reports & Audit', title: 'Purchasing Report' },
   'reports/inventory_valuation': { group: 'Reports & Audit', title: 'Inventory Valuation Report' },
   'reports/audit_trail': { group: 'Reports & Audit', title: 'Audit Trail & Compliance' },
-  'admin/users': { group: 'Administration', title: 'Users & Roles' },
+  'admin/users': { group: 'Administration', title: 'User Access & Roles' },
   'admin/settings': { group: 'Administration', title: 'Company Settings' },
   'admin/numbering': { group: 'Administration', title: 'Document Numbering' },
-  'admin/demo_data': { group: 'Administration', title: 'Demo Data Management' },
+  'admin/demo_data': { group: 'Administration', title: 'System Administration' },
 };
 
 export default function Topbar({ collapsed }: TopbarProps) {
@@ -186,7 +186,7 @@ export default function Topbar({ collapsed }: TopbarProps) {
         <input
           type="text"
           className="topbar-search-input"
-          placeholder="Cari SKU, produk, pelanggan, SO, PO..."
+          placeholder="Search SKU, product, customer, SO, PO..."
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
@@ -223,14 +223,14 @@ export default function Topbar({ collapsed }: TopbarProps) {
           >
             {totalMatches === 0 ? (
               <div style={{ padding: '12px 16px', fontSize: 13, color: '#6b7280', textAlign: 'center' }}>
-                Tidak ditemukan hasil untuk "{searchQuery}"
+                No results found for "{searchQuery}"
               </div>
             ) : (
               <>
                 {searchMatches && searchMatches.products.length > 0 && (
                   <div>
                     <div style={{ padding: '4px 12px', fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase' }}>
-                      Produk
+                      Products
                     </div>
                     {searchMatches.products.map((p) => (
                       <div
@@ -254,7 +254,7 @@ export default function Topbar({ collapsed }: TopbarProps) {
                 {searchMatches && searchMatches.customers.length > 0 && (
                   <div>
                     <div style={{ padding: '6px 12px 4px', fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase' }}>
-                      Pelanggan
+                      Customers
                     </div>
                     {searchMatches.customers.map((c) => (
                       <div
@@ -336,7 +336,7 @@ export default function Topbar({ collapsed }: TopbarProps) {
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn-sm btn-secondary"
-          title="Buka Executive Analytics Dashboard"
+          title="Open Executive Analytics Dashboard"
           style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}
         >
           <ExternalLink size={13} />
@@ -401,10 +401,10 @@ export default function Topbar({ collapsed }: TopbarProps) {
             >
               <div style={{ padding: '6px 14px', borderBottom: '1px solid #f1f5f9' }}>
                 <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', color: '#94a3b8' }}>
-                  Simulasi Pengguna & Peran (Persona)
+                  User & Role Persona
                 </div>
                 <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>
-                  Pilih peran untuk menguji alur persetujuan & otorisasi
+                  Switch user to test role-based authority & approvals
                 </div>
               </div>
 
@@ -417,7 +417,7 @@ export default function Topbar({ collapsed }: TopbarProps) {
                       onClick={() => {
                         setActiveUserId(user.id);
                         setShowRoleDropdown(false);
-                        addToast('info', `Beralih ke pengguna: ${user.name} (${user.role})`);
+                        addToast('info', `Switched active role: ${user.name} (${user.role})`);
                       }}
                       style={{
                         padding: '8px 14px',
@@ -470,7 +470,7 @@ export default function Topbar({ collapsed }: TopbarProps) {
             type="button"
             className="topbar-action-btn"
             onClick={() => setShowNotifDrawer(!showNotifDrawer)}
-            title="Notifikasi Sistem"
+            title="System Notifications"
             style={{ position: 'relative' }}
           >
             <Bell size={18} />
@@ -506,13 +506,13 @@ export default function Topbar({ collapsed }: TopbarProps) {
               }}
             >
               <div style={{ padding: '8px 14px', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#1e293b' }}>Notifikasi Operasional</span>
-                <span style={{ fontSize: 11, color: '#3b82f6' }}>{unreadNotifications.length} Baru</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#1e293b' }}>Operational Notifications</span>
+                <span style={{ fontSize: 11, color: '#3b82f6' }}>{unreadNotifications.length} New</span>
               </div>
               <div style={{ maxHeight: 260, overflowY: 'auto' }}>
                 {store.notifications.length === 0 ? (
                   <div style={{ padding: '16px', textAlign: 'center', fontSize: 12, color: '#94a3b8' }}>
-                    Tidak ada notifikasi baru
+                    No unread notifications
                   </div>
                 ) : (
                   store.notifications.slice(0, 6).map((notif) => (
@@ -529,7 +529,7 @@ export default function Topbar({ collapsed }: TopbarProps) {
                       <div style={{ fontSize: 12, fontWeight: 600, color: '#1e293b' }}>{notif.title}</div>
                       <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>{notif.message}</div>
                       <div style={{ fontSize: 9.5, color: '#94a3b8', marginTop: 4 }}>
-                        {new Date(notif.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(notif.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </div>
                   ))
@@ -539,33 +539,25 @@ export default function Topbar({ collapsed }: TopbarProps) {
           )}
         </div>
 
-        {/* Demo Reset Button */}
-        <button
-          type="button"
-          onClick={() => setShowResetConfirm(true)}
-          className="btn btn-sm btn-secondary"
-          title="Reset Demo Data"
-          style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11.5 }}
-        >
-          <RotateCcw size={13} />
-          Reset Demo
-        </button>
-
-        {/* DEMO MODE Badge */}
+        {/* System Status Badge */}
         <span
           style={{
             fontSize: 10.5,
             fontWeight: 700,
             padding: '3px 8px',
             borderRadius: 4,
-            backgroundColor: '#fef3c7',
-            color: '#b45309',
-            border: '1px solid #fde68a',
+            backgroundColor: '#ecfdf5',
+            color: '#059669',
+            border: '1px solid #a7f3d0',
             letterSpacing: '0.04em',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
           }}
-          title="Aplikasi berjalan dalam mode demonstrasi dengan local storage"
+          title="System is operating normally"
         >
-          DEMO MODE
+          <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#10b981', display: 'inline-block' }} />
+          SYSTEM ONLINE
         </span>
       </div>
 
@@ -608,13 +600,13 @@ export default function Topbar({ collapsed }: TopbarProps) {
                 <AlertCircle size={20} />
               </div>
               <div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111827' }}>Reset Semua Data Demo?</h3>
-                <p style={{ fontSize: 12, color: '#6b7280' }}>Tindakan ini akan mengembalikan data ke setelan awal pabrik.</p>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#111827' }}>Restore System State?</h3>
+                <p style={{ fontSize: 12, color: '#6b7280' }}>This action will restore all records to baseline defaults.</p>
               </div>
             </div>
 
             <p style={{ fontSize: 13, color: '#4b5563', lineHeight: 1.5, marginBottom: 20 }}>
-              Semua transaksi baru yang Anda buat (Sales Order, Purchase Order, Pengiriman, Faktur, Jurnal, Penggajian) akan dihapus dari penyimpanan peramban (localStorage) dan dikembalikan ke kondisi seed data demo resmi ARGOTURO ERP.
+              All new operational transactions (Sales Orders, Purchase Orders, Dispatches, Invoices, General Ledger Entries, Payroll Runs) will be reset to the standard initial business state.
             </p>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
@@ -623,7 +615,7 @@ export default function Topbar({ collapsed }: TopbarProps) {
                 className="btn btn-secondary"
                 onClick={() => setShowResetConfirm(false)}
               >
-                Batal
+                Cancel
               </button>
               <button
                 type="button"
@@ -633,7 +625,7 @@ export default function Topbar({ collapsed }: TopbarProps) {
                   setShowResetConfirm(false);
                 }}
               >
-                Ya, Reset Data Demo
+                Confirm Restore
               </button>
             </div>
           </div>

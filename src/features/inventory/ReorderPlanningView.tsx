@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Reorder Planning & Low-Stock Replenishment
+// ARGOTURO ERP — Reorder Planning & Replenishment
 // ============================================================
 
 import React from 'react';
-import { AlertTriangle, ShoppingCart, CheckCircle, Package, ArrowRight } from 'lucide-react';
+import { AlertTriangle, ShoppingCart, CheckCircle } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function ReorderPlanningView() {
@@ -42,10 +42,10 @@ export default function ReorderPlanningView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Perencanaan Pemesanan Ulang (Reorder Planning)
+            Reorder Planning & Replenishment
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Kalkulasi otomatis barang di bawah titik minimum (ROP) dan pembuatan PR pengadaan sekaligus
+            Automated detection of inventory below reorder point (ROP) and batch purchase requisition generation
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export default function ReorderPlanningView() {
             onClick={handleBatchGeneratePR}
             style={{ display: 'flex', alignItems: 'center', gap: 6, backgroundColor: '#ea580c', borderColor: '#ea580c' }}
           >
-            <ShoppingCart size={15} /> Buat PR Otomatis ({lowStockItems.length} Item)
+            <ShoppingCart size={15} /> Auto-Generate PR ({lowStockItems.length} Items)
           </button>
         )}
       </div>
@@ -82,22 +82,22 @@ export default function ReorderPlanningView() {
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: lowStockItems.length > 0 ? '#9a3412' : '#166534' }}>
               {lowStockItems.length > 0
-                ? `${lowStockItems.length} Produk Berada di Bawah Batas Reorder Point`
-                : 'Semua Produk Berada dalam Level Persediaan Aman'}
+                ? `${lowStockItems.length} Products Below Reorder Point (ROP)`
+                : 'All Products Within Optimal Stock Levels'}
             </div>
             <div style={{ fontSize: 12, color: lowStockItems.length > 0 ? '#c2410c' : '#15803d', marginTop: 2 }}>
               {lowStockItems.length > 0
-                ? 'Segera buat Permintaan Pembelian (PR) untuk mencegah stockout pada operasional perakitan.'
-                : 'Tidak ada kebutuhan restock darurat saat ini.'}
+                ? 'Generate a Purchase Requisition (PR) immediately to prevent operational stockouts.'
+                : 'No emergency replenishment required at this time.'}
             </div>
           </div>
         </div>
 
         {lowStockItems.length > 0 && (
           <div style={{ textAlign: 'right' }}>
-            <span style={{ fontSize: 11, color: '#9a3412' }}>Estimasi Kebutuhan Dana:</span>
+            <span style={{ fontSize: 11, color: '#9a3412' }}>Estimated Capital Requirement:</span>
             <div style={{ fontSize: 16, fontWeight: 700, color: '#9a3412' }}>
-              Rp {totalEstimatedReplenishment.toLocaleString('id-ID')}
+              IDR {totalEstimatedReplenishment.toLocaleString('en-US')}
             </div>
           </div>
         )}
@@ -109,21 +109,21 @@ export default function ReorderPlanningView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>SKU Produk</th>
-              <th>Nama Produk</th>
-              <th>Satuan</th>
-              <th style={{ textAlign: 'right' }}>Stok Fisik</th>
+              <th>Product SKU</th>
+              <th>Product Name</th>
+              <th>UOM</th>
+              <th style={{ textAlign: 'right' }}>On-Hand Stock</th>
               <th style={{ textAlign: 'right' }}>Reorder Point</th>
               <th style={{ textAlign: 'right' }}>Safety Stock</th>
-              <th style={{ textAlign: 'right' }}>Saran Pemesanan</th>
-              <th style={{ textAlign: 'right' }}>Estimasi Biaya</th>
+              <th style={{ textAlign: 'right' }}>Suggested Order</th>
+              <th style={{ textAlign: 'right' }}>Estimated Cost</th>
             </tr>
           </thead>
           <tbody>
             {lowStockItems.length === 0 ? (
               <tr>
                 <td colSpan={9} style={{ textAlign: 'center', padding: '36px 0', color: '#16a34a' }}>
-                  ✓ Persediaan optimal. Tidak ada SKU yang membutuhkan replenishment mendesak.
+                  ✓ Inventory levels healthy. No SKUs currently require replenishment.
                 </td>
               </tr>
             ) : (
@@ -155,7 +155,7 @@ export default function ReorderPlanningView() {
                     +{it.suggestedQty} {it.product.uom}
                   </td>
                   <td style={{ textAlign: 'right', fontWeight: 600 }}>
-                    Rp {it.totalCost.toLocaleString('id-ID')}
+                    IDR {it.totalCost.toLocaleString('en-US')}
                   </td>
                 </tr>
               ))

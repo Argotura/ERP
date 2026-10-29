@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Stock Transfers (Transfer Stok Antar Gudang)
+// ARGOTURO ERP — Stock Transfers
 // ============================================================
 
 import React, { useState } from 'react';
-import { ArrowLeftRight, Plus, Warehouse, CheckCircle, ArrowRight } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function StockTransfersView() {
@@ -15,12 +15,12 @@ export default function StockTransfersView() {
   const [toWarehouseId, setToWarehouseId] = useState(store.warehouses[1]?.id || '');
   const [productId, setProductId] = useState(store.products[0]?.id || '');
   const [quantity, setQuantity] = useState(10);
-  const [notes, setNotes] = useState('Relokasi stok berkala untuk pemenuhan regional');
+  const [notes, setNotes] = useState('Periodic stock rebalance for regional order fulfillment');
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
     if (fromWarehouseId === toWarehouseId) {
-      addToast('warning', 'Gudang asal dan gudang tujuan tidak boleh sama.');
+      addToast('warning', 'Source warehouse and destination warehouse cannot be the same.');
       return;
     }
 
@@ -33,10 +33,10 @@ export default function StockTransfersView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Transfer Persediaan Antar Gudang (Stock Transfers)
+            Inter-Warehouse Stock Transfers
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Pemindahan stok fisik antar cabang dan pencatatan mutasi keluar/masuk secara sinkron
+            Physical stock relocation between branch warehouses with dual-side inventory ledger synchronisation
           </p>
         </div>
 
@@ -46,7 +46,7 @@ export default function StockTransfersView() {
           onClick={() => setShowModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Buat Transfer Stok
+          <Plus size={15} /> Create Stock Transfer
         </button>
       </div>
 
@@ -55,20 +55,20 @@ export default function StockTransfersView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>No. Dokumen Transfer</th>
-              <th>Gudang Asal</th>
-              <th>Gudang Tujuan</th>
-              <th>Tanggal Transfer</th>
-              <th>Item Dipindahkan</th>
-              <th>Petugas</th>
-              <th>Catatan</th>
+              <th>Transfer Document No.</th>
+              <th>Source Warehouse</th>
+              <th>Destination Warehouse</th>
+              <th>Transfer Date</th>
+              <th>Transferred Items</th>
+              <th>Authorized By</th>
+              <th>Notes</th>
             </tr>
           </thead>
           <tbody>
             {store.stockTransfers.length === 0 ? (
               <tr>
                 <td colSpan={8} style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
-                  Belum ada dokumen transfer stok.
+                  No stock transfer records found.
                 </td>
               </tr>
             ) : (
@@ -98,9 +98,9 @@ export default function StockTransfersView() {
                     <td>
                       <span style={{ fontWeight: 600, color: '#3b82f6' }}>{toWh?.name || t.toWarehouse || t.toWarehouseId}</span>
                     </td>
-                    <td>{new Date(t.transferDate || t.date || t.createdAt).toLocaleDateString('id-ID')}</td>
+                    <td>{new Date(t.transferDate || t.date || t.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                     <td>
-                      {t.lines.length} Produk ({totalQty} Unit)
+                      {t.lines.length} Line(s) ({totalQty} Units)
                     </td>
                     <td>{t.requestedBy}</td>
                     <td style={{ color: '#64748b' }}>{t.notes || '—'}</td>
@@ -136,7 +136,7 @@ export default function StockTransfersView() {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Form Transfer Stok Antar Gudang</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Inter-Warehouse Transfer Form</h3>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
@@ -148,7 +148,7 @@ export default function StockTransfersView() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Gudang Asal (Keluar):</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Source Warehouse (Outbound):</label>
                 <select
                   value={fromWarehouseId}
                   onChange={(e) => setFromWarehouseId(e.target.value)}
@@ -163,7 +163,7 @@ export default function StockTransfersView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Gudang Tujuan (Masuk):</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Destination Warehouse (Inbound):</label>
                 <select
                   value={toWarehouseId}
                   onChange={(e) => setToWarehouseId(e.target.value)}
@@ -178,7 +178,7 @@ export default function StockTransfersView() {
               </div>
 
               <div style={{ gridColumn: 'span 2' }}>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Pilih Produk:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Select Product:</label>
                 <select
                   value={productId}
                   onChange={(e) => setProductId(e.target.value)}
@@ -186,14 +186,14 @@ export default function StockTransfersView() {
                 >
                   {store.products.map((p) => (
                     <option key={p.id} value={p.id}>
-                      {p.sku} — {p.name} (Total Stok: {p.onHandStock})
+                      {p.sku} — {p.name} (Total Stock: {p.onHandStock})
                     </option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Jumlah Transfer:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Transfer Quantity:</label>
                 <input
                   type="number"
                   min="1"
@@ -205,7 +205,7 @@ export default function StockTransfersView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Catatan Mutasi:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Transfer Memo / Reason:</label>
                 <input
                   type="text"
                   className="input"
@@ -217,10 +217,10 @@ export default function StockTransfersView() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Eksekusi Transfer Stok
+                Execute Stock Transfer
               </button>
             </div>
           </form>

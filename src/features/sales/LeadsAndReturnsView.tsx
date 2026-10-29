@@ -2,8 +2,7 @@
 // ARGOTURO ERP — Leads Pipeline & Sales Returns
 // ============================================================
 
-import React, { useState } from 'react';
-import { Users, RotateCcw, Plus, Mail, Phone, Building2 } from 'lucide-react';
+import React from 'react';
 import { useApp } from '../../context/AppContext';
 
 export default function LeadsAndReturnsView({ mode }: { mode: 'leads' | 'returns' }) {
@@ -14,10 +13,10 @@ export default function LeadsAndReturnsView({ mode }: { mode: 'leads' | 'returns
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Retur Penjualan (Sales Returns)
+            Sales Returns
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Pencatatan pengembalian barang dari pelanggan, nota retur, dan pengembalian stok ke karantina
+            Customer return authorizations, credit notes, and quarantine stock intake
           </p>
         </div>
 
@@ -25,20 +24,20 @@ export default function LeadsAndReturnsView({ mode }: { mode: 'leads' | 'returns
           <table className="data-table" style={{ width: '100%', fontSize: 13 }}>
             <thead>
               <tr>
-                <th>No. Retur</th>
-                <th>No. Faktur Asal</th>
-                <th>Pelanggan</th>
-                <th>Alasan Retur</th>
+                <th>Return No.</th>
+                <th>Original Invoice</th>
+                <th>Customer</th>
+                <th>Return Reason</th>
                 <th>Status</th>
-                <th>Tanggal Retur</th>
-                <th style={{ textAlign: 'right' }}>Total Retur</th>
+                <th>Return Date</th>
+                <th style={{ textAlign: 'right' }}>Total Value</th>
               </tr>
             </thead>
             <tbody>
               {store.salesReturns.length === 0 ? (
                 <tr>
                   <td colSpan={7} style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
-                    Belum ada retur penjualan yang dicatat.
+                    No sales returns recorded.
                   </td>
                 </tr>
               ) : (
@@ -49,8 +48,8 @@ export default function LeadsAndReturnsView({ mode }: { mode: 'leads' | 'returns
                     <tr key={r.id}>
                       <td style={{ fontWeight: 600, color: '#1e293b' }}>{r.returnNumber}</td>
                       <td>{invoice?.invoiceNumber || r.deliveryOrderNumber || r.deliveryOrderId || '-'}</td>
-                      <td>{customer?.name || 'Pelanggan'}</td>
-                      <td>{r.reason || (r.lines && r.lines[0]?.reason) || 'Cacat Pabrik'}</td>
+                      <td>{customer?.name || 'Customer'}</td>
+                      <td>{r.reason || (r.lines && r.lines[0]?.reason) || 'Quality Defect'}</td>
                       <td>
                         <span
                           style={{
@@ -65,9 +64,9 @@ export default function LeadsAndReturnsView({ mode }: { mode: 'leads' | 'returns
                           {r.status.toUpperCase()}
                         </span>
                       </td>
-                      <td>{new Date(r.returnDate).toLocaleDateString('id-ID')}</td>
+                      <td>{new Date(r.returnDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                       <td style={{ textAlign: 'right', fontWeight: 600 }}>
-                        Rp {(r.totalAmount || 0).toLocaleString('id-ID')}
+                        IDR {(r.totalAmount || 0).toLocaleString('en-US')}
                       </td>
                     </tr>
                   );
@@ -85,10 +84,10 @@ export default function LeadsAndReturnsView({ mode }: { mode: 'leads' | 'returns
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Prospek & Pipeline Penjualan (Leads & CRM)
+          Sales Leads & CRM Pipeline
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Kelola peluang bisnis baru, prospek industri, dan konversi ke pelanggan aktif
+          Commercial opportunities, corporate pipeline tracking, and customer conversion status
         </p>
       </div>
 
@@ -97,12 +96,12 @@ export default function LeadsAndReturnsView({ mode }: { mode: 'leads' | 'returns
           <thead>
             <tr>
               <th>Status</th>
-              <th>Nama Prospek</th>
-              <th>Perusahaan</th>
-              <th>Kontak</th>
-              <th>Sumber Prospek</th>
-              <th style={{ textAlign: 'right' }}>Estimasi Nilai</th>
-              <th>Sales Rep</th>
+              <th>Lead Name</th>
+              <th>Company</th>
+              <th>Contact Details</th>
+              <th>Acquisition Channel</th>
+              <th style={{ textAlign: 'right' }}>Est. Value</th>
+              <th>Assigned To</th>
             </tr>
           </thead>
           <tbody>
@@ -140,7 +139,7 @@ export default function LeadsAndReturnsView({ mode }: { mode: 'leads' | 'returns
                 </td>
                 <td>{l.source}</td>
                 <td style={{ textAlign: 'right', fontWeight: 600 }}>
-                  Rp {l.estimatedValue.toLocaleString('id-ID')}
+                  IDR {l.estimatedValue.toLocaleString('en-US')}
                 </td>
                 <td>{l.assignedTo}</td>
               </tr>

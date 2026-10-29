@@ -13,17 +13,17 @@ export default function ActivitiesView() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Aktivitas Operasional Terakhir (Activity Feed)
+          Recent Operational Activities (Activity Feed)
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Kronologi aksi pengguna dan perubahan status dokumen di seluruh modul sistem
+          Chronological record of user actions, transactions, and document status changes across all modules
         </p>
       </div>
 
       <div style={{ backgroundColor: '#ffffff', borderRadius: 8, border: '1px solid #e2e8f0', padding: 20 }}>
         {store.activityLogs.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>
-            Belum ada aktivitas yang tercatat.
+            No system activity recorded yet.
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -86,7 +86,7 @@ export default function ActivitiesView() {
 
                     <span style={{ fontSize: 11, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4 }}>
                       <Clock size={11} />
-                      {new Date(log.timestamp).toLocaleTimeString('id-ID', {
+                      {new Date(log.timestamp).toLocaleTimeString('en-US', {
                         hour: '2-digit',
                         minute: '2-digit',
                         second: '2-digit',
@@ -98,7 +98,7 @@ export default function ActivitiesView() {
                     {log.description}
                   </p>
                   <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 4 }}>
-                    Referensi ID: {log.entityNumber} ({log.action})
+                    Reference ID: {log.entityNumber} ({log.action})
                   </div>
                 </div>
               </div>
@@ -109,4 +109,3 @@ export default function ActivitiesView() {
     </div>
   );
 }
-

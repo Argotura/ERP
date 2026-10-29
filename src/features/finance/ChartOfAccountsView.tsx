@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Chart of Accounts (Bagan Akun Standar / COA)
+// ARGOTURO ERP — Chart of Accounts (COA)
 // ============================================================
 
 import React, { useState } from 'react';
-import { BookOpen, Search, Filter, Layers, DollarSign } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function ChartOfAccountsView() {
@@ -25,10 +25,10 @@ export default function ChartOfAccountsView() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Bagan Akun Standar (Chart of Accounts / COA)
+          Chart of Accounts (COA)
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Struktur kode akun akuntansi 5-digit standar Indonesia dan saldo real-time dari jurnal umum
+          Standard enterprise 5-digit account classifications and real-time general ledger balances
         </p>
       </div>
 
@@ -38,7 +38,7 @@ export default function ChartOfAccountsView() {
           <input
             type="text"
             className="input"
-            placeholder="Cari kode atau nama akun..."
+            placeholder="Search by account code or name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{ paddingLeft: 34 }}
@@ -49,14 +49,14 @@ export default function ChartOfAccountsView() {
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
           className="input"
-          style={{ width: 220 }}
+          style={{ width: 240 }}
         >
-          <option value="all">Semua Klasifikasi Akun</option>
-          <option value="asset">10000 — Aktiva / Aset</option>
-          <option value="liability">20000 — Kewajiban / Hutang</option>
-          <option value="equity">30000 — Modal / Ekuitas</option>
-          <option value="revenue">40000 — Pendapatan Usaha</option>
-          <option value="expense">50000 & 60000 — Beban & HPP</option>
+          <option value="all">All Classifications</option>
+          <option value="asset">10000 — Assets</option>
+          <option value="liability">20000 — Liabilities</option>
+          <option value="equity">30000 — Equity</option>
+          <option value="revenue">40000 — Operating Revenue</option>
+          <option value="expense">50000 & 60000 — Expenses & COGS</option>
         </select>
       </div>
 
@@ -64,12 +64,12 @@ export default function ChartOfAccountsView() {
         <table className="data-table" style={{ width: '100%', fontSize: 13 }}>
           <thead>
             <tr>
-              <th>Kode Akun</th>
-              <th>Nama Akun</th>
-              <th>Klasifikasi</th>
-              <th>Kategori</th>
-              <th>Saldo Normal</th>
-              <th style={{ textAlign: 'right' }}>Saldo Real-Time Saat Ini</th>
+              <th>Account Code</th>
+              <th>Account Name</th>
+              <th>Classification</th>
+              <th>Category</th>
+              <th>Normal Balance</th>
+              <th style={{ textAlign: 'right' }}>Real-Time Balance</th>
             </tr>
           </thead>
           <tbody>
@@ -115,7 +115,7 @@ export default function ChartOfAccountsView() {
                 <td>{acc.category}</td>
                 <td style={{ textTransform: 'capitalize' }}>{acc.normalBalance}</td>
                 <td style={{ textAlign: 'right', fontWeight: 700, color: acc.currentBalance >= 0 ? '#1e293b' : '#ef4444' }}>
-                  Rp {Math.abs(acc.currentBalance).toLocaleString('id-ID')}
+                  IDR {Math.abs(acc.currentBalance).toLocaleString('en-US')}
                 </td>
               </tr>
             ))}

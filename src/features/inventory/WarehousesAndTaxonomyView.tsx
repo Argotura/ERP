@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Warehouses, Locations & Taxonomy (Categories & UOM)
+// ARGOTURO ERP — Warehouses, Locations & Taxonomy
 // ============================================================
 
-import React, { useState } from 'react';
-import { Warehouse, Layers, Plus, MapPin, Tag, CheckCircle } from 'lucide-react';
+import React from 'react';
+import { Warehouse } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function WarehousesAndTaxonomyView({ mode }: { mode: 'warehouses' | 'categories' }) {
@@ -14,10 +14,10 @@ export default function WarehousesAndTaxonomyView({ mode }: { mode: 'warehouses'
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Taksonomi Kategori & Satuan Ukur (Categories & UOM)
+            Product Taxonomy & Categories
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Struktur klasifikasi produk industri, kelompok barang, dan satuan kuantitas
+            Product classification hierarchies, industrial groupings, and units of measure (UOM)
           </p>
         </div>
 
@@ -26,10 +26,10 @@ export default function WarehousesAndTaxonomyView({ mode }: { mode: 'warehouses'
             <thead>
               <tr>
                 <th>Status</th>
-                <th>Kode Kategori</th>
-                <th>Nama Kategori Produk</th>
-                <th>Deskripsi Industri</th>
-                <th>Jumlah SKU Terdaftar</th>
+                <th>Category Code</th>
+                <th>Category Name</th>
+                <th>Industry Description</th>
+                <th>Registered SKUs</th>
               </tr>
             </thead>
             <tbody>
@@ -55,7 +55,7 @@ export default function WarehousesAndTaxonomyView({ mode }: { mode: 'warehouses'
                     <td style={{ fontWeight: 600 }}>{c.name}</td>
                     <td style={{ color: '#64748b' }}>{c.description}</td>
                     <td>
-                      <strong style={{ color: '#3b82f6' }}>{count} SKU</strong>
+                      <strong style={{ color: '#3b82f6' }}>{count} SKU(s)</strong>
                     </td>
                   </tr>
                 );
@@ -72,10 +72,10 @@ export default function WarehousesAndTaxonomyView({ mode }: { mode: 'warehouses'
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Master Gudang & Lokasi Bin (Warehouses & Locations)
+          Warehouses & Storage Facilities
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Pusat distribusi, gudang transit, area karantina, dan pemantauan kapasitas penyimpanan
+          Distribution hubs, regional cross-dock transit, quarantine zones, and storage capacity utilization
         </p>
       </div>
 
@@ -112,7 +112,7 @@ export default function WarehousesAndTaxonomyView({ mode }: { mode: 'warehouses'
                   <h3 style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', margin: '6px 0 2px' }}>
                     {w.name}
                   </h3>
-                  <div style={{ fontSize: 11, color: '#64748b' }}>Kode: {w.code}</div>
+                  <div style={{ fontSize: 11, color: '#64748b' }}>Code: {w.code}</div>
                 </div>
 
                 <div
@@ -135,13 +135,13 @@ export default function WarehousesAndTaxonomyView({ mode }: { mode: 'warehouses'
                 {w.address}
               </p>
               <div style={{ fontSize: 11.5, color: '#64748b' }}>
-                Kepala Gudang: <strong>{w.manager}</strong>
+                Facility Manager: <strong>{w.manager}</strong>
               </div>
             </div>
 
             <div style={{ marginTop: 18, borderTop: '1px solid #f1f5f9', paddingTop: 12 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11.5, marginBottom: 4 }}>
-                <span style={{ color: '#64748b' }}>Utilisasi Kapasitas:</span>
+                <span style={{ color: '#64748b' }}>Storage Capacity Utilization:</span>
                 <span style={{ fontWeight: 700, color: w.capacityPercentage > 80 ? '#ea580c' : '#10b981' }}>
                   {w.capacityPercentage}%
                 </span>
@@ -162,4 +162,3 @@ export default function WarehousesAndTaxonomyView({ mode }: { mode: 'warehouses'
     </div>
   );
 }
-

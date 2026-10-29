@@ -1,17 +1,14 @@
 // ============================================================
-// ARGOTURO ERP — Purchase Orders (Pesanan Pembelian)
+// ARGOTURO ERP — Purchase Orders Management
 // ============================================================
 
 import React, { useState } from 'react';
 import {
-  ShoppingCart,
   Plus,
   CheckCircle2,
-  Truck,
-  FileCheck,
-  Building2,
   Eye,
   PackageCheck,
+  FileCheck,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { PurchaseOrder } from '../../types';
@@ -80,7 +77,7 @@ export default function PurchaseOrdersView() {
 
     savePurchaseOrder(newPO);
     setShowCreateModal(false);
-    addToast('success', `Purchase Order ${poNumber} berhasil diterbitkan`);
+    addToast('success', `Purchase Order ${poNumber} issued successfully`);
   };
 
   return (
@@ -88,10 +85,10 @@ export default function PurchaseOrdersView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Pesanan Pembelian (Purchase Orders / PO)
+            Purchase Orders (PO)
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Penerbitan pesanan resmi ke pemasok, kontrol penerimaan barang (GRN), dan tagihan vendor
+            Issue commercial purchase orders to vendors, monitor goods receipts (GRN), and process vendor bills
           </p>
         </div>
 
@@ -101,7 +98,7 @@ export default function PurchaseOrdersView() {
           onClick={() => setShowCreateModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Buat PO Baru
+          <Plus size={15} /> Create Purchase Order
         </button>
       </div>
 
@@ -110,13 +107,13 @@ export default function PurchaseOrdersView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>No. PO</th>
-              <th>Pemasok / Vendor</th>
-              <th>Tanggal Order</th>
-              <th>Estimasi Tiba</th>
-              <th>Progress Terima</th>
-              <th style={{ textAlign: 'right' }}>Total Pembelian</th>
-              <th style={{ textAlign: 'right' }}>Aksi</th>
+              <th>PO Number</th>
+              <th>Supplier / Vendor</th>
+              <th>Order Date</th>
+              <th>Expected Arrival</th>
+              <th>Receipt Progress</th>
+              <th style={{ textAlign: 'right' }}>Total Order</th>
+              <th style={{ textAlign: 'right' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -154,21 +151,21 @@ export default function PurchaseOrdersView() {
                       }}
                     >
                       {po.status === 'received'
-                        ? 'Diterima Penuh'
+                        ? 'Fully Received'
                         : po.status === 'partially_received'
-                        ? 'Terima Sebagian'
+                        ? 'Partially Received'
                         : po.status === 'approved'
-                        ? 'Disetujui'
+                        ? 'Approved'
                         : 'Pending Approval'}
                     </span>
                   </td>
                   <td style={{ fontWeight: 600, color: '#1e293b' }}>{po.orderNumber}</td>
                   <td>
-                    <div style={{ fontWeight: 600 }}>{supplier?.name || 'Pemasok'}</div>
+                    <div style={{ fontWeight: 600 }}>{supplier?.name || 'Supplier'}</div>
                     <div style={{ fontSize: 11, color: '#64748b' }}>Buyer: {po.buyer}</div>
                   </td>
-                  <td>{new Date(po.orderDate).toLocaleDateString('id-ID')}</td>
-                  <td>{new Date(po.expectedDeliveryDate || po.expectedArrival || po.orderDate).toLocaleDateString('id-ID')}</td>
+                  <td>{new Date(po.orderDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                  <td>{new Date(po.expectedDeliveryDate || po.expectedArrival || po.orderDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                   <td style={{ minWidth: 120 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       <div style={{ flex: 1, height: 6, backgroundColor: '#e2e8f0', borderRadius: 3, overflow: 'hidden' }}>
@@ -184,7 +181,7 @@ export default function PurchaseOrdersView() {
                     </div>
                   </td>
                   <td style={{ textAlign: 'right', fontWeight: 600 }}>
-                    Rp {po.grandTotal.toLocaleString('id-ID')}
+                    IDR {po.grandTotal.toLocaleString('en-US')}
                   </td>
                   <td style={{ textAlign: 'right' }}>
                     <button
@@ -193,7 +190,7 @@ export default function PurchaseOrdersView() {
                       className="btn btn-sm btn-secondary"
                       style={{ fontSize: 11, padding: '3px 8px' }}
                     >
-                      <Eye size={12} /> Detail & Alur
+                      <Eye size={12} /> Details & Workflow
                     </button>
                   </td>
                 </tr>
@@ -231,10 +228,10 @@ export default function PurchaseOrdersView() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <div>
                 <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>
-                  Detail Purchase Order: {selectedPO.orderNumber}
+                  Purchase Order Details: {selectedPO.orderNumber}
                 </h3>
                 <span style={{ fontSize: 12, color: '#64748b' }}>
-                  Pemasok:{' '}
+                  Vendor:{' '}
                   {store.suppliers.find((s) => s.id === selectedPO.supplierId)?.name || selectedPO.supplierId}
                 </span>
               </div>
@@ -259,7 +256,7 @@ export default function PurchaseOrdersView() {
                   className="btn btn-success"
                   style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}
                 >
-                  <CheckCircle2 size={14} /> Setujui Purchase Order
+                  <CheckCircle2 size={14} /> Approve Purchase Order
                 </button>
               )}
 
@@ -273,7 +270,7 @@ export default function PurchaseOrdersView() {
                   className="btn btn-primary"
                   style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}
                 >
-                  <PackageCheck size={14} /> Terima Barang Masuk (GRN)
+                  <PackageCheck size={14} /> Receive Inbound Goods (GRN)
                 </button>
               )}
 
@@ -287,22 +284,22 @@ export default function PurchaseOrdersView() {
                   className="btn btn-secondary"
                   style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}
                 >
-                  <FileCheck size={14} /> Catat Tagihan Pemasok (Bill)
+                  <FileCheck size={14} /> Record Vendor Bill
                 </button>
               )}
             </div>
 
             {/* Line items table */}
             <h4 style={{ fontSize: 13, fontWeight: 700, color: '#334155', marginBottom: 8 }}>
-              Barang yang Dipesan
+              Ordered Items
             </h4>
             <table className="data-table" style={{ width: '100%', fontSize: 12.5, marginBottom: 16 }}>
               <thead>
                 <tr>
-                  <th>Produk</th>
-                  <th>Jumlah Dipesan</th>
-                  <th>Jumlah Diterima</th>
-                  <th>Harga Beli Satuan</th>
+                  <th>Product</th>
+                  <th>Ordered Qty</th>
+                  <th>Received Qty</th>
+                  <th>Unit Cost</th>
                   <th style={{ textAlign: 'right' }}>Subtotal</th>
                 </tr>
               </thead>
@@ -320,8 +317,8 @@ export default function PurchaseOrdersView() {
                           {l.receivedQuantity} PCS
                         </span>
                       </td>
-                      <td>Rp {l.unitCost.toLocaleString('id-ID')}</td>
-                      <td style={{ textAlign: 'right', fontWeight: 600 }}>Rp {l.subtotal.toLocaleString('id-ID')}</td>
+                      <td>IDR {l.unitCost.toLocaleString('en-US')}</td>
+                      <td style={{ textAlign: 'right', fontWeight: 600 }}>IDR {l.subtotal.toLocaleString('en-US')}</td>
                     </tr>
                   );
                 })}
@@ -329,10 +326,10 @@ export default function PurchaseOrdersView() {
             </table>
 
             <div style={{ backgroundColor: '#f8fafc', padding: 14, borderRadius: 6, fontSize: 12.5, textAlign: 'right' }}>
-              <div>Subtotal: Rp {selectedPO.subtotal.toLocaleString('id-ID')}</div>
-              <div style={{ margin: '4px 0' }}>PPN 11%: Rp {(selectedPO.taxAmount ?? selectedPO.taxTotal ?? 0).toLocaleString('id-ID')}</div>
+              <div>Subtotal: IDR {selectedPO.subtotal.toLocaleString('en-US')}</div>
+              <div style={{ margin: '4px 0' }}>VAT 11%: IDR {(selectedPO.taxAmount ?? selectedPO.taxTotal ?? 0).toLocaleString('en-US')}</div>
               <div style={{ fontSize: 15, fontWeight: 700, color: '#1e293b' }}>
-                Grand Total: Rp {selectedPO.grandTotal.toLocaleString('id-ID')}
+                Grand Total: IDR {selectedPO.grandTotal.toLocaleString('en-US')}
               </div>
             </div>
           </div>
@@ -364,7 +361,7 @@ export default function PurchaseOrdersView() {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Buat Purchase Order Baru</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Create Purchase Order</h3>
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
@@ -376,7 +373,7 @@ export default function PurchaseOrdersView() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Pemasok:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Vendor:</label>
                 <select
                   value={supplierId}
                   onChange={(e) => setSupplierId(e.target.value)}
@@ -391,7 +388,7 @@ export default function PurchaseOrdersView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Gudang Penerima:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Destination Warehouse:</label>
                 <select
                   value={warehouseId}
                   onChange={(e) => setWarehouseId(e.target.value)}
@@ -407,7 +404,7 @@ export default function PurchaseOrdersView() {
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Item Produk:</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Product Items:</label>
               {lines.map((l, idx) => (
                 <div key={idx} style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
                   <select
@@ -458,10 +455,10 @@ export default function PurchaseOrdersView() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowCreateModal(false)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Terbitkan Purchase Order
+                Issue Purchase Order
               </button>
             </div>
           </form>

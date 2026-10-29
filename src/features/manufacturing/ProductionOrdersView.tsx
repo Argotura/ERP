@@ -1,14 +1,13 @@
 // ============================================================
-// ARGOTURO ERP — Production Orders (Perintah Kerja Perakitan / MO)
+// ARGOTURO ERP — Manufacturing Orders (MO)
 // ============================================================
 
 import React, { useState } from 'react';
-import { Hammer, Plus, CheckCircle2, Boxes, Package, Calendar, Warehouse } from 'lucide-react';
+import { Plus, CheckCircle2, Boxes } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { ProductionOrder } from '../../types';
 
 export default function ProductionOrdersView() {
-  const { store, createProductionOrder, issueMaterialsForMO, completeProductionOrder, addToast } = useApp();
+  const { store, createProductionOrder, issueMaterialsForMO, completeProductionOrder } = useApp();
   const [showModal, setShowModal] = useState(false);
 
   // Form State
@@ -28,10 +27,10 @@ export default function ProductionOrdersView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Perintah Kerja Produksi (Manufacturing Orders / MO)
+            Manufacturing Orders (MO)
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Perakitan produk industri, alokasi bahan baku, pelacakan proses kerja, dan penerimaan barang jadi
+            Production scheduling, raw material allocation, shop-floor work tracking, and finished goods intake
           </p>
         </div>
 
@@ -41,7 +40,7 @@ export default function ProductionOrdersView() {
           onClick={() => setShowModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Buat Perintah Produksi (MO)
+          <Plus size={15} /> Create Manufacturing Order
         </button>
       </div>
 
@@ -49,14 +48,14 @@ export default function ProductionOrdersView() {
         <table className="data-table" style={{ width: '100%', fontSize: 13 }}>
           <thead>
             <tr>
-              <th>Status Produksi</th>
-              <th>No. Perintah (MO)</th>
-              <th>Barang Jadi</th>
-              <th>Formula BOM</th>
-              <th>Target Selesai</th>
-              <th>Target Output</th>
-              <th>Hasil Jadi</th>
-              <th style={{ textAlign: 'right' }}>Aksi Lantai Pabrik</th>
+              <th>Production Status</th>
+              <th>Order No. (MO)</th>
+              <th>Finished Good</th>
+              <th>BOM Formula</th>
+              <th>Target Date</th>
+              <th>Planned Qty</th>
+              <th>Completed Qty</th>
+              <th style={{ textAlign: 'right' }}>Shop Floor Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -88,19 +87,19 @@ export default function ProductionOrdersView() {
                       }}
                     >
                       {mo.status === 'completed'
-                        ? 'Selesai (Completed)'
+                        ? 'Completed'
                         : mo.status === 'in_progress'
-                        ? 'Sedang Dirakit'
-                        : 'Terencana (Planned)'}
+                        ? 'In Assembly'
+                        : 'Planned'}
                     </span>
                   </td>
                   <td style={{ fontWeight: 600, color: '#1e293b' }}>{mo.orderNumber}</td>
                   <td>
-                    <div style={{ fontWeight: 600 }}>{product?.name || 'Produk Jadi'}</div>
+                    <div style={{ fontWeight: 600 }}>{product?.name || 'Finished Good'}</div>
                     <div style={{ fontSize: 11, color: '#64748b' }}>{product?.sku}</div>
                   </td>
                   <td>{bom?.name || bom?.finishedProductName || mo.bomCode || mo.bomId}</td>
-                  <td>{new Date(mo.dueDate || mo.startDate || mo.createdAt).toLocaleDateString('id-ID')}</td>
+                  <td>{new Date(mo.dueDate || mo.startDate || mo.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                   <td style={{ fontWeight: 600 }}>{mo.quantityToProduce ?? mo.plannedQty ?? 0} PCS</td>
                   <td style={{ fontWeight: 600, color: (mo.quantityProduced ?? mo.completedQty ?? 0) > 0 ? '#10b981' : '#64748b' }}>
                     {mo.quantityProduced ?? mo.completedQty ?? 0} PCS
@@ -114,7 +113,7 @@ export default function ProductionOrdersView() {
                           className="btn btn-sm btn-primary"
                           style={{ fontSize: 11, padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 4 }}
                         >
-                          <Boxes size={12} /> Keluarkan Bahan Baku
+                          <Boxes size={12} /> Issue Raw Materials
                         </button>
                       )}
 
@@ -125,13 +124,13 @@ export default function ProductionOrdersView() {
                           className="btn btn-sm btn-success"
                           style={{ fontSize: 11, padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 4 }}
                         >
-                          <CheckCircle2 size={12} /> Selesai & Terima Barang Jadi
+                          <CheckCircle2 size={12} /> Complete & Receive FG
                         </button>
                       )}
 
                       {mo.status === 'completed' && (
                         <span style={{ fontSize: 11, color: '#10b981', fontWeight: 600 }}>
-                          ✓ Barang Jadi Masuk Stok
+                          ✓ Stock Received
                         </span>
                       )}
                     </div>
@@ -169,7 +168,7 @@ export default function ProductionOrdersView() {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>
-                Terbitkan Perintah Kerja Produksi (MO)
+                Issue Manufacturing Order (MO)
               </h3>
               <button
                 type="button"
@@ -183,7 +182,7 @@ export default function ProductionOrdersView() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 20 }}>
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
-                  Pilih Formula Struktur Produk (BOM):
+                  Select BOM Formula:
                 </label>
                 <select
                   value={bomId}
@@ -201,7 +200,7 @@ export default function ProductionOrdersView() {
 
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
-                  Jumlah Unit yang Akan Dirakit:
+                  Units to Produce:
                 </label>
                 <input
                   type="number"
@@ -215,7 +214,7 @@ export default function ProductionOrdersView() {
 
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
-                  Gudang Penerima Hasil Jadi:
+                  Destination Warehouse for Finished Good:
                 </label>
                 <select
                   value={warehouseId}
@@ -232,7 +231,7 @@ export default function ProductionOrdersView() {
 
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
-                  Target Tanggal Selesai:
+                  Target Completion Date:
                 </label>
                 <input
                   type="date"
@@ -246,10 +245,10 @@ export default function ProductionOrdersView() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Terbitkan Perintah Kerja
+                Issue Manufacturing Order
               </button>
             </div>
           </form>

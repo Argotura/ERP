@@ -1,5 +1,5 @@
 // ============================================================
-// ARGOTURO ERP — Central Demo Store & Repository Layer
+// ARGOTURO ERP — Central Enterprise Store & Repository Layer
 // Single source of truth with browser localStorage persistence
 // ============================================================
 

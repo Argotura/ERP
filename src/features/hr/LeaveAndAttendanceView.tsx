@@ -1,13 +1,13 @@
 // ============================================================
-// ARGOTURO ERP — Attendance & Leave Requests (Presensi & Cuti)
+// ARGOTURO ERP — Attendance & Leave Requests
 // ============================================================
 
 import React, { useState } from 'react';
-import { Calendar, CheckCircle2, Plus, Clock, UserCheck } from 'lucide-react';
+import { Plus, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 'leaves' }) {
-  const { store, createLeaveRequest, approveLeaveRequest, rejectLeaveRequest, addToast } = useApp();
+  const { store, createLeaveRequest, approveLeaveRequest, rejectLeaveRequest } = useApp();
   const [showLeaveModal, setShowLeaveModal] = useState(false);
 
   // Form State
@@ -16,7 +16,7 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState(new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0]);
   const [daysCount, setDaysCount] = useState(3);
-  const [reason, setReason] = useState('Keperluan keluarga mendesak');
+  const [reason, setReason] = useState('Urgent family matter');
 
   const handleCreateLeave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,10 +37,10 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Presensi & Kehadiran Harian (Daily Attendance)
+            Daily Attendance & Time Tracking
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Rekap jam masuk/keluar pegawai, keterlambatan, dan rekapitulasi kehadiran per divisi
+            Employee clock-in/out records, tardiness tracking, and department attendance summaries
           </p>
         </div>
 
@@ -49,11 +49,11 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
             <thead>
               <tr>
                 <th>Status</th>
-                <th>Nama Karyawan</th>
-                <th>Tanggal</th>
-                <th>Jam Masuk (In)</th>
-                <th>Jam Keluar (Out)</th>
-                <th>Keterangan / Lembur</th>
+                <th>Employee Name</th>
+                <th>Date</th>
+                <th>Clock-In</th>
+                <th>Clock-Out</th>
+                <th>Remarks / Overtime</th>
               </tr>
             </thead>
             <tbody>
@@ -86,11 +86,11 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
                       </span>
                     </td>
                     <td style={{ fontWeight: 600, color: '#1e293b' }}>{emp?.name || att.employeeId}</td>
-                    <td>{new Date(att.date).toLocaleDateString('id-ID')}</td>
+                    <td>{new Date(att.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                     <td style={{ color: '#15803d', fontWeight: 600 }}>{att.clockIn || att.checkIn || '—'}</td>
                     <td>{att.clockOut || att.checkOut || '—'}</td>
                     <td style={{ color: '#64748b' }}>
-                      {att.overtimeHours ? `Lembur ${att.overtimeHours} jam` : 'Reguler'}
+                      {att.overtimeHours ? `Overtime ${att.overtimeHours} hrs` : 'Standard Shift'}
                     </td>
                   </tr>
                 );
@@ -108,10 +108,10 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Permohonan Cuti Karyawan (Leave Requests)
+            Employee Leave Requests
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Pengajuan cuti tahunan, sakit, izin khusus, dan persetujuan manajer HR
+            Annual leave, medical absence, personal time off, and management approvals
           </p>
         </div>
 
@@ -121,7 +121,7 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
           onClick={() => setShowLeaveModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Ajukan Permohonan Cuti
+          <Plus size={15} /> Request Leave
         </button>
       </div>
 
@@ -130,13 +130,13 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
           <thead>
             <tr>
               <th>Status</th>
-              <th>No. Pengajuan</th>
-              <th>Nama Pegawai</th>
-              <th>Jenis Cuti</th>
-              <th>Periode Tanggal</th>
-              <th>Durasi</th>
-              <th>Alasan Cuti</th>
-              <th style={{ textAlign: 'right' }}>Aksi HR</th>
+              <th>Request No.</th>
+              <th>Employee Name</th>
+              <th>Leave Type</th>
+              <th>Date Period</th>
+              <th>Duration</th>
+              <th>Reason</th>
+              <th style={{ textAlign: 'right' }}>HR Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -172,11 +172,11 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
                   <td style={{ fontWeight: 600 }}>{emp?.name || lr.employeeId}</td>
                   <td>{lr.leaveType.toUpperCase()}</td>
                   <td>
-                    {new Date(lr.startDate).toLocaleDateString('id-ID')} s/d{' '}
-                    {new Date(lr.endDate).toLocaleDateString('id-ID')}
+                    {new Date(lr.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} –{' '}
+                    {new Date(lr.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </td>
                   <td>
-                    <strong>{lr.daysCount} Hari</strong>
+                    <strong>{lr.daysCount} Day(s)</strong>
                   </td>
                   <td style={{ color: '#475569' }}>{lr.reason}</td>
                   <td style={{ textAlign: 'right' }}>
@@ -188,7 +188,7 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
                           className="btn btn-sm btn-success"
                           style={{ fontSize: 11, padding: '3px 8px' }}
                         >
-                          <CheckCircle2 size={12} /> Setujui
+                          <CheckCircle2 size={12} /> Approve
                         </button>
                         <button
                           type="button"
@@ -196,12 +196,12 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
                           className="btn btn-sm btn-danger"
                           style={{ fontSize: 11, padding: '3px 8px' }}
                         >
-                          Tolak
+                          Reject
                         </button>
                       </div>
                     ) : (
                       <span style={{ fontSize: 11, color: '#64748b' }}>
-                        Diproses oleh {lr.approvedBy || 'HR'}
+                        Processed by {lr.approvedBy || 'HR'}
                       </span>
                     )}
                   </td>
@@ -236,7 +236,7 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Form Pengajuan Cuti</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Submit Leave Request</h3>
               <button
                 type="button"
                 onClick={() => setShowLeaveModal(false)}
@@ -248,7 +248,7 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 20 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Pegawai Pemohon:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Requesting Employee:</label>
                 <select
                   value={employeeId}
                   onChange={(e) => setEmployeeId(e.target.value)}
@@ -263,22 +263,22 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Jenis Cuti:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Leave Type:</label>
                 <select
                   value={leaveType}
                   onChange={(e) => setLeaveType(e.target.value as any)}
                   className="input"
                 >
-                  <option value="annual">Cuti Tahunan</option>
-                  <option value="sick">Cuti Sakit</option>
-                  <option value="special">Cuti Khusus / Pernikahan</option>
-                  <option value="unpaid">Cuti di Luar Tanggungan</option>
+                  <option value="annual">Annual Leave</option>
+                  <option value="sick">Sick / Medical Leave</option>
+                  <option value="special">Special / Marriage Leave</option>
+                  <option value="unpaid">Unpaid Leave</option>
                 </select>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Dari Tanggal:</label>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Start Date:</label>
                   <input
                     type="date"
                     className="input"
@@ -288,7 +288,7 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Sampai Tanggal:</label>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>End Date:</label>
                   <input
                     type="date"
                     className="input"
@@ -300,7 +300,7 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Jumlah Hari Kerja:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Working Days:</label>
                 <input
                   type="number"
                   min="1"
@@ -312,7 +312,7 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Alasan / Keterangan:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Reason / Justification:</label>
                 <input
                   type="text"
                   className="input"
@@ -325,10 +325,10 @@ export default function LeaveAndAttendanceView({ mode }: { mode: 'attendance' | 
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowLeaveModal(false)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Kirim Pengajuan Cuti
+                Submit Request
               </button>
             </div>
           </form>

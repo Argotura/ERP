@@ -1,5 +1,5 @@
 // ============================================================
-// NEXORA ERP — Status Badge Component
+// ARGOTURO ERP — Status Badge Component
 // ============================================================
 
 import React from 'react';

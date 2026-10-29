@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Stock Overview (Ringkasan Persediaan Multi-Gudang)
+// ARGOTURO ERP — Stock Overview (Multi-Warehouse Inventory)
 // ============================================================
 
 import React, { useState } from 'react';
-import { Boxes, Warehouse, Search, AlertTriangle, Layers, ArrowUpDown } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function StockOverviewView() {
@@ -27,37 +27,37 @@ export default function StockOverviewView() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Ringkasan Persediaan Multi-Gudang (Stock Overview)
+          Stock Overview (Multi-Warehouse)
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Monitoring ketersediaan stok fisik, barang dialokasikan, dan valuasi aset per gudang
+          Real-time physical stock availability, warehouse bin allocations, and asset valuations
         </p>
       </div>
 
       {/* KPI Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
         <div style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: 18, border: '1px solid #e2e8f0' }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Nilai Persediaan</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Inventory Value</span>
           <div style={{ fontSize: 22, fontWeight: 700, color: '#10b981', marginTop: 4 }}>
-            Rp {totalInventoryValue.toLocaleString('id-ID')}
+            IDR {totalInventoryValue.toLocaleString('en-US')}
           </div>
-          <div style={{ fontSize: 11, color: '#64748b', marginTop: 6 }}>Metode FIFO Perpetual</div>
+          <div style={{ fontSize: 11, color: '#64748b', marginTop: 6 }}>FIFO Perpetual Costing</div>
         </div>
 
         <div style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: 18, border: '1px solid #e2e8f0' }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Unit Fisik</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Total Physical Units</span>
           <div style={{ fontSize: 22, fontWeight: 700, color: '#1e293b', marginTop: 4 }}>
-            {totalPhysicalUnits.toLocaleString('id-ID')} Unit
+            {totalPhysicalUnits.toLocaleString('en-US')} Units
           </div>
-          <div style={{ fontSize: 11, color: '#64748b', marginTop: 6 }}>Di 5 Fasilitas Pergudangan</div>
+          <div style={{ fontSize: 11, color: '#64748b', marginTop: 6 }}>Across {store.warehouses.length} Warehouse Facilities</div>
         </div>
 
         <div style={{ backgroundColor: '#ffffff', borderRadius: 8, padding: 18, border: '1px solid #e2e8f0' }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Item Low-Stock</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#64748b' }}>Low-Stock Items</span>
           <div style={{ fontSize: 22, fontWeight: 700, color: lowStockCount > 0 ? '#ef4444' : '#1e293b', marginTop: 4 }}>
-            {lowStockCount} SKU
+            {lowStockCount} SKU(s)
           </div>
-          <div style={{ fontSize: 11, color: '#64748b', marginTop: 6 }}>Berada di bawah batas aman</div>
+          <div style={{ fontSize: 11, color: '#64748b', marginTop: 6 }}>Below reorder threshold</div>
         </div>
       </div>
 
@@ -68,7 +68,7 @@ export default function StockOverviewView() {
           <input
             type="text"
             className="input"
-            placeholder="Cari SKU atau nama produk..."
+            placeholder="Search by SKU or product name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{ paddingLeft: 34 }}
@@ -79,9 +79,9 @@ export default function StockOverviewView() {
           value={selectedWarehouse}
           onChange={(e) => setSelectedWarehouse(e.target.value)}
           className="input"
-          style={{ width: 220 }}
+          style={{ width: 240 }}
         >
-          <option value="all">Semua Lokasi Gudang</option>
+          <option value="all">All Warehouse Locations</option>
           {store.warehouses.map((w) => (
             <option key={w.id} value={w.id}>
               {w.name}
@@ -96,15 +96,15 @@ export default function StockOverviewView() {
           <thead>
             <tr>
               <th>SKU</th>
-              <th>Nama Produk</th>
-              <th>Satuan</th>
-              <th style={{ textAlign: 'right' }}>Stok Total</th>
+              <th>Product Name</th>
+              <th>UOM</th>
+              <th style={{ textAlign: 'right' }}>Total Stock</th>
               {store.warehouses.map((w) => (
                 <th key={w.id} style={{ textAlign: 'right' }}>
                   {w.code}
                 </th>
               ))}
-              <th style={{ textAlign: 'right' }}>Valuasi Aset</th>
+              <th style={{ textAlign: 'right' }}>Asset Valuation</th>
             </tr>
           </thead>
           <tbody>
@@ -117,7 +117,7 @@ export default function StockOverviewView() {
                     <div style={{ fontWeight: 500 }}>{p.name}</div>
                     {isLow && (
                       <span style={{ fontSize: 10, color: '#ef4444', fontWeight: 600 }}>
-                        ⚠ Batas Reorder: {p.reorderLevel}
+                        ⚠ Reorder Level: {p.reorderLevel}
                       </span>
                     )}
                   </td>
@@ -135,7 +135,7 @@ export default function StockOverviewView() {
                     );
                   })}
                   <td style={{ textAlign: 'right', fontWeight: 600, color: '#10b981' }}>
-                    Rp {(p.onHandStock * p.unitCost).toLocaleString('id-ID')}
+                    IDR {(p.onHandStock * p.unitCost).toLocaleString('en-US')}
                   </td>
                 </tr>
               );

@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Sales Quotations (Penawaran Harga)
+// ARGOTURO ERP — Sales Quotations
 // ============================================================
 
 import React, { useState } from 'react';
-import { FileSpreadsheet, Plus, ArrowRight, Eye, CheckCircle2, Clock } from 'lucide-react';
+import { Plus, ArrowRight } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Quotation } from '../../types';
 
@@ -11,7 +11,7 @@ export default function QuotationsView() {
   const { store, activeUser, saveQuotation, convertQuotationToSO, addToast } = useApp();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [customerId, setCustomerId] = useState(store.customers[0]?.id || '');
-  const [deliveryAddress, setDeliveryAddress] = useState('Kawasan Industri GIIC Cikarang');
+  const [deliveryAddress, setDeliveryAddress] = useState('GIIC Industrial Estate, Cikarang');
   const [paymentTerms, setPaymentTerms] = useState('NET 30');
   const [lines, setLines] = useState([
     { productId: store.products[0]?.id || '', quantity: 10, unitPrice: store.products[0]?.sellingPrice || 0, discount: 0 },
@@ -31,7 +31,7 @@ export default function QuotationsView() {
       id: `quo-${Date.now()}`,
       quotationNumber: qNumber,
       customerId,
-      customerName: store.customers.find((c) => c.id === customerId)?.name || 'Pelanggan',
+      customerName: store.customers.find((c) => c.id === customerId)?.name || 'Customer',
       quotationDate: new Date().toISOString().split('T')[0],
       validUntil: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0],
       status: 'pending_approval',
@@ -61,7 +61,7 @@ export default function QuotationsView() {
 
     saveQuotation(newQuotation);
     setShowCreateModal(false);
-    addToast('success', `Quotation ${qNumber} berhasil dibuat`);
+    addToast('success', `Sales Quotation ${qNumber} created successfully`);
   };
 
   return (
@@ -69,10 +69,10 @@ export default function QuotationsView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Penawaran Harga Pelanggan (Sales Quotations)
+            Sales Quotations
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Estimasi harga resmi untuk prospek dan pelanggan sebelum dikonversi menjadi pesanan
+            Formal price estimates for prospects and clients before conversion into binding sales orders
           </p>
         </div>
 
@@ -82,7 +82,7 @@ export default function QuotationsView() {
           onClick={() => setShowCreateModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Buat Quotation Baru
+          <Plus size={15} /> Create Quotation
         </button>
       </div>
 
@@ -91,20 +91,20 @@ export default function QuotationsView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>No. Penawaran</th>
-              <th>Pelanggan</th>
-              <th>Tanggal</th>
-              <th>Masa Berlaku</th>
+              <th>Quotation No.</th>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Valid Until</th>
               <th>Salesperson</th>
-              <th style={{ textAlign: 'right' }}>Total Penawaran</th>
-              <th style={{ textAlign: 'right' }}>Aksi</th>
+              <th style={{ textAlign: 'right' }}>Total Estimate</th>
+              <th style={{ textAlign: 'right' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {store.quotations.length === 0 ? (
               <tr>
                 <td colSpan={8} style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
-                  Belum ada penawaran harga.
+                  No quotations found.
                 </td>
               </tr>
             ) : (
@@ -123,16 +123,16 @@ export default function QuotationsView() {
                           color: q.status === 'approved' ? '#15803d' : '#b45309',
                         }}
                       >
-                        {q.status === 'approved' ? 'Telah Dikonversi ke SO' : 'Penawaran Aktif'}
+                        {q.status === 'approved' ? 'Converted to SO' : 'Active Quotation'}
                       </span>
                     </td>
                     <td style={{ fontWeight: 600, color: '#1e293b' }}>{q.quotationNumber}</td>
-                    <td>{customer?.name || 'Pelanggan'}</td>
-                    <td>{new Date(q.quotationDate || q.date || q.createdAt).toLocaleDateString('id-ID')}</td>
-                    <td>{new Date(q.validUntil).toLocaleDateString('id-ID')}</td>
+                    <td>{customer?.name || 'Customer'}</td>
+                    <td>{new Date(q.quotationDate || q.date || q.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                    <td>{new Date(q.validUntil).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                     <td>{q.salesperson || q.salesRep || 'Sales Team'}</td>
                     <td style={{ textAlign: 'right', fontWeight: 600, color: '#1e293b' }}>
-                      Rp {q.grandTotal.toLocaleString('id-ID')}
+                      IDR {q.grandTotal.toLocaleString('en-US')}
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       {q.status !== 'approved' ? (
@@ -142,10 +142,10 @@ export default function QuotationsView() {
                           className="btn btn-sm btn-primary"
                           style={{ fontSize: 11, padding: '3px 8px', display: 'inline-flex', alignItems: 'center', gap: 4 }}
                         >
-                          Konversi ke SO <ArrowRight size={11} />
+                          Convert to SO <ArrowRight size={11} />
                         </button>
                       ) : (
-                        <span style={{ fontSize: 11, color: '#10b981', fontWeight: 600 }}>Terkonversi</span>
+                        <span style={{ fontSize: 11, color: '#10b981', fontWeight: 600 }}>Converted</span>
                       )}
                     </td>
                   </tr>
@@ -181,7 +181,7 @@ export default function QuotationsView() {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Buat Quotation Baru</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Create Sales Quotation</h3>
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
@@ -193,7 +193,7 @@ export default function QuotationsView() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Pelanggan:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Customer:</label>
                 <select
                   value={customerId}
                   onChange={(e) => setCustomerId(e.target.value)}
@@ -208,7 +208,7 @@ export default function QuotationsView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Ketentuan Bayar:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Payment Terms:</label>
                 <select
                   value={paymentTerms}
                   onChange={(e) => setPaymentTerms(e.target.value)}
@@ -222,7 +222,7 @@ export default function QuotationsView() {
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Item Produk:</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 6 }}>Quotation Items:</label>
               {lines.map((l, idx) => (
                 <div key={idx} style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
                   <select
@@ -272,21 +272,21 @@ export default function QuotationsView() {
             </div>
 
             <div style={{ backgroundColor: '#f8fafc', padding: 12, borderRadius: 6, fontSize: 13, textAlign: 'right', marginBottom: 20 }}>
-              <div>Subtotal: Rp {calculateSubtotal().toLocaleString('id-ID')}</div>
+              <div>Subtotal: IDR {calculateSubtotal().toLocaleString('en-US')}</div>
               <div style={{ margin: '4px 0' }}>
-                PPN (11%): Rp {Math.round(calculateSubtotal() * 0.11).toLocaleString('id-ID')}
+                VAT ({store.companySettings.standardVatRate}%): IDR {Math.round(calculateSubtotal() * (store.companySettings.standardVatRate / 100)).toLocaleString('en-US')}
               </div>
               <div style={{ fontSize: 15, fontWeight: 700 }}>
-                Total: Rp {Math.round(calculateSubtotal() * 1.11).toLocaleString('id-ID')}
+                Total: IDR {Math.round(calculateSubtotal() * (1 + store.companySettings.standardVatRate / 100)).toLocaleString('en-US')}
               </div>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowCreateModal(false)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Simpan Penawaran
+                Save Quotation
               </button>
             </div>
           </form>

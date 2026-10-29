@@ -1,23 +1,22 @@
 // ============================================================
-// ARGOTURO ERP — Delivery Orders (Surat Jalan / Pengiriman)
+// ARGOTURO ERP — Delivery Orders & Dispatch
 // ============================================================
 
 import React, { useState } from 'react';
-import { Truck, CheckCircle, Package, MapPin, Calendar, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 export default function DeliveryOrdersView() {
   const { store, confirmDelivery } = useApp();
-  const [selectedDOId, setSelectedDOId] = useState<string | null>(null);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-          Surat Jalan & Pengiriman (Delivery Orders)
+          Delivery Orders & Shipments
         </h1>
         <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-          Eksekusi pemenuhan logistik fisik, pemotongan stok otomatis di kartu inventaris, dan bukti serah terima
+          Physical logistics dispatch, automatic inventory ledger deduction, and proof-of-delivery tracking
         </p>
       </div>
 
@@ -26,20 +25,20 @@ export default function DeliveryOrdersView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>No. Surat Jalan</th>
-              <th>Referensi SO</th>
-              <th>Gudang Asal</th>
-              <th>Armada & No. Resi</th>
-              <th>Tanggal Kirim</th>
-              <th>Total Item</th>
-              <th style={{ textAlign: 'right' }}>Aksi Logistik</th>
+              <th>Delivery Order No.</th>
+              <th>SO Reference</th>
+              <th>Source Warehouse</th>
+              <th>Carrier & Tracking</th>
+              <th>Dispatch Date</th>
+              <th>Total Items</th>
+              <th style={{ textAlign: 'right' }}>Logistics Action</th>
             </tr>
           </thead>
           <tbody>
             {store.deliveryOrders.length === 0 ? (
               <tr>
                 <td colSpan={8} style={{ textAlign: 'center', padding: '36px 0', color: '#94a3b8' }}>
-                  Belum ada Surat Jalan yang diterbitkan. Buat dari Sales Order.
+                  No delivery orders issued yet. Generate them from approved Sales Orders.
                 </td>
               </tr>
             ) : (
@@ -61,19 +60,19 @@ export default function DeliveryOrdersView() {
                           color: d.status === 'completed' || d.status === 'delivered' ? '#15803d' : '#b45309',
                         }}
                       >
-                        {d.status === 'completed' || d.status === 'delivered' ? 'Telah Terkirim' : 'Menunggu Pengiriman'}
+                        {d.status === 'completed' || d.status === 'delivered' ? 'Delivered' : 'Pending Dispatch'}
                       </span>
                     </td>
                     <td style={{ fontWeight: 600, color: '#1e293b' }}>{d.deliveryNumber}</td>
                     <td>{so?.orderNumber || d.salesOrderId}</td>
-                    <td>{warehouse?.name || 'Gudang Pusat'}</td>
+                    <td>{warehouse?.name || 'Main Distribution Warehouse'}</td>
                     <td>
                       <div>{d.carrier}</div>
                       <div style={{ fontSize: 11, color: '#64748b' }}>{d.trackingNumber || d.trackingRef || '-'}</div>
                     </td>
-                    <td>{new Date(d.deliveryDate || d.date || d.createdAt).toLocaleDateString('id-ID')}</td>
+                    <td>{new Date(d.deliveryDate || d.date || d.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                     <td>
-                      {d.lines.length} Produk ({totalItemQty} PCS)
+                      {d.lines.length} Line(s) ({totalItemQty} PCS)
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       {d.status !== 'completed' && d.status !== 'delivered' ? (
@@ -91,11 +90,11 @@ export default function DeliveryOrdersView() {
                             gap: 4,
                           }}
                         >
-                          <CheckCircle2 size={12} /> Konfirmasi Kirim & Potong Stok
+                          <CheckCircle2 size={12} /> Confirm Dispatch & Deduct Stock
                         </button>
                       ) : (
                         <span style={{ fontSize: 11, color: '#10b981', fontWeight: 600 }}>
-                          ✓ Stok Terpotong
+                          ✓ Stock Deducted
                         </span>
                       )}
                     </td>

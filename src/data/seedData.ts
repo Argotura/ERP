@@ -2194,7 +2194,7 @@ export const initialInventoryLedger: InventoryLedgerEntry[] = [
     quantityOut: 0,
     unitCost: 3250000,
     balanceAfter: 13,
-    notes: 'Initial fiscal demo opening balance',
+    notes: 'Initial fiscal opening balance',
     user: 'System Admin',
   },
   {

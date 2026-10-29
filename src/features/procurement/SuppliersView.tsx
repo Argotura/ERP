@@ -1,9 +1,9 @@
 // ============================================================
-// ARGOTURO ERP — Suppliers & Vendors Directory (Pemasok)
+// ARGOTURO ERP — Suppliers & Vendors Directory
 // ============================================================
 
 import React, { useState } from 'react';
-import { Building2, Plus, Phone, Mail, MapPin, Search } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Supplier } from '../../types';
 
@@ -46,7 +46,7 @@ export default function SuppliersView() {
     };
     saveSupplier(newSup);
     setShowModal(false);
-    addToast('success', `Pemasok baru ${name} (${code}) berhasil didaftarkan`);
+    addToast('success', `New vendor ${name} (${code}) registered successfully`);
   };
 
   return (
@@ -54,10 +54,10 @@ export default function SuppliersView() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#1e293b', margin: 0 }}>
-            Master Data Pemasok & Vendor (Suppliers)
+            Supplier & Vendor Directory
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Database mitra rantai pasok industri, rekam jejak pengiriman, dan ketentuan pembayaran
+            Supply chain partner master data, contact points, payment terms, and vendor performance ratings
           </p>
         </div>
 
@@ -67,7 +67,7 @@ export default function SuppliersView() {
           onClick={() => setShowModal(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 6 }}
         >
-          <Plus size={15} /> Tambah Vendor Baru
+          <Plus size={15} /> Add New Vendor
         </button>
       </div>
 
@@ -76,7 +76,7 @@ export default function SuppliersView() {
         <input
           type="text"
           className="input"
-          placeholder="Cari kode atau nama vendor..."
+          placeholder="Search by code or vendor name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           style={{ paddingLeft: 34 }}
@@ -88,12 +88,12 @@ export default function SuppliersView() {
           <thead>
             <tr>
               <th>Status</th>
-              <th>Kode</th>
-              <th>Nama Vendor / Pabrikan</th>
-              <th>Kontak Person</th>
-              <th>Email & Telepon</th>
-              <th>Termin Pembayaran</th>
-              <th>Rating Vendor</th>
+              <th>Code</th>
+              <th>Vendor / Manufacturer Name</th>
+              <th>Contact Person</th>
+              <th>Email & Phone</th>
+              <th>Payment Terms</th>
+              <th>Vendor Rating</th>
             </tr>
           </thead>
           <tbody>
@@ -157,7 +157,7 @@ export default function SuppliersView() {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Daftarkan Vendor Pemasok</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Register Supplier / Vendor</h3>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
@@ -169,7 +169,7 @@ export default function SuppliersView() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 16 }}>
               <div style={{ gridColumn: 'span 2' }}>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Nama Perusahaan Vendor:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Vendor Company Name:</label>
                 <input
                   type="text"
                   className="input"
@@ -181,7 +181,7 @@ export default function SuppliersView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Kontak Person (PIC):</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Contact Person (PIC):</label>
                 <input
                   type="text"
                   className="input"
@@ -192,7 +192,7 @@ export default function SuppliersView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Ketentuan Bayar:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Payment Terms:</label>
                 <select
                   value={paymentTerms}
                   onChange={(e) => setPaymentTerms(e.target.value)}
@@ -206,7 +206,7 @@ export default function SuppliersView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Telepon / WhatsApp:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Phone / WhatsApp:</label>
                 <input
                   type="text"
                   className="input"
@@ -217,7 +217,7 @@ export default function SuppliersView() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Email Resmi:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Corporate Email:</label>
                 <input
                   type="email"
                   className="input"
@@ -228,7 +228,7 @@ export default function SuppliersView() {
               </div>
 
               <div style={{ gridColumn: 'span 2' }}>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Alamat Kantor & Gudang:</label>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Office & Warehouse Address:</label>
                 <textarea
                   className="input"
                   rows={2}
@@ -241,10 +241,10 @@ export default function SuppliersView() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                Batal
+                Cancel
               </button>
               <button type="submit" className="btn btn-primary">
-                Simpan Vendor
+                Save Vendor
               </button>
             </div>
           </form>

@@ -178,11 +178,11 @@ export default function Sidebar({ collapsed, onCollapse }: SidebarProps) {
         { id: 'inventory/catalog', label: 'Product Catalog', icon: <Package size={15} />, badge: store.products.length },
         { id: 'inventory/categories', label: 'Categories & UOM', icon: <Layers size={15} /> },
         { id: 'inventory/overview', label: 'Stock Overview', icon: <Boxes size={15} /> },
-        { id: 'inventory/ledger', label: 'Inventory Ledger (Kartu)', icon: <BookOpen size={15} /> },
+        { id: 'inventory/ledger', label: 'Inventory Ledger', icon: <BookOpen size={15} /> },
         { id: 'inventory/warehouses', label: 'Warehouses & Bins', icon: <Warehouse size={15} />, badge: store.warehouses.length },
         { id: 'inventory/transfers', label: 'Stock Transfers', icon: <ArrowLeftRight size={15} /> },
         { id: 'inventory/adjustments', label: 'Stock Adjustments', icon: <Sliders size={15} /> },
-        { id: 'inventory/counts', label: 'Stock Opname (Count)', icon: <ClipboardList size={15} /> },
+        { id: 'inventory/counts', label: 'Physical Stock Count', icon: <ClipboardList size={15} /> },
         {
           id: 'inventory/reorder',
           label: 'Reorder Planning',
@@ -254,10 +254,10 @@ export default function Sidebar({ collapsed, onCollapse }: SidebarProps) {
       title: 'Administration',
       icon: <Settings size={16} />,
       items: [
-        { id: 'admin/users', label: 'Users & Roles Switcher', icon: <Users size={15} /> },
+        { id: 'admin/users', label: 'User Access & Roles', icon: <Users size={15} /> },
         { id: 'admin/settings', label: 'Company Settings', icon: <Settings size={15} /> },
         { id: 'admin/numbering', label: 'Document Numbering', icon: <Hash size={15} /> },
-        { id: 'admin/demo_data', label: 'Demo Data Manager', icon: <Database size={15} /> },
+        { id: 'admin/demo_data', label: 'System Administration', icon: <Database size={15} /> },
       ],
     },
   ];
@@ -317,14 +317,14 @@ export default function Sidebar({ collapsed, onCollapse }: SidebarProps) {
             style={{
               fontSize: 9,
               fontWeight: 700,
-              backgroundColor: '#2d3748',
-              color: '#90cdf4',
-              padding: '2px 5px',
+              backgroundColor: 'rgba(56, 189, 248, 0.15)',
+              color: '#38bdf8',
+              padding: '2px 6px',
               borderRadius: 3,
               letterSpacing: '0.04em',
             }}
           >
-            DEMO
+            ACTIVE
           </span>
         </div>
       )}
@@ -469,7 +469,7 @@ export default function Sidebar({ collapsed, onCollapse }: SidebarProps) {
       >
         {!collapsed && (
           <span style={{ fontSize: 10.5, color: 'var(--sidebar-text-muted)' }}>
-            v2.0 • Indonesian Demo
+            v2.4.0 • Enterprise Edition
           </span>
         )}
         <button
